@@ -1,4 +1,132 @@
-@import url("styles.css");
+#product-form-section {
+  padding: 20px 0;
+}
+
+.dsc-product-form-container {
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.dsc-product-form-buttons {
+  width: 100%;
+  display: grid;
+  grid-gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+}
+
+@media (min-width: 576px) {
+  #product-form-section {
+    padding: 40px 0;
+  }
+}
+
+/* Tabela de Produtos */
+.dsc-table-wrapper {
+  overflow-x: auto; /* Permite rolagem horizontal */
+}
+
+.dsc-table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+
+.dsc-tb576 {
+  display: table-cell;
+}
+
+.dsc-tb768 {
+  display: table-cell;
+}
+
+.dsc-txt-left {
+  text-align: left;
+}
+
+.dsc-product-listing-image {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+}
+
+.dsc-product-listing-btn {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+/* Responsividade para telas menores que 576px */
+@media (max-width: 576px) {
+  .dsc-product-form-buttons {
+    grid-template-columns: 1fr; /* Empilha os botões em telas pequenas */
+  }
+
+  .dsc-table {
+    display: block; /* Permite que a tabela tenha rolagem horizontal */
+    width: 100%;
+  }
+
+  .dsc-tb576 {
+    display: none; /* Esconde a coluna de ID em telas pequenas */
+  }
+
+  .dsc-tb768 {
+    display: none; /* Esconde a coluna de preço em telas muito pequenas */
+  }
+
+  .dsc-txt-left {
+    text-align: left;
+  }
+
+  .dsc-product-listing-btn {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+/* Ajustes para telas maiores que 576px, mas menores que 768px */
+@media (max-width: 768px) {
+  /* .dsc-tb576 {
+    display: none; /* Esconde a coluna de ID em telas menores */
+  } */
+
+  .dsc-tb768 {
+    display: table-cell; /* Mostra a coluna de preço em telas médias */
+  }
+
+  .dsc-product-listing-btn {
+    width: 24px;
+    height: 24px;
+  }
+
+
+
+
+
+/* 
+#product-form-section {
+  padding: 20px 0;
+}
+
+.dsc-product-form-container {
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.dsc-product-form-buttons {
+  width: 100%;
+  display: grid;
+  grid-gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+}
+
+@media (min-width: 576px) {
+  #product-form-section {
+    padding: 40px 0;
+  }
+}
 
 #product-form-section {
   padding: 20px 0;
@@ -22,3 +150,33 @@
     padding: 40px 0;
   }
 }
+
+@media (max-width: 576px) {
+  .dsc-product-form-buttons {
+    grid-template-columns: 1fr; 
+  }
+
+  .dsc-table {
+    width: 100%;
+    overflow-x: auto; 
+    display: block;  
+  }
+
+  .dsc-tb576 {
+    display: none; 
+  }
+
+  .dsc-tb768 {
+    display: block; 
+  }
+
+  .dsc-txt-left {
+    text-align: left;
+  }
+}
+
+@media (max-width: 768px) {
+  .dsc-tb768 {
+    display: block; 
+  }
+} */

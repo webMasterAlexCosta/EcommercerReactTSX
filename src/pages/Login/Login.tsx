@@ -1,8 +1,10 @@
+import HeaderClient from "../../components/HeaderClient";
 import "./styles.css";
 
 const Login=()=>{
     return(
        <>
+       <HeaderClient/>
        <section id="login-section" className="dsc-container">
         <div className="dsc-login-form-container">
           <form className="dsc-card dsc-form">

@@ -1,6 +1,6 @@
 import './styles.css'
 import computador from '../../assets/images/computer.png'
-import HeaderClient from '../../components/HeaderClient';
+import HeaderClient from "../../components/HeaderClient"
 
 const carrinho = () => {
     return (
