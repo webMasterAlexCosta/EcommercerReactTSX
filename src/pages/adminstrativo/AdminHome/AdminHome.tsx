@@ -1,3 +1,4 @@
+import { Outlet } from 'react-router-dom';
 import HeaderAdmin from '../../../components/HeaderAdmin.tsx';
 import './styles.css';
 
@@ -11,6 +12,7 @@ const AdminHome = () => {
           <h2 className="dsc-section-title dsc-mb20">Bem-vindo à àrea administrativa</h2>
         </section>
       </main>
+      <Outlet />
     </>
   )
 }

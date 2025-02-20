@@ -19,7 +19,7 @@ const HeaderAdmin = () => {
               </div>
               <div className="dsc-menu-item">
                 <img src={produtosImg} alt="Cadastro de produtos" />
-                <p className="dsc-menu-item-active"><Link to="../Listagem">Produtos</Link></p>
+                <p className="dsc-menu-item-active"><Link to="../AdminHome/Listagem">Produtos</Link></p>
               </div>
             </div>
             <div className="dsc-logged-user">

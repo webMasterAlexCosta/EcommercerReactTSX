@@ -1,11 +1,10 @@
 import { Link } from "react-router-dom";
-import HeaderAdmin from "../../../components/HeaderAdmin";
 import ListaProdutos from "../../../components/ListaProdutos";
 
 const Listagem = () => {
   return (
     <>
-      <HeaderAdmin />
+      
       <main>
         <section id="product-listing-section" className="dsc-container">
           <h2 className="dsc-section-title dsc-mb20">Cadastro de produtos</h2>

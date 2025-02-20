@@ -1,13 +1,17 @@
+import { useParams } from 'react-router-dom';
+import produtoDTO from "../../models/ProdutosDTO";
 import HeaderClient from "../../components/HeaderClient.tsx";
 import ButtonCategoria from "../../components/ButtonCategoria.tsx";
-import produtoDTO from "../../models/ProdutosDTO.ts";
 import ButtonActions from "../../components/ButtonActions.tsx";
 import "./styles.css";
-import { useParams } from "react-router-dom";
 
 const Detalhes = () => {
   const { id } = useParams(); // Pega o id da URL
-  const produto = produtoDTO.find((produto) => produto.id === parseInt(id!)); // Encontra o produto pelo id
+  console.log(typeof(id)); // Verificando o tipo do id
+  console.log(typeof(parseInt(id!))); // Verificando a conversão do id para número
+
+  // Verifica se o id é válido
+  const produto = produtoDTO.find((produto) => produto.id === parseInt(id!));
 
   if (!produto) {
     return <div>Produto não encontrado!</div>; // Caso não encontre o produto

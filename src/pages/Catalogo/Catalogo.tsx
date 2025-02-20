@@ -22,7 +22,7 @@ const Catalogo = () => {
                 <img src={computador} alt={itemProduto.nome} />
               </div>
               <div style={{ width: "20%" }}>
-                <Link to={`/Detalhes/${itemProduto.id}`}>
+                <Link to={`/Catalogo/${itemProduto.id}`}>
                   <ButtonActions nome="Detalhes" className="dsc-btn dsc-btn-blue" />
                 </Link>
               </div>
