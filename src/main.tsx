@@ -18,7 +18,8 @@ createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <BrowserRouter>
       <Routes>
-        <Route path="*" element={<App />} />
+        <Route index element={<App />} />
+        <Route path="*" element={ <a href='/'><h1 style={{color:"red"}}>404 - Página não encontrada</h1></a>} />
         <Route path="/Carrinho" element={<Carrinho />} />
         <Route path="/Catalogo" element={<Catalogo />} />
         <Route path="/Catalogo/:id" element={<Detalhes />} />

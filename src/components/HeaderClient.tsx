@@ -1,34 +1,40 @@
 import cart from '../assets/images/cart.svg';
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 const HeaderClient = () => {
-  const isAdmin = true
-  const isCliente = true
+  const isAdmin = true;
+  const isCliente = true;
+
+  const getIsActive = ({ isActive }: { isActive: boolean }) =>
+    isActive ? { color: "red" } : { color: "black" };
+
   return (
     <>
       <header className="dsc-header-client">
         <nav className="dsc-container">
-          <Link to="/"><h1>DS Commerce</h1>
-          </Link> 
-          {(isCliente || isAdmin) && <>
-          <Link to="/Carrinho">Carrinho</Link>
-          <Link to="/Catalogo">Catalogo</Link>
-          
-          <Link to="/Login">Login</Link>
+          <NavLink style={getIsActive} to="/">
+            <h1>DS Commerce</h1>
+          </NavLink>
 
-        </>}
+          {(isCliente || isAdmin) && (
+            <>
+              <NavLink style={getIsActive} to="/Carrinho">Carrinho</NavLink>
+              <NavLink style={getIsActive} to="/Catalogo">Catalogo</NavLink>
+              <NavLink style={getIsActive} to="/Login">Login</NavLink>
+            </>
+          )}
 
+          {isAdmin && (
+            <NavLink style={getIsActive} to="/Administrativo/AdminHome">Administrativo</NavLink>
+          )}
 
-        {isAdmin && <Link to="/Administrativo/AdminHome">Administrativo</Link>}
           <div className="dsc-navbar-right">
             <div className="dsc-menu-items-container">
               <div className="dsc-menu-item">
                 <img src={cart} alt="Carrinho de compras" />
               </div>
             </div>
-            <Link to="/entrar"> 
-              Entrar
-            </Link>
+            <NavLink style={getIsActive} to="/entrar">Entrar</NavLink>
           </div>
         </nav>
       </header>
