@@ -38,7 +38,7 @@ const CriarNovoProduto = () => {
     });
 
     // Após salvar o produto, redirecionamos para a listagem de produtos
-    navigate("/Administrativo/Listagem");
+    navigate("/Administrativo/AdminHome/Listagem");
   };
 
   return (
@@ -58,6 +58,8 @@ const CriarNovoProduto = () => {
                     placeholder="Nome do Produto"
                     value={produto.nome}
                     onChange={handleChange}
+                    // ou assim onChange={(e) => setProduto({ ...produto, [e.target.name]: e.target.value })}
+
                     required
                   />
                 </div>
