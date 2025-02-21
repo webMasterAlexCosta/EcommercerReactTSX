@@ -1,4 +1,5 @@
-import cart from '../assets/images/cart.svg';
+import './Styles.css'
+import cart from '../../assets/images/cart.svg';
 import { NavLink } from "react-router-dom";
 
 const HeaderClient = () => {

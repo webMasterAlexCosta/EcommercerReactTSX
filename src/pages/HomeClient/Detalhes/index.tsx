@@ -1,8 +1,7 @@
 import { useParams } from 'react-router-dom';
-import produtoDTO from "../../models/ProdutosDTO";
-import HeaderClient from "../../components/HeaderClient.tsx";
-import ButtonCategoria from "../../components/ButtonCategoria.tsx";
-import ButtonActions from "../../components/ButtonActions.tsx";
+import produtoDTO from "../../../models/ProdutosDTO.ts";
+import ButtonCategoria from "../../../components/ButtonCategoria.tsx";
+import ButtonActions from "../../../components/ButtonActions.tsx";
 import "./styles.css";
 
 const Detalhes = () => {
@@ -19,7 +18,6 @@ const Detalhes = () => {
 
   return (
     <>
-      <HeaderClient />
       <section id="product-details-section" className="dsc-container">
         <div className="dsc-card dsc-mb20">
           <div className="dsc-product-details-top dsc-line-bottom">

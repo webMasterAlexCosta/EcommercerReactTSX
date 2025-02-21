@@ -1,13 +1,12 @@
-import HeaderClient from "../../components/HeaderClient";
-import computador from "../../assets/images/computer.png";
+import computador from "../../../assets/images/computer.png";
 import { Link } from "react-router-dom";
-import ButtonActions from "../../components/ButtonActions";
-import produtoDTO from "../../models/ProdutosDTO";
+import ButtonActions from "../../../components/ButtonActions";
+import produtoDTO from "../../../models/ProdutosDTO";
 
 const Catalogo = () => {
   return (
     <>
-      <HeaderClient />
+     
       <section id="catalog-section" className="dsc-container">
         <form className="dsc-search-bar">
           <button type="submit">🔎︎</button>

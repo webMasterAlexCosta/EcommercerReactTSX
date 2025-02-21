@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import ProdutoDTO from "../../../models/ProdutosDTO";
-import HeaderAdmin from '../../../components/HeaderAdmin';
-import './styles.css';
+import ProdutoDTO from "../../models/ProdutosDTO";
+
 
 const CriarNovoProduto = () => {
   const navigate = useNavigate();
@@ -43,7 +42,7 @@ const CriarNovoProduto = () => {
 
   return (
     <>
-      <HeaderAdmin />
+      
       <main>
         <section id="product-form-section" className="dsc-container">
           <div className="dsc-product-form-container">

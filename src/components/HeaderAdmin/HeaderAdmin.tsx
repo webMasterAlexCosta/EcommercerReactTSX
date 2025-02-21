@@ -1,5 +1,6 @@
-import homeImg from '../assets/images/home.svg';
-import produtosImg from '../assets/images/products.svg';
+import './Styles.css';
+import homeImg from '../../assets/images/home.svg';
+import produtosImg from '../../assets/images/products.svg';
 import { NavLink} from 'react-router-dom';
 
 const HeaderAdmin = () => {
@@ -22,7 +23,7 @@ const HeaderAdmin = () => {
               </div>
               <div className="dsc-menu-item">
                 <img src={produtosImg} alt="Cadastro de produtos" />
-                <p className="dsc-menu-item-active"><NavLink style={getIsActive} to="../AdminHome/Listagem">Produtos</NavLink></p>
+                <p className="dsc-menu-item-active"><NavLink style={getIsActive} to="/Administrativo/Listagem">Produtos</NavLink></p>
               </div>
             </div>
             <div className="dsc-logged-user">

@@ -1,6 +1,5 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import ProdutoDTO from "../../../models/ProdutosDTO"; // Certifique-se de que ProdutoDTO seja um array de produtos
-import HeaderAdmin from '../../../components/HeaderAdmin';
 import './styles.css';
 import { useState } from 'react';
 
@@ -9,19 +8,19 @@ const Formulario = () => {
   const navigate = useNavigate(); // Para redirecionar o usuário
 
   const produto = ProdutoDTO.find((produto) => produto.id === Number(id)); // Encontra o produto pelo id
-// Inicializando os estados com os valores do produto
-const [categoria, setCategoria] = useState<number>(produto?.categoria[0]?.id || 0);
-const [nomeProduto, setNomeProduto] = useState<string>(produto?.nome || '');
-const [precoProduto, setPrecoProduto] = useState<number>(produto?.preco || 0);
-const [imagemProduto, setImagemProduto] = useState<string>(produto?.imagem || '');
-const [descricaoProduto, setDescricaoProduto] = useState<string>(produto?.descricao || '');
+  // Inicializando os estados com os valores do produto
+  const [categoria, setCategoria] = useState<number>(produto?.categoria[0]?.id || 0);
+  const [nomeProduto, setNomeProduto] = useState<string>(produto?.nome || '');
+  const [precoProduto, setPrecoProduto] = useState<number>(produto?.preco || 0);
+  const [imagemProduto, setImagemProduto] = useState<string>(produto?.imagem || '');
+  const [descricaoProduto, setDescricaoProduto] = useState<string>(produto?.descricao || '');
   // Caso o produto não seja encontrado, redirecionamos para a listagem de produtos
   if (!produto) {
     navigate("/Administrativo/AdminHome/Listagem");
     return <div>Produto não encontrado!</div>;
   }
 
-  
+
 
   // Função para salvar o produto
   const handleSubmit = (e: React.FormEvent) => {
@@ -49,7 +48,7 @@ const [descricaoProduto, setDescricaoProduto] = useState<string>(produto?.descri
 
   return (
     <>
-      <HeaderAdmin />
+
       <main>
         <section id="product-form-section" className="dsc-container">
           <div className="dsc-product-form-container">

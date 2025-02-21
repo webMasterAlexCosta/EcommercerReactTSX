@@ -1,11 +1,10 @@
 import './styles.css'
-import computador from '../../assets/images/computer.png'
-import HeaderClient from "../../components/HeaderClient"
+import computador from '../../../assets/images/computer.png'
 
 const carrinho = () => {
     return (
         <> 
-        <HeaderClient />    
+         
       <section id="cart-container-section" className="dsc-container">
         <div className="dsc-card dsc-mb20">
           <div className="dsc-cart-item-container dsc-line-bottom">

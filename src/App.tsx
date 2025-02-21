@@ -1,13 +1,12 @@
+import { Outlet } from 'react-router-dom';
 import './App.css';
-import HeaderClient from './components/HeaderClient';
 
 const App = () => {
  
   return (
 
     <>
-<HeaderClient/>
-      
+      <Outlet />
     </>
   );
 }
