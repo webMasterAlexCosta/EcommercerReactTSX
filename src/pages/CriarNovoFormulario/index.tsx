@@ -37,7 +37,7 @@ const CriarNovoProduto = () => {
     });
 
     // Após salvar o produto, redirecionamos para a listagem de produtos
-    navigate("/Administrativo/AdminHome/Listagem");
+    navigate("/Administrativo/Listagem");
   };
 
   return (
