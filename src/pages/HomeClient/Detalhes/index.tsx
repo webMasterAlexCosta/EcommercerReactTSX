@@ -1,7 +1,7 @@
 import { useParams, Link } from "react-router-dom";
-import produtoDTO from "../../../../models/ProdutosDTO.ts";
-import ButtonCategoria from "../../../../components/ButtonCategoria.tsx";
-import ButtonActions from "../../../../components/ButtonActions.tsx";
+import produtoDTO from "../../../models/ProdutosDTO.ts";
+import ButtonCategoria from "../../../components/ButtonCategoria.tsx";
+import ButtonActions from "../../../components/ButtonActions.tsx";
 import "./styles.css";
 
 const Detalhes = () => {
