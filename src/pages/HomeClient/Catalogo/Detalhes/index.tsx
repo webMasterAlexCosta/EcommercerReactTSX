@@ -1,4 +1,4 @@
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import ButtonCategoria from "../../../../components/ButtonCategoria.tsx";
 import ButtonActions from "../../../../components/ButtonActions.tsx";
@@ -21,10 +21,11 @@ const Detalhes = () => {
   const [produtos, setProdutos] = useState<Produto[]>([]); // Estado para armazenar todos os produtos
   const [loading, setLoading] = useState(true); // Estado de carregamento
   const [error, setError] = useState<string>(""); // Estado de erro, caso ocorra algum problema
-  const navigate = useNavigate(); // Para navegação programática
+  
 
   useEffect(() => {
     // Carregar o produto específico
+    
     if (id) {
       axios.get(`http://localhost:8080/produtos/${id}`)
         .then(response => {
