@@ -3,7 +3,7 @@ import { Link, Outlet, useLocation } from "react-router-dom";
 import ButtonActions from "../../../components/ButtonActions";
 import axios from "axios";
 import { useState, useEffect } from "react"; // Importando useState e useEffect
-import { BASE_URL_HTTPS1, BASE_URL_LOCAL } from "../../../utils/system";
+import { BASE_URL_LOCAL } from "../../../utils/system";
 
 // Defina a interface para o produto
 interface Produto {
@@ -24,7 +24,7 @@ const Catalogo = () => {
   // Efeito para buscar os produtos quando o componente for montado
   useEffect(() => {
     // Fazendo a requisição para obter os produtos
-    axios.get(`${BASE_URL_LOCAL||BASE_URL_HTTPS1}/produtos/lista`)
+    axios.get(`${BASE_URL_LOCAL}/produtos/lista`)
       .then(response => {
         setProdutos(response.data); // Armazenando os produtos no estado (verificando se content existe)
         console.log("no catalogo"+response.data);
