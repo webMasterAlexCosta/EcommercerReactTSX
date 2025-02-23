@@ -4,6 +4,7 @@ import ButtonCategoria from "../../../../components/ButtonCategoria.tsx";
 import ButtonActions from "../../../../components/ButtonActions.tsx";
 import axios from "axios";
 import "./styles.css";
+import { BASE_URL_HTTPS1, BASE_URL_LOCAL } from "../../../../utils/system.ts";
 
 // Defina a interface para o produto
 interface Produto {
@@ -12,7 +13,7 @@ interface Produto {
   preco: string;
   imgUrl: string;
   descricao: string;
-  categorias: { id: number; nome: string }[]; // Corrigido para 'categorias'
+  categorias: { id: number; nome: string }[];
 }
 
 const Detalhes = () => {
@@ -27,7 +28,7 @@ const Detalhes = () => {
     // Carregar o produto específico
     
     if (id) {
-      axios.get(`http://localhost:8080/produtos/${id}`)
+      axios.get(`${BASE_URL_LOCAL||BASE_URL_HTTPS1}/produtos/${id}`)
         .then(response => {
           setProdutoAtual(response.data); // Armazenando o produto no estado
           setLoading(false);
@@ -40,7 +41,7 @@ const Detalhes = () => {
     }
 
     // Carregar todos os produtos (para navegação entre produtos)
-    axios.get("http://localhost:8080/produtos/lista")
+    axios.get(`${BASE_URL_LOCAL||BASE_URL_HTTPS1}/produtos/lista`)
       .then(response => {
         setProdutos(response.data); // Armazenando todos os produtos no estado
       })
@@ -75,7 +76,7 @@ const Detalhes = () => {
           <h4>{produtoAtual.nome}</h4>
           <p>{produtoAtual.descricao}</p>
           <div className="dsc-category-container">
-            {/* Corrigido para acessar 'categorias' */}
+            {/*  acessar 'categorias' */}
             {produtoAtual.categorias.map(categoria => (
               <ButtonCategoria key={categoria.id} nomeCategoria={categoria.nome} />
             ))}
