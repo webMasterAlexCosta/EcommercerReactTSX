@@ -1,4 +1,4 @@
-import { StrictMode } from 'react';
+//import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import './index.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
@@ -10,12 +10,12 @@ import Adminstrativo from './pages/HomeAdminstrativo';
 import App from './App';
 import Listagem from './pages/HomeAdminstrativo/Listagem';
 import Formulario from './pages/HomeAdminstrativo/Formulario';
-import Detalhes from './pages/HomeClient/Detalhes';
+import Detalhes from './pages/HomeClient/Catalogo/Detalhes';
 import CriarNovoProduto from './pages/CriarNovoFormulario';
 import HeaderClient from './components/HeaderClient/HeaderClient';
 
 createRoot(document.getElementById('root')!).render(
-  <StrictMode>
+ // <StrictMode>
     <BrowserRouter>
       <Routes>
         <Route path='/' element={<><HeaderClient /><App /></>}>
@@ -39,7 +39,7 @@ createRoot(document.getElementById('root')!).render(
         </Route>
       </Routes>
     </BrowserRouter>
-  </StrictMode>
+ // </StrictMode>
 );
 
 
