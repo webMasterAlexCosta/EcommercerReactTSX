@@ -1,6 +1,6 @@
-import ProdutoDTO from "../models/ProdutosDTO";
-import editar from "../assets/images/edit.svg";
-import deletar from "../assets/images/delete.svg";
+import ProdutoDTO from "../../models/dto/1"
+import editar from "../../assets/images/edit.svg";
+import deletar from "../../assets/images/delete.svg";
 import { Link } from "react-router-dom";
 
 const ListaProdutos = () => {

@@ -1,5 +1,5 @@
 import './Styles.css'
-import cart from '../../assets/images/cart.svg';
+import cart from '../../../assets/images/cart.svg';
 import { NavLink } from "react-router-dom";
 
 const HeaderClient = () => {
@@ -14,7 +14,7 @@ const HeaderClient = () => {
       <header className="dsc-header-client">
         <nav className="dsc-container">
           <NavLink style={getIsActive} to="/">
-            <h1>DS Commerce</h1>
+            <h1>Alex Costa</h1>
           </NavLink>
 
           {(isCliente || isAdmin) && (

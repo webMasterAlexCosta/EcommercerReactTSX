@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import ProdutoDTO from "../../models/ProdutosDTO";
+import ProdutoDTO from "../../../models/dto/1";
 
 
 const CriarNovoProduto = () => {

@@ -1,6 +1,6 @@
 import './Styles.css';
-import homeImg from '../../assets/images/home.svg';
-import produtosImg from '../../assets/images/products.svg';
+import homeImg from '../../../assets/images/home.svg';
+import produtosImg from '../../../assets/images/products.svg';
 import { NavLink} from 'react-router-dom';
 
 const HeaderAdmin = () => {
@@ -11,7 +11,7 @@ const HeaderAdmin = () => {
         <>
         <header className="dsc-header-admin">
         <nav className="dsc-container">
-          <NavLink style={getIsActive} to="/Administrativo/AdminHome"><h1>DSC Admin</h1></NavLink>
+          <NavLink style={getIsActive} to="/Administrativo/AdminHome"><h1>Alex Admin</h1></NavLink>
 
           <div className="dsc-navbar-right">
             <div className="dsc-menu-items-container">
@@ -27,7 +27,7 @@ const HeaderAdmin = () => {
               </div>
             </div>
             <div className="dsc-logged-user">
-              <p>Maria Silva</p>
+              <p>Alex Costa</p>
               <a href="#">Sair</a>
             </div>
           </div>

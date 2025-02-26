@@ -1,39 +1,38 @@
 import "./styles.css";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import ButtonActions from "../../../components/UI/ButtonActions";
-import { useState, useEffect } from "react";
-import * as produtoService from "../../../services/ProdotoService";
-import { ProdutoDTO } from "../../../models/dto/ProdutosDTO";
+import axios from "axios";
+import { useState, useEffect } from "react"; // Importando useState e useEffect
+import { BASE_URL_LOCAL } from "../../../utils/system";
 
-
+// Defina a interface para o produto
+interface Produto {
+  id: number;
+  nome: string;
+  preco: string;
+  imgUrl: string;
+  // Adicione outras propriedades conforme necessário
+}
 
 const Catalogo = () => {
-  const [produtos, setProdutos] = useState<ProdutoDTO[]>([]); // Estado para armazenar os produtos
-  const [loading, setLoading] = useState<boolean>(false); // Estado para o carregamento
-  const [error, setError] = useState<string | null>(null); // Estado para o erro
-  const [page, setPage] = useState<number>(1); // Para carregar mais produtos
-
+  const [produtos, setProdutos] = useState<Produto[]>([]); // Estado para armazenar os produtos
   const location = useLocation(); // Obtém a localização atual da URL
 
+  // Verifica se a rota atual é para detalhes, se for, ocultamos o catálogo
   const isDetailsPage = location.pathname.includes("/Catalogo/Detalhes");
 
+  // Efeito para buscar os produtos quando o componente for montado
   useEffect(() => {
-    const fetchProdutos = async () => {
-      setLoading(true);
-      setError(null); // Limpa erros anteriores
-      try {
-        const response = await produtoService.findAll();
-        setProdutos(response.data);
-        console.log(response)
-      } catch (error) {
-        setError("Erro ao carregar os produtos." + error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProdutos();
-  }, [page]); // Dependência para carregar novos produtos quando a página mudar
+    // Fazendo a requisição para obter os produtos
+    axios.get(`${BASE_URL_LOCAL}/produtos/lista`)
+      .then(response => {
+        setProdutos(response.data); // Armazenando os produtos no estado (verificando se content existe)
+        console.log("no catalogo"+response.data);
+      })
+      .catch(error => {
+        console.error("Erro ao carregar os produtos", error);
+      });
+  }, []); // O array vazio faz com que o efeito seja executado apenas uma vez (quando o componente for montado)
 
   if (isDetailsPage) {
     return <Outlet />; // Quando estiver na página de detalhes, apenas renderiza o Outlet
@@ -47,20 +46,16 @@ const Catalogo = () => {
         <button type="reset">🗙</button>
       </form>
 
-      {/* Exibe mensagem de erro, se houver */}
-      {error && <p className="error-message">{error}</p>}
-
       {/* O catálogo em si */}
       <div className="dsc-catalog-cards dsc-mb20 dsc-mt20">
-        {loading ? (
-          <p>Carregando produtos...</p> // Exibe o texto de carregamento
-        ) : produtos && produtos.length > 0 ? (
+        {produtos && produtos.length > 0 ? (
           produtos.map(itemProduto => (
             <div key={itemProduto.id} className="dsc-card">
               <div className="dsc-catalog-card-top dsc-line-bottom">
                 <img src={itemProduto.imgUrl} alt={itemProduto.nome} />
               </div>
               <div style={{ width: "auto" }}>
+                {/* Link para a página de detalhes do produto */}
                 <Link to={`/Catalogo/Detalhes/${itemProduto.id}`}>
                   <ButtonActions nome="Detalhes" className="dsc-btn dsc-btn-blue" />
                 </Link>
@@ -72,15 +67,13 @@ const Catalogo = () => {
             </div>
           ))
         ) : (
-          <p>Nenhum produto encontrado.</p> // Caso não haja produtos
+          <p>Carregando produtos...</p> // Mensagem exibida enquanto os produtos não são carregados
         )}
       </div>
 
-      {/* Botão de carregar mais produtos */}
-      <div className="dsc-btn-next-page" onClick={() => setPage(prevPage => prevPage + 1)}>
-        Carregar mais
-      </div>
+      <div className="dsc-btn-next-page">Carregar mais</div>
 
+      {/* Aqui é onde o conteúdo do detalhe vai ser renderizado */}
       <Outlet />
     </section>
   );
