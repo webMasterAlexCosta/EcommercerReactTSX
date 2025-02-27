@@ -7,30 +7,40 @@ const Carrinho = () => {
   const [produtos, setProdutos] = useState<ProdutoDTO[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
-  // Carregar os produtos do localStorage
   useEffect(() => {
-    const produtosNoCarrinho = localStorage.getItem(storageCarrinho);
+    // Simulando um tempo de carregamento de 3 segundos
+    setTimeout(() => {
+      const produtosNoCarrinho = localStorage.getItem(storageCarrinho);
 
-    if (produtosNoCarrinho) {
-      try {
-        // Parse no conteúdo e verificar se a estrutura é um array
-        const produtosParsed: ProdutoDTO[] = JSON.parse(produtosNoCarrinho);
-        setProdutos(produtosParsed);
-      } catch (error) {
-        console.error('Erro ao parsear os produtos do localStorage', error);
+      if (produtosNoCarrinho) {
+        try {
+          const produtosParsed: ProdutoDTO[] = JSON.parse(produtosNoCarrinho);
+          setProdutos(produtosParsed);
+        } catch (error) {
+          console.error('Erro ao parsear os produtos do localStorage', error);
+        }
       }
-    }
 
-    // Mudar o estado para "loading" false após a leitura do localStorage
-    setLoading(false);
+      setLoading(false); // Finaliza o carregamento após 3 segundos
+    }, 1000); // Espera 3000ms (3 segundos)
   }, []);
 
   return (
     <main>
       {loading ? (
-        <div>Carregando...</div> // Exibe "Carregando..." enquanto os produtos são carregados
+        <div className="loading-container">
+          <div className="loading-spinner"></div>
+          <p>Carregando seus produtos...</p>
+        </div>
       ) : produtos.length === 0 ? (
-        <div>Carrinho Vazio</div> // Exibe quando não houver produtos no carrinho
+        <section className="empty-cart">
+          <div className="empty-cart-icon">🛒</div>
+          <h2>Seu carrinho está vazio</h2>
+          <p>Adicione alguns produtos para começar a comprar!</p>
+          <div className="empty-cart-buttons">
+            <button className="dsc-btn dsc-btn-blue">Continuar Comprando</button>
+          </div>
+        </section>
       ) : (
         <section id="cart-container-section" className="dsc-container">
           <div className="dsc-card dsc-mb20">

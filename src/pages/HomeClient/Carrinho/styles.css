@@ -1,43 +1,51 @@
-@import url("styles.css");
-
+/* Estilos gerais para o carrinho */
 #cart-container-section {
   padding: 20px 0;
 }
 
+/* Estilos do container de total do carrinho */
 .dsc-cart-total-container {
   padding: 10px 20px;
+  display: flex;
+  justify-content: space-between; /* Alinha o total à direita */
+  align-items: center;
 }
 
 .dsc-cart-total-container h3 {
-  text-align: left;
-  font-size: 16px;
+  font-size: 18px; /* Aumenta o tamanho da fonte para maior destaque */
   color: var(--dsc-color-font-secondary);
+  margin: 0;
 }
 
+/* Estilo dos itens do carrinho */
 .dsc-cart-item-container {
-  padding: 0 20px;
+  padding: 15px 20px;
   display: flex;
   flex-direction: column;
+  gap: 10px; /* Espaçamento entre os elementos */
 }
 
 .dsc-cart-item-container img {
-  width: 78px;
-  height: 78px;
+  width: 80px;
+  height: 80px;
+  object-fit: cover; /* Garante que as imagens mantenham suas proporções */
+  border-radius: 8px; /* Adiciona bordas arredondadas */
 }
 
 .dsc-cart-item-left {
   display: flex;
+  gap: 15px; /* Espaçamento entre a imagem e a descrição */
 }
 
 .dsc-cart-item-quantity-container {
-  font-size: 16px;
-  font-weight: 700;
+  font-size: 14px;
+  font-weight: 600;
   display: flex;
+  align-items: center;
 }
 
 .dsc-cart-item-right {
-  padding-bottom: 10px;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   color: var(--dsc-color-font-secondary);
 }
@@ -48,18 +56,126 @@
 }
 
 .dsc-cart-item-description h3 {
-  font-size: 12px;
+  font-size: 14px;
+  margin: 0;
 }
 
 .dsc-cart-item-quantity-btn {
   color: var(--dsc-color-btn-primary);
   cursor: pointer;
+  padding: 5px 10px;
+  background-color: #f0f0f0;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.dsc-cart-item-quantity-btn:hover {
+  background-color: #e0e0e0;
 }
 
 .dsc-cart-item-quantity-container p {
   margin: 0 5px;
 }
 
+/* Ajuste para a exibição do carrinho vazio */
+.empty-cart {
+  text-align: center;
+  margin: 50px auto;
+  padding: 40px 20px;
+  max-width: 500px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+}
+
+.empty-cart-icon {
+  font-size: 80px;
+  margin-bottom: 25px;
+}
+
+.empty-cart h2 {
+  font-size: 26px;
+  margin-bottom: 15px;
+}
+
+.empty-cart p {
+  font-size: 16px;
+  color: #6c757d;
+  margin-bottom: 30px;
+}
+
+.empty-cart-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  max-width: 300px;
+  margin: 0 auto;
+}
+
+@media (min-width: 576px) {
+  .empty-cart-buttons {
+    flex-direction: row; /* Botões lado a lado em telas maiores */
+  }
+}
+
+/* Estilos dos botões */
+.dsc-btn {
+  padding: 10px 15px; /* Reduz o tamanho dos botões */
+  font-size: 14px; /* Tamanho de fonte menor */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.dsc-btn-blue {
+  background-color: #007bff;
+  color: white;
+}
+
+.dsc-btn-blue:hover {
+  background-color: #0056b3;
+}
+
+.dsc-btn-white {
+  background-color: white;
+  color: #007bff;
+  border: 1px solid #007bff;
+}
+
+.dsc-btn-white:hover {
+  background-color: #f1f1f1;
+}
+
+/* Animação de carregamento */
+.loading-container {
+  text-align: center;
+  padding: 50px;
+}
+
+.loading-spinner {
+  border: 8px solid #f3f3f3;
+  border-top: 8px solid #007bff;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1.5s linear infinite;
+  margin: 0 auto;
+}
+
+.loading-container p {
+  font-size: 18px;
+  color: var(--dsc-color-font-primary);
+  margin-top: 20px;
+}
+
+/* Animação de rotação */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Estilos para o carrinho responsivo */
 @media (min-width: 576px) {
   .dsc-cart-item-container {
     flex-direction: row;
@@ -72,5 +188,25 @@
 
   .dsc-cart-total-container h3 {
     text-align: right;
+  }
+}
+
+@media (max-width: 576px) {
+  .dsc-cart-item-container {
+    flex-direction: column;
+  }
+
+  .dsc-cart-item-right {
+    text-align: left;
+  }
+
+  .dsc-cart-total-container {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .dsc-btn {
+    width: 100%; /* Botões ocupam toda a largura em telas pequenas */
+    margin-bottom: 10px;
   }
 }
