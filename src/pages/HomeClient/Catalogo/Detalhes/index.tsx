@@ -3,25 +3,28 @@ import { useState, useEffect } from "react";
 import ButtonCategoria from "../../../../components/UI/ButtonCategoria.tsx";
 import ButtonActions from "../../../../components/UI/ButtonActions.tsx";
 import "./styles.css";
-import * as produtoService from "../../../../services/ProdotoService.ts";
+import * as produtoService from "../../../../services/ProdutoService.ts"; // Corrigido o nome do serviço
 import { ProdutoDTO } from "../../../../models/dto/ProdutosDTO.ts";
 import { storageCarrinho } from "../../../../utils/system.ts";
+import Alert from "../../../../components/UI/Alert"; // Componente de alerta
 
 const Detalhes = () => {
-  const { id } = useParams(); // Pega o id do produto da URL
-  const [produtoAtual, setProdutoAtual] = useState<ProdutoDTO | null>(null); // Estado para armazenar o produto
-  const [produtos, setProdutos] = useState<ProdutoDTO[]>([]); // Estado para armazenar todos os produtos
-  const [loading, setLoading] = useState(true); // Estado de carregamento
-  const [error, setError] = useState<string>(""); // Estado de erro, caso ocorra algum problema
+  const { id } = useParams();
+  const [produtoAtual, setProdutoAtual] = useState<ProdutoDTO | null>(null);
+  const [produtos, setProdutos] = useState<ProdutoDTO[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string>("");
+  const [alertData, setAlertData] = useState<{ title: string; text: string; icon: "success" | "error" } | null>(null);
 
   useEffect(() => {
     const fetchProduto = async () => {
-      setError(""); // Limpa o erro anterior
-      setLoading(true); // Inicia o carregamento
-      if (id && !isNaN(Number(id))) { // Valida se o id é válido
+      setError("");
+      setLoading(true);
+
+      if (id && !isNaN(Number(id))) {
         try {
           const response = await produtoService.findById(Number(id));
-          setProdutoAtual(response.data); // Armazenando o produto no estado
+          setProdutoAtual(response.data);
         } catch (err) {
           console.error("Erro ao carregar o produto:", err);
           setError("Produto não encontrado!");
@@ -30,49 +33,54 @@ const Detalhes = () => {
         setError("ID inválido!");
       }
 
-      // Carregar todos os produtos (para navegação entre produtos)
       try {
         const response = await produtoService.findAll();
-        setProdutos(response.data); // Armazenando todos os produtos no estado
+        setProdutos(response.data);
       } catch (err) {
         console.error("Erro ao carregar os produtos", err);
         setError("Erro ao carregar produtos.");
       } finally {
-        setLoading(false); // Finaliza o carregamento
+        setLoading(false);
       }
     };
-    fetchProduto();
-  }, [id]); // Requisita os dados sempre que o id mudar
 
-  if (loading) {
-    return <div>Carregando...</div>; // Mostra enquanto os dados estão sendo carregados
-  }
+    fetchProduto();
+  }, [id]);
+
+  if (loading) return <div>Carregando...</div>;
 
   if (error || !produtoAtual) {
-    return <div>{error}</div>; // Exibe erro se o produto não for encontrado ou se ocorrer um erro
+    return (
+      <div>
+        <p>{error || "Produto não encontrado!"}</p>
+        <Link to="/Catalogo">
+          <ButtonActions nome="Voltar ao Catálogo" className="dsc-btn dsc-btn-white" />
+        </Link>
+      </div>
+    );
   }
 
-  // Encontra o índice do produto atual
   const currentIndex = produtos.findIndex(produto => produto.id === produtoAtual.id);
-
-  // Encontra o próximo produto, caso exista
   const nextProduto = produtos[currentIndex + 1];
   const lastProduto = produtos[currentIndex - 1];
 
   const salvaProduto = () => {
-    // Recupera os produtos já presentes no carrinho
     const carrinhoExistente = JSON.parse(localStorage.getItem(storageCarrinho) || "[]");
-  
-    // Adiciona o produto atual ao carrinho
-    carrinhoExistente.push(produtoAtual);
-  
-    // Salva novamente no localStorage
-    localStorage.setItem(storageCarrinho, JSON.stringify(carrinhoExistente));
-  };
+    const produtoExistente = carrinhoExistente.find((item: ProdutoDTO) => item.id === produtoAtual.id);
 
+    if (produtoExistente) {
+      setAlertData({ title: "Erro ao adicionar", text: "Produto já está no carrinho!", icon: "error" });
+    } else {
+      carrinhoExistente.push(produtoAtual);
+      localStorage.setItem(storageCarrinho, JSON.stringify(carrinhoExistente));
+      setAlertData({ title: "Sucesso", text: "Produto adicionado ao carrinho!", icon: "success" });
+    }
+  };
 
   return (
     <section id="product-details-section" className="dsc-container">
+      {alertData && <Alert {...alertData} onClose={() => setAlertData(null)} />}
+
       <div className="dsc-card dsc-mb20">
         <div className="dsc-product-details-top dsc-line-bottom">
           <img src={produtoAtual.imgUrl} alt={produtoAtual.nome} />
@@ -82,7 +90,6 @@ const Detalhes = () => {
           <h4>{produtoAtual.nome}</h4>
           <p>{produtoAtual.descricao}</p>
           <div className="dsc-category-container">
-            
             {produtoAtual.categorias.map(categoria => (
               <ButtonCategoria key={categoria.id} nomeCategoria={categoria.nome} />
             ))}
@@ -96,14 +103,14 @@ const Detalhes = () => {
           <ButtonActions nome="Voltar ao Catálogo" className="dsc-btn dsc-btn-white" />
         </Link>
         <div style={{ display: "flex", justifyContent: "space-between", gap: "10px" }}>
-          {nextProduto && (
-            <Link to={`/Catalogo/Detalhes/${nextProduto.id}`}>
-              <ButtonActions nome="Próximo Produto" className="dsc-btn dsc-btn-blue" />
-            </Link>
-          )}
           {lastProduto && (
             <Link to={`/Catalogo/Detalhes/${lastProduto.id}`}>
               <ButtonActions nome="Produto Anterior" className="dsc-btn dsc-btn-white" />
+            </Link>
+          )}
+          {nextProduto && (
+            <Link to={`/Catalogo/Detalhes/${nextProduto.id}`}>
+              <ButtonActions nome="Próximo Produto" className="dsc-btn dsc-btn-blue" />
             </Link>
           )}
         </div>

@@ -3,7 +3,7 @@ import cart from '../../../assets/images/cart.svg';
 import { NavLink } from "react-router-dom";
 
 const HeaderClient = () => {
-  const isAdmin = true;
+  const isAdmin = false;
   const isCliente = true;
 
   const getIsActive = ({ isActive }: { isActive: boolean }) =>

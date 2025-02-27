@@ -2,7 +2,7 @@ import "./styles.css";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import ButtonActions from "../../../components/UI/ButtonActions";
 import { useState, useEffect } from "react";
-import * as produtoService from "../../../services/ProdotoService";
+import * as produtoService from "../../../services/ProdutoService";
 import { ProdutoDTO } from "../../../models/dto/ProdutosDTO";
 
 
@@ -24,7 +24,7 @@ const Catalogo = () => {
       try {
         const response = await produtoService.findAll();
         setProdutos(response.data);
-        console.log(response)
+        console.log(response.data)
       } catch (error) {
         setError("Erro ao carregar os produtos." + error);
       } finally {
