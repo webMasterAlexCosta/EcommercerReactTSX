@@ -1,11 +1,11 @@
 import { storageCarrinho } from "../utils/system";
 import * as produtoRepository from "../repository/ProdutoRepository";
 
-const findAll = async (page?:number) => {
+const findAll = async (page?: number) => {
   try {
     return produtoRepository.findAll(page);
   } catch (error) {
-    console.log(error);
+    console.error(error);
     throw error;
   }
 };
@@ -14,7 +14,16 @@ const findById = async (id: number) => {
   try {
     return produtoRepository.findById(id);
   } catch (error) {
-    console.log(error);
+    console.error(error);
+    throw error;
+  }
+};
+
+const findByRequest = async (item: string) => {
+  try {
+    return produtoRepository.findByRequest(item);
+  } catch (error) {
+    console.error(error);
     throw error;
   }
 };
@@ -39,4 +48,4 @@ const getLocalStorage=(key:string)=>{
 const setLocalStorage=(key:string , value:string)=>{
   return produtoRepository.setLocalStorage(key,value)
 }
-export { findAll, findById, subTotal,getLocalStorage ,setLocalStorage};
+export { findAll, findById, findByRequest,subTotal,getLocalStorage ,setLocalStorage};

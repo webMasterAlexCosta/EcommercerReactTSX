@@ -6,7 +6,7 @@ import * as produtoService from "../../../../services/ProdutoService.ts";
 import { ProdutoDTO } from "../../../../models/dto/ProdutosDTO.ts";
 import { storageCarrinho } from "../../../../utils/system.ts";
 import Alert from "../../../../components/UI/Alert"; 
-import { DetalheProduto } from "../../../../components/UI/DetalheProduto.tsx";
+import { DetalheProduto } from "../../../../components/Layout/DetalheProduto.tsx";
 
 const Detalhes = () => {
   const { id } = useParams();

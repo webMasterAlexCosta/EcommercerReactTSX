@@ -1,6 +1,6 @@
 import { ProdutoDTO } from "../../models/dto/ProdutosDTO"
 import { Link } from "react-router-dom";
-import ButtonActions from "../../components/UI/ButtonActions";
+import ButtonActions from "../UI/ButtonActions";
 interface ICard {
     produtos: ProdutoDTO[]
     loading:boolean

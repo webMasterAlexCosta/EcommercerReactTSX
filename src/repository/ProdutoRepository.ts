@@ -5,11 +5,9 @@ const findAll = async (page?: number) => {
   try {
     const url = page !== undefined 
       ? `${BASE_URL_LOCAL}/produtos/paginas?page=${page}&size=8` 
-      : `${BASE_URL_LOCAL}/produtos/lista`; 
+      : `${BASE_URL_LOCAL}/produtos/lista`;
 
-    const listaProduto = await axios.get(url);
-    return listaProduto;
-    
+    return await axios.get(url);
   } catch (error) {
     console.error("Erro ao buscar produtos:", error);
     throw error;
@@ -18,10 +16,22 @@ const findAll = async (page?: number) => {
 
 const findById = async (id: number) => {
   try {
-    const produtoId = await axios.get(`${BASE_URL_LOCAL}/produtos/${id}`);
-    return produtoId;
+    const prod=await axios.get(`${BASE_URL_LOCAL}/produtos/${id}`);
+    console.log(prod)
+    return prod
   } catch (error) {
-    console.log(error);
+    console.error(error);
+    throw error;
+  }
+};
+
+const findByRequest = async (item: string) => {
+  try {
+    const prod = await axios.get(`${BASE_URL_LOCAL}/produtos/buscar?nome=${item}`);
+   console.log(prod)
+    return prod
+  } catch (error) {
+    console.error(error);
     throw error;
   }
 };
@@ -33,4 +43,4 @@ const setLocalStorage = async (key: string, value: string) => {
   return localStorage.setItem(key, value);
 };
 
-export { findAll, findById, getLocalStorage, setLocalStorage };
+export { findAll, findById,findByRequest, getLocalStorage, setLocalStorage };
