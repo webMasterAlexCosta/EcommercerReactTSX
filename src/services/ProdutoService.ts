@@ -1,40 +1,42 @@
-import axios from "axios"
-import { BASE_URL_LOCAL, storageCarrinho } from "../utils/system"
+import { storageCarrinho } from "../utils/system";
+import * as produtoRepository from "../repository/ProdutoRepository";
 
-const findAll = async () => {
-   try{
-    const listaProduto =await axios.get(`${BASE_URL_LOCAL}/produtos/lista`)
-    return listaProduto
-   }catch(error){
-    console.log(error)
-    throw error
-   }
-}
-
-const findById = async (id: number) => {
-    try {
-        const produtoId = await axios.get(`${BASE_URL_LOCAL}/produtos/${id}`);
-        return produtoId
-
-    } catch (error) {
-        console.log(error);
-        throw error;
-
-    }
+const findAll = async (page?:number) => {
+  try {
+    return produtoRepository.findAll(page);
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
 };
 
-const subTotal=(id:number)=>{
-    const prod: string | null = localStorage.getItem(storageCarrinho);
-    if (!prod) {
-        throw new Error("No products found in local storage");
-    }
-    const parsedProd = JSON.parse(prod);
-    const resul = parsedProd.find((item: { id: number }) => item.id == id);
-    if (!resul) {
-        throw new Error("Product not found");
-    }
-    return resul.preco * resul.quantidade;
-    
+const findById = async (id: number) => {
+  try {
+    return produtoRepository.findById(id);
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
+const subTotal = async (id: number) => {
+  const prod: string | null = await produtoRepository.getLocalStorage(storageCarrinho);
+  if (!prod) {
+    throw new Error("No products found in local storage");
+  }
+  const parsedProd = JSON.parse(prod);
+  const resul = parsedProd.find((item: { id: number }) => item.id == id);
+  if (!resul) {
+    throw new Error("Product not found");
+  }
+  return resul.preco * resul.quantidade;
+};
+
+const getLocalStorage=(key:string)=>{
+  return produtoRepository.getLocalStorage(key)
 }
 
-export { findAll, findById, subTotal }
+const setLocalStorage=(key:string , value:string)=>{
+  return produtoRepository.setLocalStorage(key,value)
+}
+export { findAll, findById, subTotal,getLocalStorage ,setLocalStorage};

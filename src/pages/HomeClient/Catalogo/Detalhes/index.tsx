@@ -1,12 +1,12 @@
 import { useParams, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
-import ButtonCategoria from "../../../../components/UI/ButtonCategoria.tsx";
 import ButtonActions from "../../../../components/UI/ButtonActions.tsx";
 import "./styles.css";
-import * as produtoService from "../../../../services/ProdutoService.ts"; // Corrigido o nome do serviço
+import * as produtoService from "../../../../services/ProdutoService.ts";
 import { ProdutoDTO } from "../../../../models/dto/ProdutosDTO.ts";
 import { storageCarrinho } from "../../../../utils/system.ts";
-import Alert from "../../../../components/UI/Alert"; // Componente de alerta
+import Alert from "../../../../components/UI/Alert"; 
+import { DetalheProduto } from "../../../../components/UI/DetalheProduto.tsx";
 
 const Detalhes = () => {
   const { id } = useParams();
@@ -17,35 +17,37 @@ const Detalhes = () => {
   const [alertData, setAlertData] = useState<{ title: string; text: string; icon: "success" | "error" } | null>(null);
 
   useEffect(() => {
-    const fetchProduto = async () => {
+    const buscarProduto = async () => {
       setError("");
       setLoading(true);
 
-      if (id && !isNaN(Number(id))) {
-        try {
-          const response = await produtoService.findById(Number(id));
-          setProdutoAtual(response.data);
-        } catch (err) {
-          console.error("Erro ao carregar o produto:", err);
-          setError("Produto não encontrado!");
-        }
-      } else {
+      if (!id || isNaN(parseInt(id))) {
         setError("ID inválido!");
+        setLoading(false);
+        return;
       }
-
       try {
-        const response = await produtoService.findAll();
-        setProdutos(response.data);
+        // Busca o produto específico
+        const responseProduto = await produtoService.findById(Number(id));
+        if (!responseProduto.data) {
+          setError("Produto não encontrado!");
+        } else {
+          setProdutoAtual(responseProduto.data);
+        }
+        // Busca a lista de produtos para navegação
+        const responseProdutos = await produtoService.findAll();
+        console.log("Lista de produtos carregada:", responseProdutos.data.content);
+        setProdutos(responseProdutos.data || []);
       } catch (err) {
-        console.error("Erro ao carregar os produtos", err);
-        setError("Erro ao carregar produtos.");
+        console.error("Erro ao carregar os dados:", err);
+        setError("Erro ao carregar o produto!");
       } finally {
         setLoading(false);
       }
     };
 
-    fetchProduto();
-  }, [id]);
+    buscarProduto();
+  }, [id]); // Agora a busca será acionada sempre que o ID mudar
 
   if (loading) return <div>Carregando...</div>;
 
@@ -59,20 +61,20 @@ const Detalhes = () => {
       </div>
     );
   }
+  // Lógica para pegar próximo e anterior
+  const currentIndex = produtos.findIndex(produto => produto.id === produtoAtual?.id);
+  const nextProduto = produtos[currentIndex + 1] || null;
+  const lastProduto = produtos[currentIndex - 1] || null;
 
-  const currentIndex = produtos.findIndex(produto => produto.id === produtoAtual.id);
-  const nextProduto = produtos[currentIndex + 1];
-  const lastProduto = produtos[currentIndex - 1];
-
-  const salvaProduto = () => {
-    const carrinhoExistente = JSON.parse(localStorage.getItem(storageCarrinho) || "[]");
+  const salvaProduto = async() => {
+    const carrinhoExistente = JSON.parse(await produtoService.getLocalStorage(storageCarrinho) || "[]");
     const produtoExistente = carrinhoExistente.find((item: ProdutoDTO) => item.id === produtoAtual.id);
 
     if (produtoExistente) {
       setAlertData({ title: "Erro ao adicionar", text: "Produto já está no carrinho!", icon: "error" });
     } else {
       carrinhoExistente.push(produtoAtual);
-      localStorage.setItem(storageCarrinho, JSON.stringify(carrinhoExistente));
+      produtoService.setLocalStorage(storageCarrinho, JSON.stringify(carrinhoExistente));
       setAlertData({ title: "Sucesso", text: "Produto adicionado ao carrinho!", icon: "success" });
     }
   };
@@ -81,21 +83,7 @@ const Detalhes = () => {
     <section id="product-details-section" className="dsc-container">
       {alertData && <Alert {...alertData} onClose={() => setAlertData(null)} />}
 
-      <div className="dsc-card dsc-mb20">
-        <div className="dsc-product-details-top dsc-line-bottom">
-          <img src={produtoAtual.imgUrl} alt={produtoAtual.nome} />
-        </div>
-        <div className="dsc-product-details-bottom">
-          <h3>{produtoAtual.preco}</h3>
-          <h4>{produtoAtual.nome}</h4>
-          <p>{produtoAtual.descricao}</p>
-          <div className="dsc-category-container">
-            {produtoAtual.categorias.map(categoria => (
-              <ButtonCategoria key={categoria.id} nomeCategoria={categoria.nome} />
-            ))}
-          </div>
-        </div>
-      </div>
+     <DetalheProduto produtoAtual={produtoAtual}/>
 
       <div className="dsc-btn-page-container">
         <ButtonActions nome="Comprar" onNewValue={salvaProduto} className="dsc-btn dsc-btn-blue" />
