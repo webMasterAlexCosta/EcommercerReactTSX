@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import ListaProdutos from "../../../components/Layout/ListaProdutos";
+import ListaProdutos from "../../../components/Layout/ListaProdutosAdmin";
 
 const Listagem = () => {
   return (

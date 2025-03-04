@@ -42,5 +42,8 @@ const getLocalStorage = async (key: string) => {
 const setLocalStorage = async (key: string, value: string) => {
   return localStorage.setItem(key, value);
 };
+const removeLocalStorage=async(key:string)=>{
+  return localStorage.removeItem(key)
+}
 
-export { findAll, findById,findByRequest, getLocalStorage, setLocalStorage };
+export { findAll, findById,findByRequest, getLocalStorage, setLocalStorage,removeLocalStorage };

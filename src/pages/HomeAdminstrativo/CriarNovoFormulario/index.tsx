@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import ProdutoDTO from "../../../models/dto/1";
+// import { useNavigate } from 'react-router-dom';
+// import ProdutoDTO from "../../../models/dto/ProdutosDTO";
 
 
 const CriarNovoProduto = () => {
-  const navigate = useNavigate();
+  //const navigate = useNavigate();
   const [produto, setProduto] = useState({
     nome: '',
     preco: '',
@@ -23,22 +23,22 @@ const CriarNovoProduto = () => {
   };
 
   // Função para salvar o novo produto
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Converte "preco" de string para number para garantir a compatibilidade de tipos
-    const newProduto = {
-      ...produto,
-      preco: Number(produto.preco)
-    };
-    // Aqui você pode adicionar o produto à sua base de dados ou array
-    ProdutoDTO.push({
-      id: ProdutoDTO.length + 1,  // Você pode usar um ID único aqui, de acordo com sua lógica
-      ...newProduto
-    });
+  // const handleSubmit = (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   // Converte "preco" de string para number para garantir a compatibilidade de tipos
+  //   const newProduto = {
+  //     ...produto,
+  //     preco: Number(produto.preco)
+  //   };
+  //   // Aqui você pode adicionar o produto à sua base de dados ou array
+  //   ProdutoDTO.push({
+  //     id: ProdutoDTO.length + 1,  // Você pode usar um ID único aqui, de acordo com sua lógica
+  //     ...newProduto
+  //   });
 
-    // Após salvar o produto, redirecionamos para a listagem de produtos
-    navigate("/Administrativo/Listagem");
-  };
+  //   // Após salvar o produto, redirecionamos para a listagem de produtos
+  //   navigate("/Administrativo/Listagem");
+  // };
 
   return (
     <>
@@ -46,7 +46,7 @@ const CriarNovoProduto = () => {
       <main>
         <section id="product-form-section" className="dsc-container">
           <div className="dsc-product-form-container">
-            <form className="dsc-card dsc-form" onSubmit={handleSubmit}>
+            <form className="dsc-card dsc-form">
               <h2>Criar Novo Produto</h2>
               <div className="dsc-form-controls-container">
                 <div>

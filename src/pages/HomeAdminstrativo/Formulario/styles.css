@@ -32,23 +32,9 @@
   border-collapse: collapse;
 }
 
-.dsc-tb576 {
-  display: table-cell;
-}
 
-.dsc-tb768 {
-  display: table-cell;
-}
 
-.dsc-txt-left {
-  text-align: left;
-}
 
-.dsc-product-listing-image {
-  width: 50px;
-  height: 50px;
-  object-fit: cover;
-}
 
 .dsc-product-listing-btn {
   width: 20px;
@@ -67,13 +53,9 @@
     width: 100%;
   }
 
-  .dsc-tb576 {
-    display: none; /* Esconde a coluna de ID em telas pequenas */
-  }
+  
 
-  .dsc-tb768 {
-    display: none; /* Esconde a coluna de preço em telas muito pequenas */
-  }
+ 
 
   .dsc-txt-left {
     text-align: left;
@@ -91,10 +73,7 @@
     display: none; /* Esconde a coluna de ID em telas menores */
   } */
 
-  .dsc-tb768 {
-    display: table-cell; /* Mostra a coluna de preço em telas médias */
-  }
-
+ 
   .dsc-product-listing-btn {
     width: 24px;
     height: 24px;

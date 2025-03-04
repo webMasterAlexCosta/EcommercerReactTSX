@@ -1,18 +1,33 @@
-import ProdutoDTO from "../../models/dto/1"
-import editar from "../../assets/images/edit.svg";
-import deletar from "../../assets/images/delete.svg";
+import "../../../pages/HomeAdminstrativo/Formulario/styles.css"
+import "./styles.css"
+import editar from "../../../assets/images/edit.svg";
+import deletar from "../../../assets/images/delete.svg";
+import * as produtoService from "../../../services/ProdutoService"
+import { useEffect, useState } from "react";
+import { ProdutoDTO } from "../../../models/dto/ProdutosDTO";
 import { Link } from "react-router-dom";
 
 const ListaProdutos = () => {
+    const [produto, setProduto] = useState<ProdutoDTO[]>([])
+    
+
+
+    useEffect(()=>{
+        const buscarProduto=async()=>{
+          const prod=await  produtoService.findAll();
+          return prod
+        }
+        buscarProduto().then(prod => setProduto(prod.data))
+    },[])
     return (
         <>
-            {ProdutoDTO.map((produto) => (
+            {produto.map((produto) => (
                 <tr key={produto.id}>
                     <td className="dsc-tb576">{produto.id}</td>
                     <td>
                         <img
                             className="dsc-product-listing-image"
-                            src={produto.imagem}
+                            src={produto.imgUrl}
                             alt="Produto"
                         />
                     </td>
@@ -35,7 +50,7 @@ const ListaProdutos = () => {
                         />
                     </td>
                 </tr>
-            ))}
+            ))} 
         </>
     );
 };

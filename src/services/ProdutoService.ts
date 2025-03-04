@@ -48,4 +48,12 @@ const getLocalStorage=(key:string)=>{
 const setLocalStorage=(key:string , value:string)=>{
   return produtoRepository.setLocalStorage(key,value)
 }
-export { findAll, findById, findByRequest,subTotal,getLocalStorage ,setLocalStorage};
+
+const removeLocalStorage = (key:string)=>{
+  return produtoRepository.removeLocalStorage(key)
+}
+export { findAll, findById, findByRequest,subTotal,getLocalStorage ,setLocalStorage,removeLocalStorage};
+    export function updateProduto(updatedProduto: ProdutoDTO) {
+        throw new Error("Function not implemented.");
+    }
+

@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react';
 import Alert from '../../../components/UI/Alert';
 import { storageCarrinho } from '../../../utils/system';
 import { Link } from 'react-router-dom';
+import * as produtoService from "../../../services/ProdutoService"
 
 const Carrinho = () => {
   const { produtos, loading, handleQuantityChange, setProdutos } = useCarrinho(); // Verifique se o hook retorna setProdutos
@@ -21,7 +22,7 @@ const Carrinho = () => {
   const limparCarrinho = () => {
     setAlertData({ title: "Limpeza Carrinho", text: "Carrinho foi limpo", icon: "success" });
     setTimeout((()=>{
-      localStorage.removeItem(storageCarrinho); // Limpa apenas os produtos, sem apagar todo o localStorage
+     produtoService.removeLocalStorage(storageCarrinho) ; // Limpa apenas os produtos, sem apagar todo o localStorage
     setProdutos([]); // Atualiza o estado do carrinho para refletir a remoção
    
     }), 2000)
