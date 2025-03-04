@@ -1,7 +1,7 @@
 import './Styles.css'
-import cart from '../../../assets/images/cart.svg';
 import { NavLink } from "react-router-dom";
-
+import { CartIcon } from "../../UI/CartIcon"
+import { Link } from 'react-router-dom';
 const HeaderClient = () => {
   const isAdmin = true;
   const isCliente = true;
@@ -31,9 +31,14 @@ const HeaderClient = () => {
 
           <div className="dsc-navbar-right">
             <div className="dsc-menu-items-container">
+            <Link to="/carrinho">
               <div className="dsc-menu-item">
-                <img src={cart} alt="Carrinho de compras" />
-              </div>
+               
+                  <CartIcon />
+                  </div>
+                </Link>
+
+              
             </div>
             <NavLink style={getIsActive} to="/entrar">Entrar</NavLink>
           </div>

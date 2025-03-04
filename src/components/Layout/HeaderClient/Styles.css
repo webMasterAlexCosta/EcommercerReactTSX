@@ -41,3 +41,19 @@ nav a:hover {
   align-items: center;
   gap: 15px; /* Espaçamento entre os elementos */
 }
+.number{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--dsc-color-notification);
+  color: var(--dsc-color-font-tertiary);
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  position: relative;
+  padding-left: -10px;
+  top: -10px;
+  left: -10px;
+  font-size: 10px;
+  
+}

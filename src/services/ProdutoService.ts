@@ -1,5 +1,6 @@
-import { storageCarrinho } from "../utils/system";
+import { BASE_URL_LOCAL, storageCarrinho } from "../utils/system";
 import * as produtoRepository from "../repository/ProdutoRepository";
+import axios, { AxiosRequestConfig } from "axios";
 
 const findAll = async (page?: number) => {
   try {
@@ -9,6 +10,22 @@ const findAll = async (page?: number) => {
     throw error;
   }
 };
+//posso usar esse serviço tambem
+const findPageRequest=(pagina:number, nome:string,tamanho = 8,sort="nome")=>{
+    const config : AxiosRequestConfig = {
+      method:"GET",
+      baseURL : BASE_URL_LOCAL,
+      url: "/produtos/paginas",
+      params:{
+        page : pagina,
+        name : nome,
+        size : tamanho,
+        sort : sort
+      }
+    }
+    return axios(config)
+}
+
 
 const findById = async (id: number) => {
   try {
@@ -41,19 +58,10 @@ const subTotal = async (id: number) => {
   return resul.preco * resul.quantidade;
 };
 
-const getLocalStorage=(key:string)=>{
-  return produtoRepository.getLocalStorage(key)
-}
 
-const setLocalStorage=(key:string , value:string)=>{
-  return produtoRepository.setLocalStorage(key,value)
-}
 
-const removeLocalStorage = (key:string)=>{
-  return produtoRepository.removeLocalStorage(key)
-}
-export { findAll, findById, findByRequest,subTotal,getLocalStorage ,setLocalStorage,removeLocalStorage};
-    export function updateProduto(updatedProduto: ProdutoDTO) {
-        throw new Error("Function not implemented.");
-    }
+
+
+export { findAll, findById, findByRequest,subTotal,findPageRequest};
+    
 

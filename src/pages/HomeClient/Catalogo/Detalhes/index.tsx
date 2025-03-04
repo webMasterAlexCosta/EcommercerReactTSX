@@ -1,12 +1,14 @@
 import { useParams, Link } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import ButtonActions from "../../../../components/UI/ButtonActions.tsx";
 import "./styles.css";
 import * as produtoService from "../../../../services/ProdutoService.ts";
+import * as carinhoService from "../../../../services/CarrinhoService.ts";
 import { ProdutoDTO } from "../../../../models/dto/ProdutosDTO.ts";
 import { storageCarrinho } from "../../../../utils/system.ts";
 import Alert from "../../../../components/UI/Alert"; 
 import { DetalheProduto } from "../../../../components/Layout/DetalheProduto.tsx";
+import ContextCartCount from "../../../../data/CartCountContext.ts";
 
 const Detalhes = () => {
   const { id } = useParams();
@@ -15,6 +17,8 @@ const Detalhes = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string>("");
   const [alertData, setAlertData] = useState<{ title: string; text: string; icon: "success" | "error" } | null>(null);
+
+const { setContextCartCount} = useContext(ContextCartCount)
 
   useEffect(() => {
     const buscarProduto = async () => {
@@ -67,15 +71,17 @@ const Detalhes = () => {
   const lastProduto = produtos[currentIndex - 1] || null;
 
   const salvaProduto = async() => {
-    const carrinhoExistente = JSON.parse(await produtoService.getLocalStorage(storageCarrinho) || "[]");
+    const carrinhoExistente = JSON.parse( carinhoService.getCarrinho() || "[]");
     const produtoExistente = carrinhoExistente.find((item: ProdutoDTO) => item.id === produtoAtual.id);
 
     if (produtoExistente) {
       setAlertData({ title: "Erro ao adicionar", text: "Produto já está no carrinho!", icon: "error" });
     } else {
       carrinhoExistente.push(produtoAtual);
-      produtoService.setLocalStorage(storageCarrinho, JSON.stringify(carrinhoExistente));
+      carinhoService.setCarrinho(storageCarrinho, JSON.stringify(carrinhoExistente));
       setAlertData({ title: "Sucesso", text: "Produto adicionado ao carrinho!", icon: "success" });
+      const newCart = JSON.parse(carinhoService.getCarrinho() || "[]");
+      setContextCartCount(newCart.reduce((total: number, item: ProdutoDTO) => total + item.quantidade,0));
     }
   };
 

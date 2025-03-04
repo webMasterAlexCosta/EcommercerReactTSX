@@ -1,14 +1,17 @@
 import './styles.css';
 import useCarrinho from '../../../hooks/useCarrinho'; // Certifique-se de apontar para o caminho correto do seu hook
-import { useMemo, useState } from 'react';
+import { useContext, useMemo, useState } from 'react';
 import Alert from '../../../components/UI/Alert';
 import { storageCarrinho } from '../../../utils/system';
 import { Link } from 'react-router-dom';
-import * as produtoService from "../../../services/ProdutoService"
+import * as carrinhoService from "../../../services/CarrinhoService"
+import ContextCartCount from '../../../data/CartCountContext';
+import { ProdutoDTO } from '../../../models/dto/ProdutosDTO';
 
 const Carrinho = () => {
-  const { produtos, loading, handleQuantityChange, setProdutos } = useCarrinho(); // Verifique se o hook retorna setProdutos
+  const { produtos, loading, handleQuantityChange, cartIconNumber, setProdutos } = useCarrinho(); // Verifique se o hook retorna setProdutos
   const [alertData, setAlertData] = useState<{ title: string; text: string; icon: "success" | "error" } | null>(null);
+  const { setContextCartCount } = useContext(ContextCartCount);
 
   // Memoizando os subtotais para cada item do carrinho
   const subtotais = useMemo(() => produtos.map((item) => item.preco * item.quantidade), [produtos]);
@@ -21,11 +24,12 @@ const Carrinho = () => {
 
   const limparCarrinho = () => {
     setAlertData({ title: "Limpeza Carrinho", text: "Carrinho foi limpo", icon: "success" });
-    setTimeout((()=>{
-     produtoService.removeLocalStorage(storageCarrinho) ; // Limpa apenas os produtos, sem apagar todo o localStorage
-    setProdutos([]); // Atualiza o estado do carrinho para refletir a remoção
-   
-    }), 2000)
+    setTimeout(() => {
+      carrinhoService.removeCarirnho(storageCarrinho); // Limpa apenas os produtos, sem apagar todo o localStorage
+      setProdutos([]); // Atualiza o estado do carrinho para refletir a remoção
+      const newCart = JSON.parse(carrinhoService.getCarrinho() || "[]");
+      setContextCartCount(newCart.reduce((total: number, item: ProdutoDTO) => total + item.quantidade, 0));
+    }, 2000);
   };
 
   return (
@@ -54,11 +58,11 @@ const Carrinho = () => {
                   <div className="dsc-cart-item-description">
                     <h3>{item.nome}</h3>
                     <div className="dsc-cart-item-quantity-container">
-                      <button className="dsc-cart-item-quantity-btn" onClick={() => handleQuantityChange(item.id, '-')}>
+                      <button className="dsc-cart-item-quantity-btn" onClick={() => { handleQuantityChange(item.id, '-'); cartIconNumber(); }}>
                         -
                       </button>
                       <p>{item.quantidade}</p>
-                      <button className="dsc-cart-item-quantity-btn" onClick={() => handleQuantityChange(item.id, '+')}>
+                      <button className="dsc-cart-item-quantity-btn" onClick={() => { handleQuantityChange(item.id, '+'); cartIconNumber(); }}>
                         +
                       </button>
                     </div>
@@ -77,7 +81,7 @@ const Carrinho = () => {
           <div className="dsc-btn-page-container">
             <div className="dsc-btn dsc-btn-blue">Finalizar pedido</div>
             <Link to="/Catalogo">
-            <div className="dsc-btn dsc-btn-white" >Continuar comprando</div>
+              <div className="dsc-btn dsc-btn-white">Continuar comprando</div>
             </Link>
             <div className="dsc-btn dsc-btn-white" onClick={limparCarrinho}>
               Limpar Carrinho
