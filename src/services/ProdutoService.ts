@@ -1,6 +1,7 @@
-import { BASE_URL_LOCAL, storageCarrinho } from "../utils/system";
+import {  storageCarrinho } from "../utils/system";
 import * as produtoRepository from "../repository/ProdutoRepository";
-import axios, { AxiosRequestConfig } from "axios";
+import { AxiosRequestConfig } from "axios";
+import requestBackEnd from "../utils/request";
 
 const findAll = async (page?: number) => {
   try {
@@ -14,7 +15,6 @@ const findAll = async (page?: number) => {
 const findPageRequest=(pagina:number, nome:string,tamanho = 8,sort="nome")=>{
     const config : AxiosRequestConfig = {
       method:"GET",
-      baseURL : BASE_URL_LOCAL,
       url: "/produtos/paginas",
       params:{
         page : pagina,
@@ -23,7 +23,7 @@ const findPageRequest=(pagina:number, nome:string,tamanho = 8,sort="nome")=>{
         sort : sort
       }
     }
-    return axios(config)
+    return requestBackEnd(config)
 }
 
 

@@ -12,11 +12,14 @@ import Detalhes from './pages/HomeClient/Catalogo/Detalhes';
 import CriarNovoProduto from './pages/HomeAdminstrativo/CriarNovoFormulario/index';
 import HeaderClient from './components/Layout/HeaderClient';
 import Formulario from './pages/HomeAdminstrativo/Formulario';
+import ContextIsLogin from './data/LoginContext';
+
 
 const App = () => {
   const [contextCartCount, setContextCartCount] = useState<number>(0);
-
+  const [contextIsLogin , setContextIsLogin] = useState<boolean>(false)
   return (
+    <ContextIsLogin.Provider value={{contextIsLogin,setContextIsLogin}}>
     <ContextCartCount.Provider value={{ contextCartCount, setContextCartCount }}>
       <BrowserRouter>
         <div className="app-container">
@@ -42,6 +45,7 @@ const App = () => {
         </div>
       </BrowserRouter>
     </ContextCartCount.Provider>
+    </ContextIsLogin.Provider>
   );
 }
 

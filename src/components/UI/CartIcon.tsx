@@ -5,7 +5,7 @@ import { useContext } from "react";
 import ContextCartCount from "../../data/CartCountContext";
 
 const CartIcon = () => {
-    const { contextCartCount} = useContext(ContextCartCount)
+    const { contextCartCount } = useContext(ContextCartCount)
 
 
     console.log(contextCartCount)
@@ -13,8 +13,10 @@ const CartIcon = () => {
     return (
         <>
             <img src={cart} alt="Carrinho de compras" />
-            <div className="number">{contextCartCount}
-            </div>
+            {contextCartCount > 0 && (
+                <div className="number">{contextCartCount}
+                </div>
+            )}
         </>
     )
 }
