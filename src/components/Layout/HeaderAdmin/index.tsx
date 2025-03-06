@@ -5,6 +5,8 @@ import { NavLink} from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { UserDTO } from '../../../models/dto/UserDTO';
 import * as userServices from "../../../services/UserServices"
+import { Link } from 'react-router-dom';
+import * as credenciaisServices from "../../../services/CredenciasiService"
 const HeaderAdmin = () => {
   const getIsActive=({isActive}:{isActive:boolean})=>
     isActive  ? {color:"red"} : {color:"black"};
@@ -22,6 +24,12 @@ const HeaderAdmin = () => {
       };
       fetchUser();
     }, [setUsuario]);
+
+    const handlerClick = ()=>{
+     return credenciaisServices.logout()
+
+
+      }
     return (
         <>
         <header className="dsc-header-admin">
@@ -43,7 +51,9 @@ const HeaderAdmin = () => {
             </div>
             <div className="dsc-logged-user">
               <p>{usuario?.nome}</p>
-              <a href="#">Sair</a>
+             <Link to="/catalogo" onClick={handlerClick }>
+             Sair
+             </Link>
             </div>
           </div>
         </nav>
