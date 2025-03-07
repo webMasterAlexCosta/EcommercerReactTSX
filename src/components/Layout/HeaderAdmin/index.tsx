@@ -2,28 +2,18 @@ import './Styles.css';
 import homeImg from '../../../assets/images/home.svg';
 import produtosImg from '../../../assets/images/products.svg';
 import { NavLink} from 'react-router-dom';
-import { useEffect, useState } from 'react';
-import { UserDTO } from '../../../models/dto/UserDTO';
-import * as userServices from "../../../services/UserServices"
 import { Link } from 'react-router-dom';
 import * as credenciaisServices from "../../../services/CredenciasiService"
-const HeaderAdmin = () => {
+
+
+interface HeaderAdminProps{
+  user:string |undefined
+}
+
+const HeaderAdmin = ({user}:HeaderAdminProps) => {
   const getIsActive=({isActive}:{isActive:boolean})=>
     isActive  ? {color:"red"} : {color:"black"};
-    const [usuario,setUsuario]=useState<UserDTO>()
-
-    useEffect(() => {
-      const fetchUser = async () => {
-      try {
-        const response = await userServices.findMe();
-        console.log(response.data);
-        setUsuario(response.data);
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-      }
-      };
-      fetchUser();
-    }, [setUsuario]);
+   
 
     const handlerClick = ()=>{
      return credenciaisServices.logout()
@@ -34,7 +24,7 @@ const HeaderAdmin = () => {
         <>
         <header className="dsc-header-admin">
         <nav className="dsc-container">
-          <NavLink style={getIsActive} to="/Administrativo/AdminHome"><h1>{usuario?.nome}</h1></NavLink>
+          <NavLink style={getIsActive} to="/Administrativo"><h1>{user}</h1></NavLink>
 
           <div className="dsc-navbar-right">
             <div className="dsc-menu-items-container">
@@ -50,7 +40,7 @@ const HeaderAdmin = () => {
               </div>
             </div>
             <div className="dsc-logged-user">
-              <p>{usuario?.nome}</p>
+              <p>{user}</p>
              <Link to="/catalogo" onClick={handlerClick }>
              Sair
              </Link>

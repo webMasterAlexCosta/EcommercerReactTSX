@@ -8,9 +8,9 @@ const findMe = async () => {
   }
     
     try {
-      const user=await requestBackEnd(config)
-      console.log(user)
-      return user
+      const response=await requestBackEnd(config)
+      
+      return response
     } catch (error) {
       console.error(error);
       throw error;

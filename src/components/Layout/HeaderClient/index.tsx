@@ -37,7 +37,7 @@ const HeaderClient = () => {
         <NavLink style={getIsActive} to="/Catalogo">Catalogo</NavLink>
 
         {!contextIsLogin && <NavLink style={getIsActive} to="/Login">Login</NavLink>}
-        {isAdmin && <NavLink style={getIsActive} to="/Administrativo/AdminHome">Administrativo</NavLink>}
+        {isAdmin && <NavLink style={getIsActive} to="/Administrativo">Administrativo</NavLink>}
 
         <div className="dsc-navbar-right">
           <NavLink to="/carrinho">
