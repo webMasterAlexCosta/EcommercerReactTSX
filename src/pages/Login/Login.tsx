@@ -2,10 +2,12 @@ import { useContext, useState } from "react";
 import { loginRequest } from "../../services/CredenciasiService";
 import "./styles.css";
 import { CredenciaisDTO } from "../../models/dto/CredenciaisDTO";
-import { TOKEN_KEY } from "../../utils/system";
 import { useNavigate } from "react-router-dom";
 import ContextIsLogin from "../../data/LoginContext";
-import * as authService from "../../services/AuthService"
+import * as authService from "../../services/AuthService";
+import Alert from "../../components/UI/Alert";
+import * as crendincialService from "../../services/CredenciasiService";
+import LoginForm from "../../hooks/loginForm"; // Now using LoginForm component
 
 const Login = () => {
   const navigate = useNavigate();
@@ -13,9 +15,10 @@ const Login = () => {
     email: "",
     senha: ""
   });
-  const {setContextIsLogin} = useContext(ContextIsLogin)
-
+  const { setContextIsLogin } = useContext(ContextIsLogin);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [alertData, setAlertData] = useState<{ title: string; text: string; icon: "success" | "error" | "warning" | "info"; } | null>(null);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const name = event.target.name;
@@ -25,64 +28,72 @@ const Login = () => {
 
   const handleSubmitLogin = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setIsSubmitted(true); // Marca que o formulário foi enviado
+    setIsSubmitted(true);
+    setLoading(true);
 
-    // Verifica se os campos estão vazios
     if (formData.email && formData.senha) {
       try {
-        const enviar = await loginRequest(formData);
-        //console.log(enviar.data.token);
-        localStorage.setItem(TOKEN_KEY, enviar.data.token);
-        setContextIsLogin(true)
-        console.log(authService.getAccessTokenPayload())
-        navigate("/catalogo")
+        const response = await loginRequest(formData);
+        crendincialService.save(response.data.token);
+        setContextIsLogin(true);
+
+        const payload = authService.getAccessTokenPayload();
+        setLoading(false);
+
+        setAlertData({
+          title: "Login Aceito",
+          text: `Usuário ${payload?.nome} logado com sucesso`,
+          icon: "success"
+        });
       } catch (error) {
-        throw new Error(error instanceof Error ? error.message : "erro desconhecido");
+        console.error("Erro no login:", error);
+        setLoading(false);
+
+        setAlertData({
+          title: "Erro",
+          text: "Falha no login. Verifique seus dados.",
+          icon: "error"
+        });
       }
+    } else {
+      setLoading(false);
     }
+  };
+
+  const handleAlertClose = () => {
+    if (alertData?.icon === "success") {
+      navigate("/catalogo");
+    } else {
+      navigate("/login");
+    }
+    setAlertData(null);
   };
 
   return (
     <section id="login-section" className="dsc-container">
-      <div className="dsc-login-form-container">
-        <form className="dsc-card dsc-form" onSubmit={handleSubmitLogin}>
-          <h2>Login</h2>
-          <div className="dsc-form-controls-container">
-            <div>
-              <input
-                name="email"
-                value={formData.email}
-                onChange={handleInputChange}
-                className={`dsc-form-control ${isSubmitted && !formData.email ? "dsc-input-error" : ""}`}
-                type="text"
-                placeholder="Email"
-              />
-              {isSubmitted && !formData.email && (
-                <div className="dsc-form-error">Campo obrigatório</div>
-              )}
-            </div>
-            <div>
-              <input
-                name="senha"
-                value={formData.senha}
-                onChange={handleInputChange}
-                className={`dsc-form-control ${isSubmitted && !formData.senha ? "dsc-input-error" : ""}`}
-                type="password"
-                placeholder="Senha"
-              />
-              {isSubmitted && !formData.senha && (
-                <div className="dsc-form-error">Campo obrigatório</div>
-              )}
-            </div>
-          </div>
+      {loading ? (
+        <div className="loading-container">
+          <div className="loading-spinner"></div>
+          <p>Carregando...</p>
+        </div>
+      ) : (
+        <LoginForm
+          onSubmit={handleSubmitLogin}
+          onChange={handleInputChange}
+          formData={formData}
+          isSubmitted={isSubmitted}
+          loading={loading}
+        />
+      )}
 
-          <div className="dsc-login-form-buttons dsc-mt20">
-            <button type="submit" className="dsc-btn dsc-btn-blue">
-              Entrar
-            </button>
-          </div>
-        </form>
-      </div>
+      {alertData && (
+        <Alert
+          title={alertData.title}
+          text={alertData.text}
+          icon={alertData.icon}
+          onClose={handleAlertClose}
+        />
+      )}
     </section>
   );
 };
