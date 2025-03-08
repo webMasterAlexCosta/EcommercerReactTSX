@@ -17,15 +17,13 @@ const HeaderAdmin = ({user}:HeaderAdminProps) => {
 
     const handlerClick = ()=>{
      return credenciaisServices.logout()
-
-
       }
     return (
         <>
         <header className="dsc-header-admin">
         <nav className="dsc-container">
           <NavLink style={getIsActive} to="/Administrativo"><h1>{user}</h1></NavLink>
-
+          
           <div className="dsc-navbar-right">
             <div className="dsc-menu-items-container">
               <div className="dsc-menu-item">

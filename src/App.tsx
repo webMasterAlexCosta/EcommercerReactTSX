@@ -13,7 +13,8 @@ import HeaderClient from './components/Layout/HeaderClient';
 import Formulario from './pages/HomeAdminstrativo/Formulario';
 import ContextIsLogin from './data/LoginContext';
 
-import { history } from './utils/history';  // Importando o history configurado
+import { history } from './utils/history';
+import { PrivateRoute } from './components/Private/Router';
 
 const App = () => {
   const [contextCartCount, setContextCartCount] = useState<number>(0);
@@ -22,10 +23,9 @@ const App = () => {
   return (
     <ContextIsLogin.Provider value={{ contextIsLogin, setContextIsLogin }}>
       <ContextCartCount.Provider value={{ contextCartCount, setContextCartCount }}>
-        <HistoryRouter history={history}> {/* Agora com HistoryRouter */}
+        <HistoryRouter history={history}>
           <div className="app-container">
             <Routes>
-              {/* Rota principal com o HeaderClient */}
               <Route path="/" element={<><HeaderClient /><Outlet /></>}>
                 <Route path="Carrinho" element={<Carrinho />} />
                 <Route path="Catalogo" element={<Catalogo />}>
@@ -36,10 +36,11 @@ const App = () => {
               </Route>
 
               {/* Rotas administrativas */}
-              <Route path="/Administrativo" element={<Adminstrativo />}>
-                <Route path="Listagem" element={<Listagem />} />
-                <Route path="Formulario/:id" element={<Formulario />} />
-                <Route path="CriarNovoProduto/:id" element={<CriarNovoProduto />} />
+
+              <Route path="/Administrativo" element={<PrivateRoute> <Adminstrativo /> </PrivateRoute>}>
+                <Route path="Listagem" element={<PrivateRoute><Listagem /></PrivateRoute>} />
+                <Route path="Formulario/:id" element={<PrivateRoute><Formulario /></PrivateRoute>} />
+                <Route path="CriarNovoProduto/:id" element={<PrivateRoute><CriarNovoProduto /></PrivateRoute>} />
               </Route>
             </Routes>
           </div>

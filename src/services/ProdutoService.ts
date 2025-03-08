@@ -2,6 +2,7 @@ import {  storageCarrinho } from "../utils/system";
 import * as produtoRepository from "../repository/ProdutoRepository";
 import { AxiosRequestConfig } from "axios";
 import requestBackEnd from "../utils/request";
+import { ProdutoDTO } from "../models/dto/ProdutosDTO";
 
 const findAll = async (page?: number) => {
   try {
@@ -57,11 +58,25 @@ const subTotal = async (id: number) => {
   }
   return resul.preco * resul.quantidade;
 };
+async function updateProduto(updatedProduto: ProdutoDTO) {
+  try {
+    const config: AxiosRequestConfig = {
+      method: "PUT",
+      url: `/produtos/${updatedProduto.id}`,
+      data: updatedProduto
+    };
+    return await requestBackEnd(config);
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
 
 
 
 
-
-export { findAll, findById, findByRequest,subTotal,findPageRequest};
+export { findAll, findById, findByRequest,subTotal,findPageRequest ,updateProduto};
     
 
+
+    

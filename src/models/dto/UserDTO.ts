@@ -1,12 +1,12 @@
 export interface EnderecoDTO {
     id: number;
-    logradouro: string;
-    cep: string;
-    numero: number;
-    cidade: string;
-    bairro: string;
-    complemento: string;
     uf: string;
+    cidade: string;
+    complemento: string;
+    numero: number;
+    logradouro: string;
+    bairro: string;
+    cep: string;
   }
   
   export interface UserDTO {

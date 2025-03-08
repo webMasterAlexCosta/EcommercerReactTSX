@@ -5,6 +5,7 @@ import { CredenciaisDTO } from "../../models/dto/CredenciaisDTO";
 import { TOKEN_KEY } from "../../utils/system";
 import { useNavigate } from "react-router-dom";
 import ContextIsLogin from "../../data/LoginContext";
+import * as authService from "../../services/AuthService"
 
 const Login = () => {
   const navigate = useNavigate();
@@ -30,9 +31,10 @@ const Login = () => {
     if (formData.email && formData.senha) {
       try {
         const enviar = await loginRequest(formData);
-        console.log(enviar.data.token);
+        //console.log(enviar.data.token);
         localStorage.setItem(TOKEN_KEY, enviar.data.token);
         setContextIsLogin(true)
+        console.log(authService.getAccessTokenPayload())
         navigate("/catalogo")
       } catch (error) {
         throw new Error(error instanceof Error ? error.message : "erro desconhecido");

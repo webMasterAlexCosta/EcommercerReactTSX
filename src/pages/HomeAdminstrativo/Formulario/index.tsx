@@ -63,7 +63,7 @@ const Formulario = () => {
         };
 
         try {
-            await produtoService.updateProduto(updatedProduto);
+             produtoService.updateProduto(updatedProduto);
             navigate("/Administrativo/AdminHome/Listagem");
         } catch (error) {
             console.error("Erro ao atualizar produto:", error);

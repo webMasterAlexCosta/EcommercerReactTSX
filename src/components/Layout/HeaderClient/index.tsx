@@ -5,6 +5,7 @@ import { useContext, useEffect } from 'react';
 import ContextIsLogin from '../../../data/LoginContext';
 import { TOKEN_KEY } from '../../../utils/system';
 import * as credencialServices from "../../../services/CredenciasiService"
+import * as authService from "../../../services/AuthService"
 const HeaderClient = () => {
   const { contextIsLogin, setContextIsLogin } = useContext(ContextIsLogin);
   const isAdmin = true; // Mantém para o controle de admin
@@ -32,7 +33,7 @@ const HeaderClient = () => {
   return (
     <header className="dsc-header-client">
       <nav className="dsc-container">
-        <NavLink style={getIsActive} to="/">Alex Costa</NavLink>
+        <NavLink style={getIsActive} to="/">{authService.getAccessTokenPayload()?.nome}</NavLink>
         <NavLink style={getIsActive} to="/Carrinho">Carrinho</NavLink>
         <NavLink style={getIsActive} to="/Catalogo">Catalogo</NavLink>
 
