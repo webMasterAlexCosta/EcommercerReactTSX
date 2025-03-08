@@ -42,7 +42,7 @@ const findByRequest = async (item: string) => {
     return produtoRepository.findByRequest(item);
   } catch (error) {
     console.error(error);
-    throw error;
+    throw error
   }
 };
 
@@ -62,7 +62,7 @@ async function updateProduto(updatedProduto: ProdutoDTO) {
   try {
     const config: AxiosRequestConfig = {
       method: "PUT",
-      url: `/produtos/${updatedProduto.id}`,
+      url: `/produtos/${updatedProduto.id}/atualizar`,
       data: updatedProduto
     };
     return await requestBackEnd(config);
