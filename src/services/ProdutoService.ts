@@ -1,4 +1,4 @@
-import {  storageCarrinho } from "../utils/system";
+import { storageCarrinho } from "../utils/system";
 import * as produtoRepository from "../repository/ProdutoRepository";
 import { AxiosRequestConfig } from "axios";
 import requestBackEnd from "../utils/request";
@@ -13,20 +13,24 @@ const findAll = async (page?: number) => {
   }
 };
 //posso usar esse serviço tambem
-const findPageRequest=(pagina:number, nome:string,tamanho = 8,sort="nome")=>{
-    const config : AxiosRequestConfig = {
-      method:"GET",
-      url: "/produtos/paginas",
-      params:{
-        page : pagina,
-        name : nome,
-        size : tamanho,
-        sort : sort
-      }
-    }
-    return requestBackEnd(config)
-}
-
+const findPageRequest = (
+  pagina: number,
+  nome: string,
+  tamanho = 8,
+  sort = "nome"
+) => {
+  const config: AxiosRequestConfig = {
+    method: "GET",
+    url: "/produtos/paginas",
+    params: {
+      page: pagina,
+      name: nome,
+      size: tamanho,
+      sort: sort,
+    },
+  };
+  return requestBackEnd(config);
+};
 
 const findById = async (id: number) => {
   try {
@@ -42,12 +46,14 @@ const findByRequest = async (item: string) => {
     return produtoRepository.findByRequest(item);
   } catch (error) {
     console.error(error);
-    throw error
+    throw error;
   }
 };
 
 const subTotal = async (id: number) => {
-  const prod: string | null = await produtoRepository.getLocalStorage(storageCarrinho);
+  const prod: string | null = await produtoRepository.getLocalStorage(
+    storageCarrinho
+  );
   if (!prod) {
     throw new Error("No products found in local storage");
   }
@@ -58,25 +64,15 @@ const subTotal = async (id: number) => {
   }
   return resul.preco * resul.quantidade;
 };
-async function updateProduto(updatedProduto: ProdutoDTO) {
-  try {
-    const config: AxiosRequestConfig = {
-      method: "PUT",
-      url: `/produtos/${updatedProduto.id}/atualizar`,
-      data: updatedProduto
-    };
-    return await requestBackEnd(config);
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
+async function updateProduto(produto: ProdutoDTO) {
+  return produtoRepository.updatedProduto(produto);
 }
 
-
-
-
-export { findAll, findById, findByRequest,subTotal,findPageRequest ,updateProduto};
-    
-
-
-    
+export {
+  findAll,
+  findById,
+  findByRequest,
+  subTotal,
+  findPageRequest,
+  updateProduto,
+};

@@ -15,7 +15,7 @@ const useCarrinho = () => {
   };
 
   useEffect(() => {
-    setTimeout(() => { 
+    
       const produtosNoCarrinho = localStorage.getItem(storageCarrinho);
 
       if (produtosNoCarrinho) {
@@ -28,7 +28,7 @@ const useCarrinho = () => {
       }
 
       setLoading(false);
-    }, (Math.random() * 1000)); 
+    
   }, []); 
 
   const updateCarrinho = (updatedProdutos: ProdutoDTO[]) => {
@@ -68,7 +68,8 @@ const useCarrinho = () => {
     loading,  
     handleQuantityChange,
     setProdutos,
-    cartIconNumber
+    cartIconNumber,
+    setLoading
   };
 };
 

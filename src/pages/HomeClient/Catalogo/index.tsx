@@ -5,21 +5,20 @@ import * as produtoService from "../../../services/ProdutoService";
 import { ProdutoDTO } from "../../../models/dto/ProdutosDTO";
 import { CardProduto } from "../../../components/Layout/CardProduto";
 import { BarraBuscar } from "../../../components/Layout/BarraBuscar";
+import useCarrinho from "../../../hooks/useCarrinho";
 
 const Catalogo = () => {
   const [produtos, setProdutos] = useState<ProdutoDTO[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
+//const [montando, setMontando] = useState<boolean>(false);
   const [page, setPage] = useState<number>(0);
   const [searchName, setSearchName] = useState<string>(""); 
   const location = useLocation();
-
+  const {loading,setLoading} = useCarrinho()
   const isDetailsPage = location.pathname.includes("/Catalogo/Detalhes");
 
   useEffect(() => {
     const buscarProdutos = async () => {
       setLoading(true);
-      setError(null);
       try {
         let response;
         if (searchName) {
@@ -38,14 +37,14 @@ const Catalogo = () => {
         );
       } catch (error) {
         console.error("Erro na busca:", error);
-        setError("Erro ao carregar os produtos.");
+       
       } finally {
         setLoading(false);
       }
     };
 
     buscarProdutos();
-  }, [page, searchName]); 
+  }, [page, searchName, setLoading]); 
 
   if (isDetailsPage) {
     return <Outlet />;
@@ -58,7 +57,7 @@ const Catalogo = () => {
         setPage(0); // Reseta a página ao buscar
       }} />
 
-      {error && <p className="error-message">{error}</p>}
+      
 
       <CardProduto produtos={produtos} loading={loading} />
 
