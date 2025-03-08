@@ -2,6 +2,7 @@ import "./styles.css";  // Certifique-se de importar o arquivo de estilos
 import { ProdutoDTO } from "../../../models/dto/ProdutosDTO";
 import { Link } from "react-router-dom";
 import ButtonActions from "../../UI/ButtonActions";
+import { CarregandoProdutos } from "../CarregandoProdutos";
 
 interface ICard {
     produtos: ProdutoDTO[];
@@ -36,13 +37,10 @@ const CardProduto = ({ produtos, loading }: ICard) => {
     return (
         <>
             {loading ? (
-                <div className="loading-container">
-                    <div className="loading-spinner"></div>
-                    <p>Carregando seus produtos...</p>
-                </div>
+               <CarregandoProdutos title="Carregando Produtos"/>
             ) : produtos.length === 0 ? (
                 // Quando não houver produtos, mostrar a mensagem de "Nenhum produto encontrado"
-                <p className="nenhum-produto">Nenhum produto encontrado</p>
+                <CarregandoProdutos className="nenhum-produto" title="nenhum produto encontrado"/>
             ) : (
                 // Quando houver produtos, renderizar a lista de produtos com a classe dsc-catalog-cards
                 <div className="dsc-catalog-cards dsc-mb20 dsc-mt20">

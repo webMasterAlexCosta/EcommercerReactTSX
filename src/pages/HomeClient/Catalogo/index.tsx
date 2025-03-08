@@ -15,6 +15,7 @@ const Catalogo = () => {
   const location = useLocation();
   const {loading,setLoading} = useCarrinho()
   const isDetailsPage = location.pathname.includes("/Catalogo/Detalhes");
+  const [carregarMais,setCarregarMais] = useState<string>("Carregar Mais")
 
   useEffect(() => {
     const buscarProdutos = async () => {
@@ -35,9 +36,10 @@ const Catalogo = () => {
         setProdutos((prevProdutos) =>
           page === 0 || searchName ? produtosRecebidos : [...prevProdutos, ...produtosRecebidos]
         );
+        setCarregarMais("Carregar Mais")
       } catch (error) {
         console.error("Erro na busca:", error);
-       
+       setCarregarMais("Ocorreu um erro ao Buscar")
       } finally {
         setLoading(false);
       }
@@ -62,8 +64,8 @@ const Catalogo = () => {
       <CardProduto produtos={produtos} loading={loading} />
 
       {!searchName && ( 
-        <div className="dsc-btn-next-page" onClick={() => setPage((prevPage) => prevPage + 1)}>
-          Carregar mais
+        <div className="dsc-btn-next-page" onClick={() => { setPage((prevPage) => prevPage + 1); setCarregarMais("Aguarde"); }}>
+          {carregarMais}
         </div>
       )}
 

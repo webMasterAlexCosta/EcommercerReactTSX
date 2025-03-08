@@ -1,12 +1,14 @@
 import './styles.css';
 import useCarrinho from '../../../hooks/useCarrinho'; // Certifique-se de apontar para o caminho correto do seu hook
 import { useContext, useMemo, useState } from 'react';
-import Alert from '../../../components/UI/Alert';
 import { storageCarrinho } from '../../../utils/system';
-import { Link } from 'react-router-dom';
 import * as carrinhoService from "../../../services/CarrinhoService"
 import ContextCartCount from '../../../data/CartCountContext';
 import { ProdutoDTO } from '../../../models/dto/ProdutosDTO';
+
+import { ConteudoCarrinho } from '../../../components/Layout/ConteudoCarrinho';
+import { AdicionarProdutos } from '../../../components/Layout/AdicionarProdutos';
+import { CarregandoProdutos } from '../../../components/Layout/CarregandoProdutos';
 
 const Carrinho = () => {
   const { produtos, loading, handleQuantityChange, cartIconNumber, setProdutos } = useCarrinho(); // Verifique se o hook retorna setProdutos
@@ -35,60 +37,19 @@ const Carrinho = () => {
   return (
     <main>
       {loading ? (
-        <div className="loading-container">
-          <div className="loading-spinner"></div>
-          <p>Carregando seus produtos...</p>
-        </div>
+        <CarregandoProdutos title="Carregando Produtos"/>
       ) : produtos.length === 0 ? (
-        <section className="empty-cart">
-          <div className="empty-cart-icon">🛒</div>
-          <h2>Seu carrinho está vazio</h2>
-          <p>Adicione alguns produtos para começar a comprar!</p>
-          <div className="empty-cart-buttons">
-            <button className="dsc-btn dsc-btn-blue">Continuar Comprando</button>
-          </div>
-        </section>
+        <AdicionarProdutos />
       ) : (
-        <section id="cart-container-section" className="dsc-container">
-          <div className="dsc-card dsc-mb20">
-            {produtos.map((item, index) => (
-              <div key={`${item.id}-${index}`} className="dsc-cart-item-container dsc-line-bottom">
-                <div className="dsc-cart-item-left">
-                  <img src={item.imgUrl} alt={item.nome} />
-                  <div className="dsc-cart-item-description">
-                    <h3>{item.nome}</h3>
-                    <div className="dsc-cart-item-quantity-container">
-                      <button className="dsc-cart-item-quantity-btn" onClick={() => { handleQuantityChange(item.id, '-'); cartIconNumber(); }}>
-                        -
-                      </button>
-                      <p>{item.quantidade}</p>
-                      <button className="dsc-cart-item-quantity-btn" onClick={() => { handleQuantityChange(item.id, '+'); cartIconNumber(); }}>
-                        +
-                      </button>
-                    </div>
-                  </div>
-                </div>
-                <div className="dsc-cart-item-right">
-                  <h3>R$ {subtotais[index].toFixed(2).replace('.', ',')}</h3>
-                </div>
-              </div>
-            ))}
-
-            <div className="dsc-cart-total-container">
-              <h3>Total: R$ {totalFormatado} </h3>
-            </div>
-          </div>
-          <div className="dsc-btn-page-container">
-            <div className="dsc-btn dsc-btn-blue">Finalizar pedido</div>
-            <Link to="/Catalogo">
-              <div className="dsc-btn dsc-btn-white">Continuar comprando</div>
-            </Link>
-            <div className="dsc-btn dsc-btn-white" onClick={limparCarrinho}>
-              Limpar Carrinho
-            </div>
-            {alertData && <Alert {...alertData} onClose={() => setAlertData(null)} />}
-          </div>
-        </section>
+        <ConteudoCarrinho handleQuantityChange={handleQuantityChange}
+          limparCarrinho={limparCarrinho}
+          totalFormatado={totalFormatado}
+          cartIconNumber={cartIconNumber}
+          alertData={alertData}
+          setAlertData={setAlertData}
+          produtos={produtos}
+          subtotais={subtotais}
+        />
       )}
     </main>
   );
