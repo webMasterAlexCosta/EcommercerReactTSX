@@ -4,30 +4,38 @@ import { CartIcon } from "../../UI/CartIcon";
 import { useContext, useEffect } from 'react';
 import ContextIsLogin from '../../../data/LoginContext';
 import { TOKEN_KEY } from '../../../utils/system';
-import * as credencialServices from "../../../services/CredenciasiService"
-import * as authService from "../../../services/AuthService"
+import * as credencialServices from "../../../services/CredenciasiService";
+import * as authService from "../../../services/AuthService";
+import IconAdminContext from '../../../data/IconAdminContext';
+
 const HeaderClient = () => {
+
   const { contextIsLogin, setContextIsLogin } = useContext(ContextIsLogin);
-  const isAdmin = true; // Mantém para o controle de admin
+  const { iconAdminContext,setIconAdminContext } = useContext(IconAdminContext);
 
   useEffect(() => {
     const checkLoginStatus = () => {
-      const token = localStorage.getItem(TOKEN_KEY);
+      const token = credencialServices.get(TOKEN_KEY);
+     
+
       setContextIsLogin(!!token); // Define o login com base na presença do token
     };
 
     checkLoginStatus();
+
+    // Ouvinte para o armazenamento local para refletir as mudanças entre diferentes abas
     window.addEventListener('storage', checkLoginStatus);
 
     return () => window.removeEventListener('storage', checkLoginStatus);
-  }, [setContextIsLogin]);
+  }, [setContextIsLogin, iconAdminContext]);
 
-  const getIsActive = ({ isActive } :{isActive:boolean}) => ({ color: isActive ? "red" : "black" });
+  const getIsActive = ({ isActive }: { isActive: boolean }) => ({ color: isActive ? "red" : "black" });
 
   function handleOnclick(event: React.MouseEvent<HTMLAnchorElement, MouseEvent>): void {
     event.preventDefault();
-    credencialServices.logout()
+    credencialServices.logout();
     setContextIsLogin(false);
+    setIconAdminContext(false)
   }
 
   return (
@@ -38,7 +46,12 @@ const HeaderClient = () => {
         <NavLink style={getIsActive} to="/Catalogo">Catalogo</NavLink>
 
         {!contextIsLogin && <NavLink style={getIsActive} to="/Login">Login</NavLink>}
-        {isAdmin && <NavLink style={getIsActive} to="/Administrativo">Administrativo</NavLink>}
+
+        {iconAdminContext && (
+          <NavLink style={getIsActive} to="/Administrativo">
+            <span className="material-icons">settings</span>
+          </NavLink>
+        )}
 
         <div className="dsc-navbar-right">
           <NavLink to="/carrinho">
@@ -46,10 +59,11 @@ const HeaderClient = () => {
               <CartIcon />
             </div>
           </NavLink>
-          {!contextIsLogin 
+          {!contextIsLogin
             ? <NavLink style={getIsActive} to="/login">Entrar</NavLink>
-            : <NavLink style={getIsActive} to="/catalogo" onClick={handleOnclick }>Sair</NavLink>
-          }        </div>
+            : <NavLink style={getIsActive} to="/catalogo" onClick={handleOnclick}>Sair</NavLink>
+          }
+        </div>
       </nav>
     </header>
   );

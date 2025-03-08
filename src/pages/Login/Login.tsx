@@ -8,6 +8,7 @@ import * as authService from "../../services/AuthService";
 import Alert from "../../components/UI/Alert";
 import * as crendincialService from "../../services/CredenciasiService";
 import LoginForm from "../../hooks/loginForm"; // Now using LoginForm component
+import IconAdminContext from "../../data/IconAdminContext";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -16,6 +17,7 @@ const Login = () => {
     senha: ""
   });
   const { setContextIsLogin } = useContext(ContextIsLogin);
+  const {setIconAdminContext} = useContext(IconAdminContext)
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [alertData, setAlertData] = useState<{ title: string; text: string; icon: "success" | "error" | "warning" | "info"; } | null>(null);
@@ -39,7 +41,8 @@ const Login = () => {
 
         const payload = authService.getAccessTokenPayload();
         setLoading(false);
-
+        const perfil = authService.getAccessTokenPayload()?.perfis.includes("ADMIN");
+        setIconAdminContext(perfil ? true : false);
         setAlertData({
           title: "Login Aceito",
           text: `Usuário ${payload?.nome} logado com sucesso`,

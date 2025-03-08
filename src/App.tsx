@@ -12,15 +12,17 @@ import CriarNovoProduto from './pages/HomeAdminstrativo/CriarNovoFormulario/inde
 import HeaderClient from './components/Layout/HeaderClient';
 import Formulario from './pages/HomeAdminstrativo/Formulario';
 import ContextIsLogin from './data/LoginContext';
-
+import IconAdminContext from './data/IconAdminContext'
 import { history } from './utils/history';
 import { PrivateRoute } from './components/Private/Router';
 
 const App = () => {
   const [contextCartCount, setContextCartCount] = useState<number>(0);
   const [contextIsLogin, setContextIsLogin] = useState<boolean>(false);
+  const [iconAdminContext, setIconAdminContext] = useState<string>('');
 
   return (
+    <IconAdminContext.Provider value={{iconAdminContext,setIconAdminContext}}>
     <ContextIsLogin.Provider value={{ contextIsLogin, setContextIsLogin }}>
       <ContextCartCount.Provider value={{ contextCartCount, setContextCartCount }}>
         <HistoryRouter history={history}>
@@ -47,6 +49,7 @@ const App = () => {
         </HistoryRouter>
       </ContextCartCount.Provider>
     </ContextIsLogin.Provider>
+    </IconAdminContext.Provider>
   );
 }
 
