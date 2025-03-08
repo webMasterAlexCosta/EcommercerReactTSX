@@ -1,10 +1,10 @@
 import { createContext } from "react";
 
-interface IIconAdminContext {
+interface IconAdminContext {
     iconAdminContext: boolean;
     setIconAdminContext: (iconAdminContext: boolean) => void;
 }
-const IconAdminContext = createContext<IIconAdminContext>({
+const IconAdminContext = createContext<IconAdminContext>({
     iconAdminContext: false,
   setIconAdminContext: () => {},
 });

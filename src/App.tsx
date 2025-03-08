@@ -19,7 +19,7 @@ import { PrivateRoute } from './components/Private/Router';
 const App = () => {
   const [contextCartCount, setContextCartCount] = useState<number>(0);
   const [contextIsLogin, setContextIsLogin] = useState<boolean>(false);
-  const [iconAdminContext, setIconAdminContext] = useState<string>('');
+  const [iconAdminContext, setIconAdminContext] = useState<boolean>(false);
 
   return (
     <IconAdminContext.Provider value={{iconAdminContext,setIconAdminContext}}>
