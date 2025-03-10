@@ -5,14 +5,48 @@
 
 .dsc-login-form-container {
   width: 100%;
-  max-width: 360px;
+  max-width: 410px;
   margin: 0 auto;
 }
 
 .dsc-login-form-buttons {
   width: 100%;
 }
+.suporte-user {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center; /* Alinha os itens verticalmente */
+  margin-top: 25px; /* Espaço maior acima do elemento */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Fonte moderna */
+}
 
+.suporte-user span {
+  cursor: pointer;
+  color: #3498db; /* Azul claro moderno */
+  font-size: 14px;
+  text-decoration: none; /* Remove sublinhado padrão */
+  transition: all 0.3s ease; /* Transição suave para todos os efeitos */
+  padding: 8px 12px; /* Adiciona um pouco de preenchimento para melhorar o clique */
+  border-radius: 6px; /* Cantos arredondados */
+}
+
+.suporte-user span:hover {
+  background-color: #f0f8ff; /* Fundo azul bem claro ao passar o mouse */
+  color: #2980b9; /* Azul mais escuro no hover */
+  text-decoration: none; /* Sem sublinhado no hover */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+}
+
+/* Estilo adicional para dar um destaque visual */
+.suporte-user span:first-child {
+  border-right: 1px solid #ddd; /* Linha divisória entre as opções */
+  padding-right: 15px; /* Espaçamento extra à direita da primeira opção */
+}
+
+.suporte-user span:last-child {
+  padding-left: 15px; /* Espaçamento extra à esquerda da segunda opção */
+}
 @media (min-width: 576px) {
   #login-section {
     padding: 40px 0;

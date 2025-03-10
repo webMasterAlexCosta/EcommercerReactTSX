@@ -1,53 +1,87 @@
-import React from "react";
+import React, { useState } from "react";
+import LockResetIcon from '@mui/icons-material/LockReset'; // Ícone para redefinir senha
+import PersonAddIcon from '@mui/icons-material/PersonAdd'; // Ícone para criar novo cadastro
+import { LoginSharp } from "@mui/icons-material";
+import RedefinirSenha from "../components/Layout/RedefinirSenha";
 
 interface LoginFormProps {
   onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  formData: { email: string; senha: string };
+  formData: { email: string; senha?: string };
   isSubmitted: boolean;
   loading: boolean;
 }
 
 const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, onChange, formData, isSubmitted, loading }) => {
+  const [resetSenha, setResetSenha] = useState<boolean>(false);
+  const [cadastro, setCadastro] = useState<boolean>(false);
+
   return (
     <div className="dsc-login-form-container">
-      <form className="dsc-card dsc-form" onSubmit={onSubmit}>
-        <h2>Login</h2>
-        <div className="dsc-form-controls-container">
-          <div>
-            <input
-              name="email"
-              value={formData.email}
-              onChange={onChange}
-              className={`dsc-form-control ${isSubmitted && !formData.email ? "dsc-input-error" : ""}`}
-              type="text"
-              placeholder="Email"
-            />
-            {isSubmitted && !formData.email && (
-              <div className="dsc-form-error">Campo obrigatório</div>
-            )}
-          </div>
-          <div>
-            <input
-              name="senha"
-              value={formData.senha}
-              onChange={onChange}
-              className={`dsc-form-control ${isSubmitted && !formData.senha ? "dsc-input-error" : ""}`}
-              type="password"
-              placeholder="Senha"
-            />
-            {isSubmitted && !formData.senha && (
-              <div className="dsc-form-error">Campo obrigatório</div>
-            )}
-          </div>
-        </div>
+      {!resetSenha && !cadastro
+        ?
+        (
+          <form className="dsc-card dsc-form" onSubmit={onSubmit}>
+            <LoginSharp sx={{ fontSize: "24px", color: "#007bff" }} />
 
-        <div className="dsc-login-form-buttons dsc-mt20">
-          <button type="submit" className="dsc-btn dsc-btn-blue" disabled={loading}>
-            Entrar
-          </button>
-        </div>
-      </form>
+            <h2>Login</h2>
+            <div className="dsc-form-controls-container">
+              <div>
+                <input
+                  name="email"
+                  value={formData.email}
+                  onChange={onChange}
+                  className={`dsc-form-control ${isSubmitted && !formData.email ? "dsc-input-error" : ""}`}
+                  type="text"
+                  placeholder="Email"
+                />
+                {isSubmitted && !formData.email && (
+                  <div className="dsc-form-error">Campo obrigatório</div>
+                )}
+              </div>
+              <div>
+                <input
+                  name="senha"
+                  value={formData.senha}
+                  onChange={onChange}
+                  className={`dsc-form-control ${isSubmitted && !formData.senha ? "dsc-input-error" : ""}`}
+                  type="password"
+                  placeholder="Senha"
+                />
+                {isSubmitted && !formData.senha && (
+                  <div className="dsc-form-error">Campo obrigatório</div>
+                )}
+              </div>
+            </div>
+
+            <div className="dsc-login-form-buttons dsc-mt20">
+              <button type="submit" className="dsc-btn dsc-btn-blue" disabled={loading}>
+                Entrar
+              </button>
+            </div>
+            <div className="suporte-user">
+              <span onClick={() => setResetSenha(true)}>
+                <LockResetIcon style={{ fontSize: '18px', marginRight: '8px', color: '#3498db' }} />
+                Redefinir Senha
+              </span>
+              <span onClick={() => setCadastro(true)}>
+                <PersonAddIcon style={{ fontSize: '18px', marginRight: '8px', color: '#3498db' }} />
+                Criar Novo Cadastro
+              </span>
+            </div>
+          </form>
+        )
+        :
+        resetSenha ? (
+          <RedefinirSenha
+            isSubmitted={isSubmitted}
+            loading={loading}
+          />
+        ) : (
+          <div>
+            <h2>Criar Novo Cadastro</h2>
+          </div>
+        )}
     </div>
   );
 };
