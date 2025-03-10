@@ -1,0 +1,65 @@
+import React from 'react';
+import { AdminPanelSettings, Settings, SupervisorAccount, Dashboard } from '@mui/icons-material';
+import { IconButton, Typography, Grid, Paper } from '@mui/material';
+import { NavLink } from 'react-router-dom';
+
+const AdminDashboard = () => {
+  return (
+    <div className="admin-dashboard">
+      <h2>Área Administrativa</h2>
+      
+      {/* Grid para alinhar os ícones em um layout de cards */}
+      <Grid container spacing={3}>
+        {/* Card do Painel Administrativo */}
+        <Grid item xs={12} sm={6} md={4}>
+          <Paper className="admin-card" style={{ padding: '20px', textAlign: 'center' }}>
+            <NavLink to="/admin/painel">
+              <IconButton>
+                <AdminPanelSettings style={{ fontSize: 50, color: '#3f51b5' }} />
+              </IconButton>
+              <Typography variant="h6">Painel Administrativo</Typography>
+            </NavLink>
+          </Paper>
+        </Grid>
+
+        {/* Card de Configurações */}
+        <Grid item xs={12} sm={6} md={4}>
+          <Paper className="admin-card" style={{ padding: '20px', textAlign: 'center' }}>
+            <NavLink to="/admin/configuracoes">
+              <IconButton>
+                <Settings style={{ fontSize: 50, color: '#3f51b5' }} />
+              </IconButton>
+              <Typography variant="h6">Configurações</Typography>
+            </NavLink>
+          </Paper>
+        </Grid>
+
+        {/* Card de Usuários Administradores */}
+        <Grid item xs={12} sm={6} md={4}>
+          <Paper className="admin-card" style={{ padding: '20px', textAlign: 'center' }}>
+            <NavLink to="/admin/usuarios">
+              <IconButton>
+                <SupervisorAccount style={{ fontSize: 50, color: '#3f51b5' }} />
+              </IconButton>
+              <Typography variant="h6">Usuários</Typography>
+            </NavLink>
+          </Paper>
+        </Grid>
+
+        {/* Card do Dashboard */}
+        <Grid item xs={12} sm={6} md={4}>
+          <Paper className="admin-card" style={{ padding: '20px', textAlign: 'center' }}>
+            <NavLink to="/admin/dashboard">
+              <IconButton>
+                <Dashboard style={{ fontSize: 50, color: '#3f51b5' }} />
+              </IconButton>
+              <Typography variant="h6">Dashboard</Typography>
+            </NavLink>
+          </Paper>
+        </Grid>
+      </Grid>
+    </div>
+  );
+};
+
+export default AdminDashboard;

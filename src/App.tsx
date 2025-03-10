@@ -1,6 +1,6 @@
-import { BrowserRouter , Routes, Route, Outlet, Link } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Outlet, Link } from 'react-router-dom';
 import './App.css';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import ContextCartCount from './data/CartCountContext';
 import Carrinho from './pages/HomeClient/Carrinho';
 import Catalogo from './pages/HomeClient/Catalogo';
@@ -15,16 +15,19 @@ import ContextIsLogin from './data/LoginContext';
 import IconAdminContext from './data/IconAdminContext';
 import { PrivateRoute } from './components/Private/Router';
 
+
 const App = () => {
   const [contextCartCount, setContextCartCount] = useState<number>(0);
   const [contextIsLogin, setContextIsLogin] = useState<boolean>(false);
   const [iconAdminContext, setIconAdminContext] = useState<boolean>(false);
 
+  
+
   return (
-    <BrowserRouter> 
-      <IconAdminContext.Provider value={{ iconAdminContext, setIconAdminContext }}>
-        <ContextIsLogin.Provider value={{ contextIsLogin, setContextIsLogin }}>
-          <ContextCartCount.Provider value={{ contextCartCount, setContextCartCount }}>
+    <IconAdminContext.Provider value={{ iconAdminContext, setIconAdminContext }}>
+      <ContextIsLogin.Provider value={{ contextIsLogin, setContextIsLogin }}>
+        <ContextCartCount.Provider value={{ contextCartCount, setContextCartCount }}>
+          <BrowserRouter>
             <div className="app-container">
               <Routes>
                 <Route path="/" element={<><HeaderClient /><Outlet /></>}>
@@ -44,10 +47,10 @@ const App = () => {
                 </Route>
               </Routes>
             </div>
-          </ContextCartCount.Provider>
-        </ContextIsLogin.Provider>
-      </IconAdminContext.Provider>
-    </BrowserRouter> 
+          </BrowserRouter>
+        </ContextCartCount.Provider>
+      </ContextIsLogin.Provider>
+    </IconAdminContext.Provider>
   );
 }
 
