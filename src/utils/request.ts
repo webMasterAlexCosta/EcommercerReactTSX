@@ -1,7 +1,7 @@
 import axios, { AxiosRequestConfig } from "axios";
 import { BASE_URL_LOCAL, TOKEN_KEY } from "./system";
 import * as credentialRespository from "../repository/CredenciaisRepository";
-import { history } from './history';  
+  
 
 const requestBackEnd = (config: AxiosRequestConfig) => {
     const headers = config.withCredentials
@@ -33,12 +33,13 @@ axios.interceptors.response.use(
         if (error.response) {
             if (error.response.status === 401) {
                 
-                history.push("/login"); 
+                window.location.href="/login"; 
+
             }
 
             if (error.response.status === 403) {
                
-                history.push("/catalogo"); 
+                window.location.href="/catalogo"; 
             }
         }
 
