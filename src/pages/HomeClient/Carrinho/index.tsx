@@ -8,7 +8,7 @@ import { ProdutoDTO } from '../../../models/dto/ProdutosDTO';
 
 import { ConteudoCarrinho } from '../../../components/Layout/ConteudoCarrinho';
 import { AdicionarProdutos } from '../../../components/Layout/AdicionarProdutos';
-import { CarregandoProdutos } from '../../../components/Layout/CarregandoProdutos';
+import {Carregando } from '../../../components/UI/Carregando';
 
 const Carrinho = () => {
   const { produtos, loading, handleQuantityChange, cartIconNumber, setProdutos } = useCarrinho(); // Verifique se o hook retorna setProdutos
@@ -37,7 +37,7 @@ const Carrinho = () => {
   return (
     <main>
       {loading ? (
-        <CarregandoProdutos title="Carregando Produtos"/>
+        <Carregando title="Carregando Produtos"/>
       ) : produtos.length === 0 ? (
         <AdicionarProdutos />
       ) : (

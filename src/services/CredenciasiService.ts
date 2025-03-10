@@ -36,7 +36,5 @@ const get = (TOKEN_KEY: string) => {
 
 };
 
-const recuperarSenha = (email: string,cpf:string) => {
-  return credenciaisRepository.recuperarSenha(email,cpf);
-};
-export { loginRequest, logout, save ,get,recuperarSenha};
+
+export { loginRequest, logout, save ,get};

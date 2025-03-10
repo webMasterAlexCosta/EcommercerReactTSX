@@ -1,9 +1,9 @@
-interface ICarregandoProdutos {
+interface ICarregando {
     title: string
     className?: string
 }
 
-const CarregandoProdutos = ({ title, className }: ICarregandoProdutos) => {
+const Carregando = ({ title, className }: ICarregando) => {
     return (
         <>
             {!className ? (
@@ -18,4 +18,4 @@ const CarregandoProdutos = ({ title, className }: ICarregandoProdutos) => {
     )
 }
 
-export { CarregandoProdutos }
+export { Carregando }

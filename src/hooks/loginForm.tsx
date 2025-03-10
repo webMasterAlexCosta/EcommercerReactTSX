@@ -3,6 +3,8 @@ import LockResetIcon from '@mui/icons-material/LockReset'; // Ícone para redefi
 import PersonAddIcon from '@mui/icons-material/PersonAdd'; // Ícone para criar novo cadastro
 import { LoginSharp } from "@mui/icons-material";
 import RedefinirSenha from "../components/Layout/RedefinirSenha";
+import { NovoCadastro } from "../components/Layout/NovoCadastro";
+
 
 interface LoginFormProps {
   onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
@@ -15,6 +17,7 @@ interface LoginFormProps {
 const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, onChange, formData, isSubmitted, loading }) => {
   const [resetSenha, setResetSenha] = useState<boolean>(false);
   const [cadastro, setCadastro] = useState<boolean>(false);
+  
 
   return (
     <div className="dsc-login-form-container">
@@ -74,14 +77,12 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, onChange, formData, isS
         :
         resetSenha ? (
           <RedefinirSenha
-            isSubmitted={isSubmitted}
-            loading={loading}
+          isSubmitted={isSubmitted}
+           
           />
-        ) : (
-          <div>
-            <h2>Criar Novo Cadastro</h2>
-          </div>
-        )}
+        ) : cadastro ? (
+          <NovoCadastro isSubmitted={isSubmitted} />
+        ) : null}
     </div>
   );
 };

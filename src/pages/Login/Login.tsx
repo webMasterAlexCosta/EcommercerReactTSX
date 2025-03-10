@@ -9,6 +9,7 @@ import Alert from "../../components/UI/Alert";
 import * as crendincialService from "../../services/CredenciasiService";
 import LoginForm from "../../hooks/loginForm"; // Now using LoginForm component
 import IconAdminContext from "../../data/IconAdminContext";
+import { Carregando } from "../../components/UI/Carregando";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -75,10 +76,7 @@ const Login = () => {
   return (
     <section id="login-section" className="dsc-container">
       {loading ? (
-        <div className="loading-container">
-          <div className="loading-spinner"></div>
-          <p>Carregando...</p>
-        </div>
+        <Carregando title="Realizando Login" />
       ) : (
         <LoginForm
           onSubmit={handleSubmitLogin}
