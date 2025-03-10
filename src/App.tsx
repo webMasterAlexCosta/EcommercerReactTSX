@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route, Outlet, Link } from 'react-router-dom';
 import './App.css';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import ContextCartCount from './data/CartCountContext';
 import Carrinho from './pages/HomeClient/Carrinho';
 import Catalogo from './pages/HomeClient/Catalogo';
