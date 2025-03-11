@@ -1,7 +1,7 @@
 import './styles.css';
 import useCarrinho from '../../../hooks/useCarrinho'; // Certifique-se de apontar para o caminho correto do seu hook
 import { useContext, useMemo, useState } from 'react';
-import { storageCarrinho } from '../../../utils/system';
+
 import * as carrinhoService from "../../../services/CarrinhoService"
 import ContextCartCount from '../../../data/CartCountContext';
 import { ProdutoDTO } from '../../../models/dto/ProdutosDTO';
@@ -27,7 +27,7 @@ const Carrinho = () => {
   const limparCarrinho = () => {
     setAlertData({ title: "Limpeza Carrinho", text: "Carrinho foi limpo", icon: "success" });
     setTimeout(() => {
-      carrinhoService.removeCarirnho(storageCarrinho); // Limpa apenas os produtos, sem apagar todo o localStorage
+      carrinhoService.removeCarrinho(); // Limpa apenas os produtos, sem apagar todo o localStorage
       setProdutos([]); // Atualiza o estado do carrinho para refletir a remoção
       const newCart = JSON.parse(carrinhoService.getCarrinho() || "[]");
       setContextCartCount(newCart.reduce((total: number, item: ProdutoDTO) => total + item.quantidade, 0));

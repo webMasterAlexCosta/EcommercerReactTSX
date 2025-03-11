@@ -11,24 +11,18 @@ interface CartItem {
 const CartIcon = () => {
   const { contextCartCount, setContextCartCount } = useContext(ContextCartCount);
   
-  // Recupera o carrinho do localStorage e converte de volta para o array
   useEffect(() => {
-    // Recupera o carrinho do localStorage e converte de volta para o array
-    const storedCart = JSON.parse(carrinhoService.getCarrinho() || "[]") || [];
+    const storedCart: CartItem[] = carrinhoService.getCarrinho();
+
+    const totalCount = storedCart.reduce((acc, item) => acc + (item.quantidade || 1), 0);
     
-    // Calcular a quantidade total de itens no carrinho
-    const totalCount: number = storedCart.reduce((acc: number, item: CartItem) => acc + (item.quantidade || 1), 0);
-    
-    // Atualizar o contexto com o total de itens
     setContextCartCount(totalCount);
-  }, [setContextCartCount]); // Recalcula sempre que o carrinho mudar
+  }, [setContextCartCount]);
 
   return (
     <>
-      <img src={cart}width="40px" alt="Carrinho de compras" />
-      {contextCartCount > 0 && (
-        <div className="number">{contextCartCount}</div>
-      )}
+      <img src={cart} width="40px" alt="Carrinho de compras" />
+      {contextCartCount > 0 && <div className="number">{contextCartCount}</div>}
     </>
   );
 };
