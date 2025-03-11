@@ -1,11 +1,12 @@
 interface IFinalizarPedido{
-    title:string
+    title: string;
+    enviar: () => void;
 }
 
-const FinalizarPedido = ({title} : IFinalizarPedido) => {
+const FinalizarPedido = ({title , enviar} : IFinalizarPedido) => {
     return (
         <>
-    <div className="dsc-btn dsc-btn-blue">{title}</div>
+    <div className="dsc-btn dsc-btn-blue" onClick={enviar}>{title}</div>
         </>
     )
 }

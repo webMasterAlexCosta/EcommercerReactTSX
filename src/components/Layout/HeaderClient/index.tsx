@@ -53,24 +53,30 @@ useEffect(()=>{
 
         <NavLink style={getIsActive} to="/">
           <Home style={{ fontSize: 40, color: 'black' }} />
-
+          <h3>Inicio</h3>
 
         </NavLink>
         <NavLink style={getIsActive} to="/catalogo">
           <MenuBook style={{ fontSize: 40, color: 'black' }} />
+          <h3>Catalogo</h3>
         </NavLink>
 
         <div className="dsc-navbar-right">
+        <NavLink style={getIsActive} to="/perfil">
           <AccountCircle style={{ fontSize: 40, color: 'black' }} />
+          <h3>Perfil</h3>
+          </NavLink>
           {/* {authService.getAccessTokenPayload()?.nome} */}
-          <NavLink to="/carrinho">
+          <NavLink to="/carrinho" style={getIsActive}>
             <div className="dsc-menu-item">
               <CartIcon />
             </div>
+            <h3>Carrinho</h3>
           </NavLink>
           {iconAdminContext && (
             <NavLink style={getIsActive} to="/Administrativo">
               <span className="material-icons">settings</span>
+              <h3>Admin</h3>
             </NavLink>
           )}
           {!contextIsLogin

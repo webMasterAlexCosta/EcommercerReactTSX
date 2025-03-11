@@ -49,6 +49,7 @@ const Carrinho = () => {
           setAlertData={setAlertData}
           produtos={produtos}
           subtotais={subtotais}
+          enviar={carrinhoService.enviarPedido}
         />
       )}
     </main>

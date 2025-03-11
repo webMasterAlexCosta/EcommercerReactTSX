@@ -15,4 +15,9 @@ const getCarrinho=()=>{
   const removeCarirnho = (key:string)=>{
     return carrinhoRepository.removeCarrinho(key)
   }
-  export {getCarrinho,setCarrinho,removeCarirnho}
+const enviarPedido = ()=>{
+    
+      return carrinhoRepository.enviarPedido()
+}
+
+  export {getCarrinho,setCarrinho,removeCarirnho,enviarPedido}

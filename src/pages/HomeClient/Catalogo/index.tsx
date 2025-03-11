@@ -9,7 +9,6 @@ import useCarrinho from "../../../hooks/useCarrinho";
 
 const Catalogo = () => {
   const [produtos, setProdutos] = useState<ProdutoDTO[]>([]);
-//const [montando, setMontando] = useState<boolean>(false);
   const [page, setPage] = useState<number>(0);
   const [searchName, setSearchName] = useState<string>(""); 
   const location = useLocation();
@@ -33,8 +32,8 @@ const Catalogo = () => {
         const produtosRecebidos = response.data.content ?? response.data; 
         console.log("Produtos recebidos:", produtosRecebidos);
 
-        setProdutos((prevProdutos) =>
-          page === 0 || searchName ? produtosRecebidos : [...prevProdutos, ...produtosRecebidos]
+        setProdutos((item) =>
+          page === 0 || searchName ? produtosRecebidos : [...item, ...produtosRecebidos]
         );
         setCarregarMais("Carregar Mais")
       } catch (error) {
@@ -56,7 +55,7 @@ const Catalogo = () => {
     <section id="catalog-section" className="dsc-container">
       <BarraBuscar onSearch={(item) => {
         setSearchName(item);
-        setPage(0); // Reseta a página ao buscar
+        setPage(0); 
       }} />
 
       

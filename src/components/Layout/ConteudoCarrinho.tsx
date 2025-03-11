@@ -1,8 +1,12 @@
+import { AxiosResponse } from 'axios';
 import { ProdutoDTO } from '../../models/dto/ProdutosDTO';
 import Alert from '../UI/Alert';
 import { ContinuarComprando } from '../UI/ContinuarComprando';
 import { FinalizarPedido } from '../UI/FinalizarPedido';
 import { Limpar } from '../UI/Limpar';
+import { useState } from 'react';
+import { Carregando } from '../UI/Carregando';
+
 
 interface IConteudoCarrinho {
     handleQuantityChange: (id: number, action: "+" | "-") => void;
@@ -13,7 +17,7 @@ interface IConteudoCarrinho {
     setAlertData: React.Dispatch<React.SetStateAction<{ title: string; text: string; icon: "success" | "error" } | null>>;
     produtos: ProdutoDTO[];
     subtotais: number[];
-
+    enviar: () => Promise<AxiosResponse<unknown>>;
 }
 
 const ConteudoCarrinho = ({ handleQuantityChange
@@ -24,12 +28,19 @@ const ConteudoCarrinho = ({ handleQuantityChange
     , setAlertData
     , produtos
     , subtotais
+    , enviar
 
 
 }
     : IConteudoCarrinho) => {
+
+        const [loading,setLoading]= useState<boolean>(false)
     return (
         <>
+            {loading?
+            <Carregando title="Ënviando Seu Pedido, Aguarde"/>
+            :
+            (
             <section id="cart-container-section" className="dsc-container">
                 <div className="dsc-card dsc-mb20">
                     {produtos.map((item, index) => (
@@ -60,13 +71,17 @@ const ConteudoCarrinho = ({ handleQuantityChange
                     </div>
                 </div>
                 <div className="dsc-btn-page-container">
-                    <FinalizarPedido title="Finalizar Pedido" />
+                    <FinalizarPedido title="Finalizar Pedido" enviar={async () => {
+                        setLoading(true);
+                        await enviar();
+                        setLoading(false);
+                    }} />
                     <ContinuarComprando link="/catalogo" title="Continuar Comprando" />
                     <Limpar onClickHandle={limparCarrinho} title="Limpar Carrinho" />
 
                     {alertData && <Alert {...alertData} onClose={() => setAlertData(null)} />}
                 </div>
-            </section>
+            </section>)}
         </>
     )
 }

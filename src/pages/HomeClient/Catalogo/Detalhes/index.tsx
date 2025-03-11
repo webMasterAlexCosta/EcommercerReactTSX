@@ -9,6 +9,7 @@ import { storageCarrinho } from "../../../../utils/system.ts";
 import Alert from "../../../../components/UI/Alert"; 
 import { DetalheProduto } from "../../../../components/Layout/DetalheProduto.tsx";
 import ContextCartCount from "../../../../data/CartCountContext.ts";
+import { Carregando } from "../../../../components/UI/Carregando.tsx";
 
 const Detalhes = () => {
   const { id } = useParams();
@@ -35,6 +36,7 @@ const { setContextCartCount} = useContext(ContextCartCount)
         const responseProduto = await produtoService.findById(Number(id));
         if (!responseProduto.data) {
           setError("Produto não encontrado!");
+          console.log(error)
         } else {
           setProdutoAtual(responseProduto.data);
         }
@@ -51,28 +53,28 @@ const { setContextCartCount} = useContext(ContextCartCount)
     };
 
     buscarProduto();
-  }, [id]); // Agora a busca será acionada sempre que o ID mudar
+  }, [id,error]); 
 
-  if (loading) return <div>Carregando...</div>;
+ // if (loading) return <div>Carregando...</div>;
 
-  if (error || !produtoAtual) {
-    return (
-      <div>
-        <p>{error || "Produto não encontrado!"}</p>
-        <Link to="/Catalogo">
-          <ButtonActions nome="Voltar ao Catálogo" className="dsc-btn dsc-btn-white" />
-        </Link>
-      </div>
-    );
-  }
-  // Lógica para pegar próximo e anterior
+  // if (error || !produtoAtual) {
+  //   return (
+  //     <div>
+  //       <p>{error || "Produto não encontrado!"}</p>
+  //       <Link to="/Catalogo">
+  //         <ButtonActions nome="Voltar ao Catálogo" className="dsc-btn dsc-btn-white" />
+  //       </Link>
+  //     </div>
+  //   );
+  // }
+  // aqui bruno estou definindo a Lógica para pegar próximo e anterior
   const currentIndex = produtos.findIndex(produto => produto.id === produtoAtual?.id);
   const nextProduto = produtos[currentIndex + 1] || null;
   const lastProduto = produtos[currentIndex - 1] || null;
 
   const salvaProduto = async() => {
     const carrinhoExistente = JSON.parse( carinhoService.getCarrinho() || "[]");
-    const produtoExistente = carrinhoExistente.find((item: ProdutoDTO) => item.id === produtoAtual.id);
+    const produtoExistente = carrinhoExistente.find((item: ProdutoDTO) => item.id === produtoAtual?.id);
 
     if (produtoExistente) {
       setAlertData({ title: "Erro ao adicionar", text: "Produto já está no carrinho!", icon: "error" });
@@ -86,31 +88,35 @@ const { setContextCartCount} = useContext(ContextCartCount)
   };
 
   return (
-    <section id="product-details-section" className="dsc-container">
-      {alertData && <Alert {...alertData} onClose={() => setAlertData(null)} />}
-
-     <DetalheProduto produtoAtual={produtoAtual}/>
-
-      <div className="dsc-btn-page-container">
-        <ButtonActions nome="Comprar" onNewValue={salvaProduto} className="dsc-btn dsc-btn-blue" />
-        <Link to="/Catalogo">
-          <ButtonActions nome="Voltar ao Catálogo" className="dsc-btn dsc-btn-white" />
-        </Link>
-        <div style={{ display: "flex", justifyContent: "space-between", gap: "10px" }}>
-          {lastProduto && (
-            <Link to={`/Catalogo/Detalhes/${lastProduto.id}`}>
-              <ButtonActions nome="Produto Anterior" className="dsc-btn dsc-btn-white" />
-            </Link>
-          )}
-          {nextProduto && (
-            <Link to={`/Catalogo/Detalhes/${nextProduto.id}`}>
-              <ButtonActions nome="Próximo Produto" className="dsc-btn dsc-btn-blue" />
-            </Link>
-          )}
+    loading ? (
+      <Carregando title="Carregando o Produto" />
+    ) : (
+      <section id="product-details-section" className="dsc-container">
+        {alertData && <Alert {...alertData} onClose={() => setAlertData(null)} />}
+  
+        {produtoAtual && <DetalheProduto produtoAtual={produtoAtual} />}
+  
+        <div className="dsc-btn-page-container">
+          <ButtonActions nome="Comprar" onNewValue={salvaProduto} className="dsc-btn dsc-btn-blue" />
+          <Link to="/Catalogo">
+            <ButtonActions nome="Voltar ao Catálogo" className="dsc-btn dsc-btn-white" />
+          </Link>
+          <div style={{ display: "flex", justifyContent: "space-between", gap: "10px" }}>
+            {lastProduto && (
+              <Link to={`/Catalogo/Detalhes/${lastProduto.id}`}>
+                <ButtonActions nome="Produto Anterior" className="dsc-btn dsc-btn-white" />
+              </Link>
+            )}
+            {nextProduto && (
+              <Link to={`/Catalogo/Detalhes/${nextProduto.id}`}>
+                <ButtonActions nome="Próximo Produto" className="dsc-btn dsc-btn-blue" />
+              </Link>
+            )}
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+    )
   );
-};
-
+  
+}
 export default Detalhes;
