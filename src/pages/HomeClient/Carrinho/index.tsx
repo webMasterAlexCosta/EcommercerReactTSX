@@ -1,31 +1,28 @@
 import './styles.css';
 import useCarrinho from '../../../hooks/useCarrinho'; 
-import { useContext, useMemo, useState } from 'react';
+import {  useMemo, useState } from 'react';
 import { AxiosResponse } from 'axios';
 import * as carrinhoService from "../../../services/CarrinhoService"
-import ContextCartCount from '../../../data/CartCountContext';
-import { ProdutoDTO } from '../../../models/dto/ProdutosDTO';
 import { ConteudoCarrinho } from '../../../components/Layout/ConteudoCarrinho';
 import { AdicionarProdutos } from '../../../components/Layout/AdicionarProdutos';
 import { Carregando } from '../../../components/UI/Carregando';
 
 const Carrinho = () => {
-  const { produtos, loading, handleQuantityChange, cartIconNumber, setProdutos } = useCarrinho();
+  const { produtos, loading, handleQuantityChange, cartIconNumber, setProdutos ,setContextCartCount} = useCarrinho();
   const [alertData, setAlertData] = useState<{ title: string; text: string; icon: "success" | "error" } | null>(null);
-  const { setContextCartCount } = useContext(ContextCartCount);
 
   const subtotais = useMemo(() => produtos.map((item) => item.preco * item.quantidade), [produtos]);
   const totalCarrinho = useMemo(() => subtotais.reduce((total, subtotal) => total + subtotal, 0), [subtotais]);
   const totalFormatado = totalCarrinho.toFixed(2).replace('.', ',');
 
   const limparCarrinho = () => {
+    
     setAlertData({ title: "Limpeza Carrinho", text: "Carrinho foi limpo", icon: "success" });
     setTimeout(() => {
       try {
         carrinhoService.removeCarrinho();
         setProdutos([]);
-        const newCart = JSON.parse(carrinhoService.getCarrinho() || "[]");
-        setContextCartCount(newCart.reduce((total: number, item: ProdutoDTO) => total + item.quantidade, 0));
+        setContextCartCount(0);
       } catch (error) {
         setAlertData({ title: "Erro", text: "Ocorreu um erro ao limpar o carrinho.", icon: "error" });
         console.error("Erro ao limpar carrinho: ", error);

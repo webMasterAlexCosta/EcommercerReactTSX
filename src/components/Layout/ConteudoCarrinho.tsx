@@ -18,6 +18,7 @@ interface IConteudoCarrinho {
     subtotais: number[];
     enviar: () => Promise<AxiosResponse<unknown>>;
     setProdutos: React.Dispatch<React.SetStateAction<ProdutoDTO[]>>;
+    
 }
 
 const ConteudoCarrinho = ({
@@ -47,7 +48,7 @@ const ConteudoCarrinho = ({
             // Limpar o carrinho após um tempo
             setTimeout(() => {
                 setAlertData(null);
-               
+               // window.location.reload()
             }, 5000);
 
             setIsCarrinho(false); // Reseta o estado do carrinho
