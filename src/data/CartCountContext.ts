@@ -1,11 +1,15 @@
 import { createContext } from "react";
 
-interface IContextCardCount {
+// Tipagem do contexto para garantir que contextCartCount seja um número e setContextCartCount seja uma função setter.
+interface IContextCartCount {
   contextCartCount: number;
-  setContextCartCount: (contextCartCount: number) => void;
+  setContextCartCount: React.Dispatch<React.SetStateAction<number>>;  // Usando o tipo correto para setter
 }
-const ContextCartCount = createContext<IContextCardCount>({
-  contextCartCount: 0,
-  setContextCartCount: () => {},
+
+// Criando o contexto com valores padrão.
+const ContextCartCount = createContext<IContextCartCount>({
+  contextCartCount: 0,  // Valor inicial de contextCartCount
+  setContextCartCount: () => {},  // Função vazia como valor inicial
 });
+
 export default ContextCartCount;

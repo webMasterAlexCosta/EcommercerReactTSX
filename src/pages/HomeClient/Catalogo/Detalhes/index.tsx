@@ -11,47 +11,45 @@ import ContextCartCount from "../../../../data/CartCountContext.ts";
 import { Carregando } from "../../../../components/UI/Carregando.tsx";
 
 const Detalhes = () => {
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
   const [produtoAtual, setProdutoAtual] = useState<ProdutoDTO | null>(null);
   const [produtos, setProdutos] = useState<ProdutoDTO[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string>("");
   const [alertData, setAlertData] = useState<{ title: string; text: string; icon: "success" | "error" } | null>(null);
 
   const { setContextCartCount } = useContext(ContextCartCount);
 
   useEffect(() => {
     const buscarProduto = async () => {
-      setError("");
       setLoading(true);
 
       if (!id || isNaN(parseInt(id))) {
-        setError("ID inválido!");
         setLoading(false);
         return;
       }
       try {
-        const responseProduto = await produtoService.findById(Number(id));
-        if (!responseProduto.data) {
-          setError("Produto não encontrado!");
+        const responseProduto = await produtoService.findById(parseInt(id));
+
+        // Verificar se a resposta contém o produto corretamente
+        if (!responseProduto.data || !responseProduto.data.id) {
+          setAlertData({ title: "Erro", text: "Produto não encontrado!", icon: "error" });
+          console.log("Produto não encontrado!");
         } else {
-          setProdutoAtual(responseProduto.data);
-          console.log(error)
+          setProdutoAtual(responseProduto.data); // Atualizar estado com o produto encontrado
         }
 
         const responseProdutos = await produtoService.findAll();
         setProdutos(responseProdutos.data || []);
       } catch (error) {
-        
-        setError("Erro ao carregar o produto!");
-        console.log(error)
+        setAlertData({ title: "Erro", text: "Ocorreu um erro ao buscar o produto.", icon: "error" });
+        console.error(error);
       } finally {
         setLoading(false);
       }
     };
 
     buscarProduto();
-  }, [id]); // Removido `error`
+  }, [id]);
 
   // Definir lógica de navegação para próximo e anterior
   const currentIndex = produtos.findIndex(produto => produto.id === produtoAtual?.id);
@@ -59,6 +57,11 @@ const Detalhes = () => {
   const lastProduto = produtos[currentIndex - 1] || null;
 
   const salvaProduto = async () => {
+    if (!produtoAtual) {
+      setAlertData({ title: "Erro", text: "Produto não encontrado.", icon: "error" });
+      return;
+    }
+
     const carrinhoExistente = carinhoService.getCarrinho();
     const produtoExistente = carrinhoExistente.find((item: ProdutoDTO) => item.id === produtoAtual?.id);
 
@@ -67,9 +70,9 @@ const Detalhes = () => {
     } else {
       carrinhoExistente.push(produtoAtual);
       carinhoService.setCarrinho(carrinhoExistente);
-      
+
       setAlertData({ title: "Sucesso", text: "Produto adicionado ao carrinho!", icon: "success" });
-      
+
       const newCart = carinhoService.getCarrinho();
       setContextCartCount(newCart.reduce((total: number, item: ProdutoDTO) => total + (item.quantidade || 1), 0));
     }
@@ -81,9 +84,13 @@ const Detalhes = () => {
     ) : (
       <section id="product-details-section" className="dsc-container">
         {alertData && <Alert {...alertData} onClose={() => setAlertData(null)} />}
-  
-        {produtoAtual && <DetalheProduto produtoAtual={produtoAtual} />}
-  
+
+        {produtoAtual ? (
+          <DetalheProduto produtoAtual={produtoAtual} />
+        ) : (
+          <p>Produto não encontrado!</p> // Exibe uma mensagem quando o produto não for encontrado
+        )}
+
         <div className="dsc-btn-page-container">
           <ButtonActions nome="Comprar" onNewValue={salvaProduto} className="dsc-btn dsc-btn-blue" />
           <Link to="/Catalogo">

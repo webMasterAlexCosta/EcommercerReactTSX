@@ -19,14 +19,14 @@ const removeCarrinho = (key: string) => {
 const enviarPedido = async (): Promise<AxiosResponse<unknown>> => {
     // Pega os dados do carrinho e converte de string para objeto
     const carrinhoAtual = getCarrinho();
-    console.log("Carrinho atual:", carrinhoAtual);
+   // console.log("Carrinho atual:", carrinhoAtual);
 
     // Se o carrinho não estiver vazio
     if (carrinhoAtual != null && carrinhoAtual !== "[]") {
         try {
             // Converte o carrinho de volta para objeto
             const carrinhoObjeto = JSON.parse(carrinhoAtual);
-
+            console.log(carrinhoObjeto)
             // Configuração da requisição
             const config: AxiosRequestConfig = {
                 method: "POST",
@@ -40,15 +40,15 @@ const enviarPedido = async (): Promise<AxiosResponse<unknown>> => {
 
             // Envia o pedido
             const enviado = await requestBackEnd(config);
-
+            
             // Verifica o status da resposta
             if (enviado.status === 500) {
-                console.log("Erro no servidor");
+            //    console.log("Erro no servidor");
                 return Promise.reject("Erro no servidor");
             }
 
             if (enviado.status === 200 || enviado.status === 201) {
-                console.log("Pedido enviado com sucesso");
+               console.log(enviado);
                 return enviado;
             }
 

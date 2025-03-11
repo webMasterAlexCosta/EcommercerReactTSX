@@ -19,7 +19,7 @@ const findAll = async (page?: number) => {
 const findById = async (id: number) => {
   try {
     const prod = await requestBackEnd({ url: `/produtos/${id}` });
-    console.log(prod);
+    //console.log(prod);
     return prod;
   } catch (error) {
     console.error(error);

@@ -13,10 +13,10 @@ const CartIcon = () => {
   
   useEffect(() => {
     const storedCart: CartItem[] = carrinhoService.getCarrinho();
-
-    const totalCount = storedCart.reduce((acc, item) => acc + (item.quantidade || 1), 0);
+    console.log(storedCart)
+    const totalCount = storedCart.reduce((acc, items) => acc + (items.quantidade || 1), 0);
     
-    setContextCartCount(totalCount);
+    setContextCartCount(Number(totalCount));
   }, [setContextCartCount]);
 
   return (

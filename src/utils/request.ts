@@ -6,7 +6,7 @@ import * as credentialRespository from "../repository/CredenciaisRepository";
 const requestBackEnd = (config: AxiosRequestConfig) => {
     // Recupera o token do repositório
     const token = credentialRespository.get(TOKEN_KEY);
-    console.log("Token recuperado:", token); // Verifique se o token é válido
+   // console.log("Token recuperado:", token); // Verifique se o token é válido
 
     // Verifica se o token foi encontrado e adiciona o cabeçalho Authorization
     const headers = {
@@ -14,7 +14,7 @@ const requestBackEnd = (config: AxiosRequestConfig) => {
         Authorization: token ? `Bearer ${token}` : undefined, // Adiciona o token ao cabeçalho
     };
 
-    console.log("Headers enviados:", headers); // Verifica os cabeçalhos
+   // console.log("Headers enviados:", headers); // Verifica os cabeçalhos
 
     // Realiza a requisição com os cabeçalhos configurados
     return axios({ ...config, baseURL: BASE_URL_LOCAL, headers });

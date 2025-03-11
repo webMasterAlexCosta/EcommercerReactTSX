@@ -1,55 +1,81 @@
 import './styles.css';
-import useCarrinho from '../../../hooks/useCarrinho'; // Certifique-se de apontar para o caminho correto do seu hook
+import useCarrinho from '../../../hooks/useCarrinho'; 
 import { useContext, useMemo, useState } from 'react';
-
+import { AxiosResponse } from 'axios';
 import * as carrinhoService from "../../../services/CarrinhoService"
 import ContextCartCount from '../../../data/CartCountContext';
 import { ProdutoDTO } from '../../../models/dto/ProdutosDTO';
-
 import { ConteudoCarrinho } from '../../../components/Layout/ConteudoCarrinho';
 import { AdicionarProdutos } from '../../../components/Layout/AdicionarProdutos';
-import {Carregando } from '../../../components/UI/Carregando';
+import { Carregando } from '../../../components/UI/Carregando';
 
 const Carrinho = () => {
-  const { produtos, loading, handleQuantityChange, cartIconNumber, setProdutos } = useCarrinho(); // Verifique se o hook retorna setProdutos
+  const { produtos, loading, handleQuantityChange, cartIconNumber, setProdutos } = useCarrinho();
   const [alertData, setAlertData] = useState<{ title: string; text: string; icon: "success" | "error" } | null>(null);
   const { setContextCartCount } = useContext(ContextCartCount);
 
-  // Memoizando os subtotais para cada item do carrinho
   const subtotais = useMemo(() => produtos.map((item) => item.preco * item.quantidade), [produtos]);
-
-  // Cálculo do total do carrinho, com base nos subtotais
   const totalCarrinho = useMemo(() => subtotais.reduce((total, subtotal) => total + subtotal, 0), [subtotais]);
-
-  // Formatação do total
   const totalFormatado = totalCarrinho.toFixed(2).replace('.', ',');
 
   const limparCarrinho = () => {
     setAlertData({ title: "Limpeza Carrinho", text: "Carrinho foi limpo", icon: "success" });
     setTimeout(() => {
-      carrinhoService.removeCarrinho(); // Limpa apenas os produtos, sem apagar todo o localStorage
-      setProdutos([]); // Atualiza o estado do carrinho para refletir a remoção
-      const newCart = JSON.parse(carrinhoService.getCarrinho() || "[]");
-      setContextCartCount(newCart.reduce((total: number, item: ProdutoDTO) => total + item.quantidade, 0));
+      try {
+        carrinhoService.removeCarrinho();
+        setProdutos([]);
+        const newCart = JSON.parse(carrinhoService.getCarrinho() || "[]");
+        setContextCartCount(newCart.reduce((total: number, item: ProdutoDTO) => total + item.quantidade, 0));
+      } catch (error) {
+        setAlertData({ title: "Erro", text: "Ocorreu um erro ao limpar o carrinho.", icon: "error" });
+        console.error("Erro ao limpar carrinho: ", error);
+      }
     }, 2000);
+  };
+
+  const enviarPedido = async (): Promise<AxiosResponse<unknown, unknown>> => {
+    // Primeiro, mostramos o alerta de sucesso
+    setAlertData({ title: "Pedido Enviado com Sucesso", text: "Obrigado pela sua compra!", icon: "success" });
+
+    // Aguardar um tempo antes de continuar com o envio do pedido
+    setTimeout(async () => {
+      try {
+        const response = await carrinhoService.enviarPedido();
+
+        // Se o pedido for enviado com sucesso, limpar o carrinho
+        setContextCartCount(0);
+        carrinhoService.removeCarrinho();
+        setProdutos([]);
+        
+        // O alerta já foi setado acima, então o fluxo está controlado aqui
+        return response;
+      } catch (error) {
+        setAlertData({ title: "Erro ao Enviar Pedido", text: "Ocorreu um erro ao enviar seu pedido. Tente novamente.", icon: "error" });
+        console.error("Erro ao enviar pedido: ", error);
+        throw error;
+      }
+    }, 2000); // Atraso para garantir que o alerta seja exibido antes de realizar o envio
+    return Promise.resolve({} as AxiosResponse<unknown, unknown>);
   };
 
   return (
     <main>
       {loading ? (
-        <Carregando title="Carregando Produtos"/>
+        <Carregando title="Carregando Produtos" />
       ) : produtos.length === 0 ? (
         <AdicionarProdutos />
       ) : (
-        <ConteudoCarrinho handleQuantityChange={handleQuantityChange}
+        <ConteudoCarrinho
+          handleQuantityChange={handleQuantityChange}
           limparCarrinho={limparCarrinho}
           totalFormatado={totalFormatado}
           cartIconNumber={cartIconNumber}
           alertData={alertData}
           setAlertData={setAlertData}
           produtos={produtos}
+          setProdutos={setProdutos}
           subtotais={subtotais}
-          enviar={carrinhoService.enviarPedido}
+          enviar={enviarPedido} 
         />
       )}
     </main>

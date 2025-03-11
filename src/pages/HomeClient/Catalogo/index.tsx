@@ -22,15 +22,15 @@ const Catalogo = () => {
       try {
         let response;
         if (searchName) {
-          console.log(`Buscando por nome: ${searchName}`);
+         // console.log(`Buscando por nome: ${searchName}`);
           response = await produtoService.findByRequest(searchName);
-          console.log("Resposta da busca:", response.data);
+     //     console.log("Resposta da busca:", response.data);
         } else {
           response = await produtoService.findAll(page);
         }
 
         const produtosRecebidos = response.data.content ?? response.data; 
-        console.log("Produtos recebidos:", produtosRecebidos);
+      //  console.log("Produtos recebidos:", produtosRecebidos);
 
         setProdutos((item) =>
           page === 0 || searchName ? produtosRecebidos : [...item, ...produtosRecebidos]

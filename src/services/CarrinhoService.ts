@@ -47,10 +47,9 @@ const enviarPedido = async (): Promise<AxiosResponse<unknown>> => {
         };
 
         const enviado = await requestBackEnd(config);
-
+        	console.log(enviado.data)
         if (enviado.status === 200 || enviado.status === 201) {
-            console.log("Pedido enviado com sucesso");
-            removeCarrinho(); // Limpa o carrinho após o envio bem-sucedido
+           console.log("Pedido enviado com sucesso");
             return enviado;
         }
 
