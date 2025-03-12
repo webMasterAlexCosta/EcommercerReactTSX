@@ -4,9 +4,10 @@ import Alert from "../UI/Alert";
 import { ContinuarComprando } from "../UI/ContinuarComprando";
 import { FinalizarPedido } from "../UI/FinalizarPedido";
 import { Limpar } from "../UI/Limpar";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Carregando } from "../UI/Carregando";
-import { gerarPDF } from "../UI/Pdf"; // 🔹 Importando função de geração de PDF
+import gerarPDF from "../UI/Pdf"; // 🔹 Importando função de geração de PDF
+import PedidoContext from "../../data/PedidosContext";
 
 interface IConteudoCarrinho {
     handleQuantityChange: (id: number, action: "+" | "-") => void;
@@ -50,7 +51,7 @@ const ConteudoCarrinho = ({
             setIsCarrinho(false);
         }
     }, [isCarrinho, setAlertData]);
-
+const { pedidoContext } = useContext(PedidoContext);
     return (
         <>
             {loading ? (
@@ -104,7 +105,7 @@ const ConteudoCarrinho = ({
                                 setLoading(true);
                                 try {
                                     await enviar(); // 🔹 Envia o pedido
-                                    await gerarPDF(); // 🔹 Gera o PDF automaticamente
+                                     gerarPDF(pedidoContext); // 🔹 Gera o PDF automaticamente
                                     console.log("Pedido enviado e PDF gerado")
                                     setLoading(false);
                                     setIsCarrinho(true); // Marca o pedido como enviado

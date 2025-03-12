@@ -20,6 +20,12 @@ export interface PedidoData {
         subTotal: string;
     }[];
 }
+export interface PedidoFeito {
+    id: number;
+    numeroPedido: string;
+    momento: string;
+    statusPedido: string;
+}
 
 export  interface PedidoItem {
     id: number;

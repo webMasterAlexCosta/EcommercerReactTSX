@@ -1,15 +1,19 @@
 import './styles.css';
 import useCarrinho from '../../../hooks/useCarrinho'; 
-import {  useMemo, useState } from 'react';
+import {  useContext, useMemo, useState } from 'react';
 import { AxiosResponse } from 'axios';
 import * as carrinhoService from "../../../services/CarrinhoService"
+import * as userService from "../../../services/UserServices";
 import { ConteudoCarrinho } from '../../../components/Layout/ConteudoCarrinho';
 import { AdicionarProdutos } from '../../../components/Layout/AdicionarProdutos';
 import { Carregando } from '../../../components/UI/Carregando';
+import PedidoContext from '../../../data/PedidosContext';
+import { PedidoFeito } from '../../../models/dto/CarrinhoDTO';
 
 const Carrinho = () => {
   const { produtos, loading, handleQuantityChange, cartIconNumber, setProdutos ,setContextCartCount} = useCarrinho();
   const [alertData, setAlertData] = useState<{ title: string; text: string; icon: "success" | "error" } | null>(null);
+  const { setPedidoContext } = useContext(PedidoContext);
 
   const subtotais = useMemo(() => produtos.map((item) => item.preco * item.quantidade), [produtos]);
   const totalCarrinho = useMemo(() => subtotais.reduce((total, subtotal) => total + subtotal, 0), [subtotais]);
@@ -33,12 +37,13 @@ const Carrinho = () => {
   const enviarPedido = async (): Promise<AxiosResponse<unknown, unknown>> => {
     // Primeiro, mostramos o alerta de sucesso
     setAlertData({ title: "Pedido Enviado com Sucesso", text: "Obrigado pela sua compra!", icon: "success" });
-
+    
     // Aguardar um tempo antes de continuar com o envio do pedido
     setTimeout(async () => {
       try {
-        const response = await carrinhoService.enviarPedido();
-
+        const response = await userService.enviarPedido();
+        console.log("Número do Pedido:", response.data); // Confirmação no console
+        setPedidoContext(response.data as PedidoFeito);
         // Se o pedido for enviado com sucesso, limpar o carrinho
         setContextCartCount(0);
         carrinhoService.removeCarrinho();

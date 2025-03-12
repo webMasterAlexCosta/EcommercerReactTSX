@@ -14,16 +14,19 @@ import Formulario from './pages/HomeAdminstrativo/Formulario';
 import ContextIsLogin from './data/LoginContext';
 import IconAdminContext from './data/IconAdminContext';
 import { PrivateRoute } from './components/Private/Router';
+import { PedidoFeito } from './models/dto/CarrinhoDTO';
+import  PedidoContext  from './data/PedidosContext';
 
 
 const App = () => {
   const [contextCartCount, setContextCartCount] = useState<number>(0);
   const [contextIsLogin, setContextIsLogin] = useState<boolean>(false);
   const [iconAdminContext, setIconAdminContext] = useState<boolean>(false);
+  const [pedidoContext, setPedidoContext] = useState<PedidoFeito | null>(null);
 
-  
 
   return (
+    <PedidoContext.Provider value={{ pedidoContext, setPedidoContext }}>
     <IconAdminContext.Provider value={{ iconAdminContext, setIconAdminContext }}>
       <ContextIsLogin.Provider value={{ contextIsLogin, setContextIsLogin }}>
         <ContextCartCount.Provider value={{ contextCartCount, setContextCartCount }}>
@@ -51,6 +54,7 @@ const App = () => {
         </ContextCartCount.Provider>
       </ContextIsLogin.Provider>
     </IconAdminContext.Provider>
+    </PedidoContext.Provider>
   );
 }
 

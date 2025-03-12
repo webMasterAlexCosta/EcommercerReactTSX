@@ -4,7 +4,6 @@ import * as carrinhoService from "../../services/CarrinhoService";
 import * as authService from "../../services/AuthService";
 import { EnderecoDTO } from "../../models/dto/UserDTO";
 
-// Interface para o payload do token
 interface PayloadDTO {
     perfis: string[];
     sub: string;
@@ -15,22 +14,20 @@ interface PayloadDTO {
     email: string;
 }
 
-// Interface para os produtos do carrinho
 interface ProdutoCarrinhoPDF {
     nome: string;
     quantidade: number;
-    
     preco: number;
 }
 
-// ✅ Função exportada para ser chamada ao finalizar o pedido
-const gerarPDF=async()=> {
+// ✅ Agora `gerarPDF()` recebe `pedidoContext` como argumento
+const gerarPDF = async (pedidoContext: { numeroPedido: string } | null) => {
     const payload = authService.getAccessTokenPayload() as PayloadDTO;
     const carrinho = carrinhoService.getCarrinho() || [];
+
     const cart: ProdutoCarrinhoPDF[] = carrinho.map(item => ({
         nome: item.nome,
         quantidade: item.quantidade,
-        
         preco: item.preco
     }));
 
@@ -39,9 +36,9 @@ const gerarPDF=async()=> {
         return;
     }
 
-    // Garantia de valores padrão
-    const nome: string = payload.nome || "Não especificado";
-    const email: string = payload.email || "Não especificado";
+    const numeroPed = pedidoContext?.numeroPedido;
+    const nome = payload.nome || "Não especificado";
+    const email = payload.email || "Não especificado";
     const endereco: EnderecoDTO | null = payload.endereco || null;
 
     const doc = new jsPDF();
@@ -64,11 +61,10 @@ const gerarPDF=async()=> {
     doc.setFont("Helvetica", "normal");
     doc.text("Nome:", 14, 50);
     doc.text(nome, 60, 50);
-
     doc.text("E-mail:", 14, 60);
     doc.text(email, 60, 60);
-
     doc.text("Endereço:", 14, 70);
+
     const enderecoFormatado = endereco
         ? `${endereco.logradouro}, ${endereco.numero} - ${endereco.bairro}, ${endereco.cidade} - ${endereco.uf}`
         : "Endereço não disponível";
@@ -90,15 +86,9 @@ const gerarPDF=async()=> {
     doc.setFont("Helvetica", "normal");
 
     cart.forEach((item) => {
-        const produto = item.nome || "Não especificado";
-        const quantidade = item.quantidade || 0;
-       
-        const preco = item.preco || 0;
-
-        doc.text(produto, 14, yOffset);
-        doc.text(String(quantidade), 120, yOffset, { align: "right" });
-        doc.text(`R$ ${preco.toFixed(2)}`, 180, yOffset, { align: "right" });
-
+        doc.text(item.nome, 14, yOffset);
+        doc.text(String(item.quantidade), 120, yOffset, { align: "right" });
+        doc.text(`R$ ${item.preco.toFixed(2)}`, 180, yOffset, { align: "right" });
         yOffset += 7;
     });
 
@@ -112,8 +102,7 @@ const gerarPDF=async()=> {
 
     // QR Code com número do pedido
     try {
-        const numeroPedido = Math.floor(Math.random() * 1000000);
-        const qrCodeData = `Pedido número: ${numeroPedido}`;
+        const qrCodeData = `Pedido número: ${numeroPed}`;
         const qrCodeImage = await gerarQRCode(qrCodeData);
         doc.addImage(qrCodeImage, "PNG", 150, 10, 40, 40);
     } catch (error) {
@@ -122,7 +111,7 @@ const gerarPDF=async()=> {
 
     // Salvar PDF
     doc.save("pedido.pdf");
-}
+};
 
 // Função para gerar QR Code
 function gerarQRCode(data: string): Promise<string> {
@@ -137,4 +126,5 @@ function gerarQRCode(data: string): Promise<string> {
         });
     });
 }
-export {gerarPDF}
+
+export default gerarPDF;
