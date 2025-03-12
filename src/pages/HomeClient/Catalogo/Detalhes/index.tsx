@@ -63,18 +63,22 @@ const Detalhes = () => {
     }
 
     const carrinhoExistente = carinhoService.getCarrinho();
-    const produtoExistente = carrinhoExistente.find((item: ProdutoDTO) => item.id === produtoAtual?.id);
+    const produtoExistente = carrinhoExistente.find((item) => item.id === produtoAtual?.id);
 
     if (produtoExistente) {
       setAlertData({ title: "Erro ao adicionar", text: "Produto já está no carrinho!", icon: "error" });
     } else {
-      carrinhoExistente.push(produtoAtual);
+      const carrinhoItem = {
+        ...produtoAtual,
+        categorias: produtoAtual.categorias.map(categoria => categoria.nome)
+      };
+      carrinhoExistente.push(carrinhoItem);
       carinhoService.setCarrinho(carrinhoExistente);
 
       setAlertData({ title: "Sucesso", text: "Produto adicionado ao carrinho!", icon: "success" });
 
       const newCart = carinhoService.getCarrinho();
-      setContextCartCount(newCart.reduce((total: number, item: ProdutoDTO) => total + (item.quantidade || 1), 0));
+      setContextCartCount(newCart.reduce((total, item) => total + (item.quantidade || 1), 0));
     }
   };
 
