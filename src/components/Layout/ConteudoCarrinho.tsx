@@ -1,11 +1,12 @@
-import { AxiosResponse } from 'axios';
-import { ProdutoDTO } from '../../models/dto/ProdutosDTO';
-import Alert from '../UI/Alert';
-import { ContinuarComprando } from '../UI/ContinuarComprando';
-import { FinalizarPedido } from '../UI/FinalizarPedido';
-import { Limpar } from '../UI/Limpar';
-import { useEffect, useState } from 'react';
-import { Carregando } from '../UI/Carregando';
+import { AxiosResponse } from "axios";
+import { ProdutoDTO } from "../../models/dto/ProdutosDTO";
+import Alert from "../UI/Alert";
+import { ContinuarComprando } from "../UI/ContinuarComprando";
+import { FinalizarPedido } from "../UI/FinalizarPedido";
+import { Limpar } from "../UI/Limpar";
+import { useEffect, useState } from "react";
+import { Carregando } from "../UI/Carregando";
+import { gerarPDF } from "../UI/Pdf"; // 🔹 Importando função de geração de PDF
 
 interface IConteudoCarrinho {
     handleQuantityChange: (id: number, action: "+" | "-") => void;
@@ -18,7 +19,6 @@ interface IConteudoCarrinho {
     subtotais: number[];
     enviar: () => Promise<AxiosResponse<unknown>>;
     setProdutos: React.Dispatch<React.SetStateAction<ProdutoDTO[]>>;
-    
 }
 
 const ConteudoCarrinho = ({
@@ -32,26 +32,22 @@ const ConteudoCarrinho = ({
     subtotais,
     enviar
 }: IConteudoCarrinho) => {
-
     const [loading, setLoading] = useState<boolean>(false);
     const [isCarrinho, setIsCarrinho] = useState<boolean>(false);
 
-    // Usando useEffect para exibir o alerta após o pedido ser enviado com sucesso
     useEffect(() => {
         if (isCarrinho) {
             setAlertData({
-                title: 'Pedido Enviado com Sucesso',
-                icon: 'success',
-                text: 'Obrigado pela sua preferência!',
+                title: "Pedido Enviado com Sucesso",
+                icon: "success",
+                text: "Obrigado pela sua preferência!",
             });
 
-            // Limpar o carrinho após um tempo
             setTimeout(() => {
                 setAlertData(null);
-               // window.location.reload()
             }, 5000);
 
-            setIsCarrinho(false); // Reseta o estado do carrinho
+            setIsCarrinho(false);
         }
     }, [isCarrinho, setAlertData]);
 
@@ -72,7 +68,7 @@ const ConteudoCarrinho = ({
                                             <button
                                                 className="dsc-cart-item-quantity-btn"
                                                 onClick={() => {
-                                                    handleQuantityChange(item.id, '-');
+                                                    handleQuantityChange(item.id, "-");
                                                     cartIconNumber();
                                                 }}
                                             >
@@ -82,7 +78,7 @@ const ConteudoCarrinho = ({
                                             <button
                                                 className="dsc-cart-item-quantity-btn"
                                                 onClick={() => {
-                                                    handleQuantityChange(item.id, '+');
+                                                    handleQuantityChange(item.id, "+");
                                                     cartIconNumber();
                                                 }}
                                             >
@@ -92,7 +88,7 @@ const ConteudoCarrinho = ({
                                     </div>
                                 </div>
                                 <div className="dsc-cart-item-right">
-                                    <h3>R$ {subtotais[index].toFixed(2).replace('.', ',')}</h3>
+                                    <h3>R$ {subtotais[index].toFixed(2).replace(".", ",")}</h3>
                                 </div>
                             </div>
                         ))}
@@ -107,16 +103,18 @@ const ConteudoCarrinho = ({
                             enviar={async () => {
                                 setLoading(true);
                                 try {
-                                    await enviar(); // Tenta enviar o pedido
+                                    await enviar(); // 🔹 Envia o pedido
+                                    await gerarPDF(); // 🔹 Gera o PDF automaticamente
+                                    console.log("Pedido enviado e PDF gerado")
                                     setLoading(false);
-                                    setIsCarrinho(true); // Marca o pedido como enviado e ativa o alerta
+                                    setIsCarrinho(true); // Marca o pedido como enviado
                                 } catch (error) {
-                                    console.log(error)
+                                    console.log(error);
                                     setLoading(false);
                                     setAlertData({
-                                        title: 'Erro ao Enviar Pedido',
-                                        icon: 'error',
-                                        text: 'Ocorreu um erro ao enviar seu pedido. Tente novamente.',
+                                        title: "Erro ao Enviar Pedido",
+                                        icon: "error",
+                                        text: "Ocorreu um erro ao enviar seu pedido. Tente novamente.",
                                     });
                                 }
                             }}
@@ -130,6 +128,6 @@ const ConteudoCarrinho = ({
             )}
         </>
     );
-}
+};
 
 export { ConteudoCarrinho };

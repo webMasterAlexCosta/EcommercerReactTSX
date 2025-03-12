@@ -1,6 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
 import { ProdutoDTO } from '../models/dto/ProdutosDTO';
-import { storageCarrinho } from '../utils/system';
 import * as carrinhoService from "../services/CarrinhoService";
 import ContextCartCount from '../data/CartCountContext';
 
@@ -11,16 +10,16 @@ const useCarrinho = () => {
 
   // Atualiza o contador do carrinho
   const cartIconNumber = (cart?: ProdutoDTO[]) => {
-    const newCart = cart ?? JSON.parse(carrinhoService.getCarrinho() || "[]");
-    const totalItems = newCart.reduce((total: number, item: ProdutoDTO) => total + (item.quantidade || 0), 0);
+    const newCart = cart ?? carrinhoService.getCarrinho();
+    const totalItems = (newCart as ProdutoDTO[]).reduce((total: number, item: ProdutoDTO) => total + (item.quantidade || 0), 0);
     setContextCartCount(totalItems);
   };
 
   useEffect(() => {
     try {
-      const produtosNoCarrinho = localStorage.getItem(storageCarrinho);
+      const produtosNoCarrinho = carrinhoService.getCarrinho();
       if (produtosNoCarrinho) {
-        const produtosParsed: ProdutoDTO[] = JSON.parse(produtosNoCarrinho);
+        const produtosParsed: ProdutoDTO[] = JSON.parse(JSON.stringify(produtosNoCarrinho));
         setProdutos(produtosParsed);
         cartIconNumber(produtosParsed); // Atualiza o contador ao carregar
       }
@@ -39,7 +38,12 @@ const useCarrinho = () => {
       
     } else {
       setProdutos(updatedProdutos);
-      localStorage.setItem(storageCarrinho, JSON.stringify(updatedProdutos));
+      // Convert ProdutoDTO[] to CarrinhoItem[] by mapping categorias from CategoriasDTO[] to string[]
+      const carrinhoItems = updatedProdutos.map((produto) => ({
+        ...produto,
+        categorias: produto.categorias.map((categoria) => categoria.nome)
+      }));
+      carrinhoService.setCarrinho(carrinhoItems);
       cartIconNumber(updatedProdutos); // Atualiza o contador corretamente
     }
   };

@@ -10,7 +10,7 @@ export interface CarrinhoItem {
 
 export interface PedidoData {
     items: {
-        id: string;
+        id: number;
         nome: string;
         preco: number;
         descricao: string;

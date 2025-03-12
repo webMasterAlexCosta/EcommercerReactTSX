@@ -15,7 +15,7 @@ const CartIcon = () => {
     try {
       // Obtendo o carrinho do serviço e convertendo para JSON
       const storedCart = carrinhoService.getCarrinho();
-      const cartArray: CartItem[] = storedCart ? JSON.parse(storedCart) : [];
+      const cartArray: CartItem[] = storedCart ? JSON.parse(JSON.stringify(storedCart)) : [];
 
       // Calcula a quantidade total de itens no carrinho
       const totalCount = cartArray.reduce((acc, item) => acc + (item.quantidade || 1), 0);

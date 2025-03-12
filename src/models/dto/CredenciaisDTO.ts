@@ -10,7 +10,7 @@ export type perfil = "CLIENTE" | "ADMIN";
 export interface AccessTokenPayloadDTO{
     nome:string;
     email:string;
-    perfis:perfil[]
-    exp:number
-    endereco:EnderecoDTO[]
+    perfis:perfil[];
+    exp:number;
+    endereco:EnderecoDTO;
 }
