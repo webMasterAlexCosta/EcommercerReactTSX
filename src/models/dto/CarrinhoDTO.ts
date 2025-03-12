@@ -21,7 +21,7 @@ export interface PedidoData {
     }[];
 }
 export interface PedidoFeito {
-    id: number;
+    id: number|null;
     numeroPedido: string;
     momento: string;
     statusPedido: string;

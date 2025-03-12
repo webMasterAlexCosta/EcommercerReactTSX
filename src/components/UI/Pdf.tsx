@@ -20,8 +20,7 @@ interface ProdutoCarrinhoPDF {
     preco: number;
 }
 
-// ✅ Agora `gerarPDF()` recebe `pedidoContext` como argumento
-const gerarPDF = async (pedidoContext: { numeroPedido: string } | null) => {
+const gerarPDF = async (pedido: { numeroPedido: string } | null) => {
     const payload = authService.getAccessTokenPayload() as PayloadDTO;
     const carrinho = carrinhoService.getCarrinho() || [];
 
@@ -36,7 +35,7 @@ const gerarPDF = async (pedidoContext: { numeroPedido: string } | null) => {
         return;
     }
 
-    const numeroPed = pedidoContext?.numeroPedido;
+    const numeroPed = pedido?.numeroPedido;
     const nome = payload.nome || "Não especificado";
     const email = payload.email || "Não especificado";
     const endereco: EnderecoDTO | null = payload.endereco || null;
@@ -99,8 +98,10 @@ const gerarPDF = async (pedidoContext: { numeroPedido: string } | null) => {
     const total = cart.reduce((acc, item) => acc + (item.preco || 0) * (item.quantidade || 1), 0);
     doc.text("Total:", 14, yOffset);
     doc.text(`R$ ${total.toFixed(2)}`, 180, yOffset, { align: "right" });
-
+    doc.text("Número do Pedido:", 14, yOffset + 10);
+    doc.text(numeroPed || "Não especificado", 60, yOffset + 10);
     // QR Code com número do pedido
+    console.log("Gerando QR Code com número do pedido:", numeroPed);
     try {
         const qrCodeData = `Pedido número: ${numeroPed}`;
         const qrCodeImage = await gerarQRCode(qrCodeData);

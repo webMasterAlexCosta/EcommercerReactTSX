@@ -4,10 +4,9 @@ import Alert from "../UI/Alert";
 import { ContinuarComprando } from "../UI/ContinuarComprando";
 import { FinalizarPedido } from "../UI/FinalizarPedido";
 import { Limpar } from "../UI/Limpar";
-import { useContext, useEffect, useState } from "react";
+import {  useEffect, useState } from "react";
 import { Carregando } from "../UI/Carregando";
-import gerarPDF from "../UI/Pdf"; // 🔹 Importando função de geração de PDF
-import PedidoContext from "../../data/PedidosContext";
+
 
 interface IConteudoCarrinho {
     handleQuantityChange: (id: number, action: "+" | "-") => void;
@@ -20,6 +19,7 @@ interface IConteudoCarrinho {
     subtotais: number[];
     enviar: () => Promise<AxiosResponse<unknown>>;
     setProdutos: React.Dispatch<React.SetStateAction<ProdutoDTO[]>>;
+   
 }
 
 const ConteudoCarrinho = ({
@@ -31,7 +31,8 @@ const ConteudoCarrinho = ({
     setAlertData,
     produtos,
     subtotais,
-    enviar
+    enviar,
+   
 }: IConteudoCarrinho) => {
     const [loading, setLoading] = useState<boolean>(false);
     const [isCarrinho, setIsCarrinho] = useState<boolean>(false);
@@ -51,7 +52,6 @@ const ConteudoCarrinho = ({
             setIsCarrinho(false);
         }
     }, [isCarrinho, setAlertData]);
-const { pedidoContext } = useContext(PedidoContext);
     return (
         <>
             {loading ? (
@@ -105,8 +105,6 @@ const { pedidoContext } = useContext(PedidoContext);
                                 setLoading(true);
                                 try {
                                     await enviar(); // 🔹 Envia o pedido
-                                     gerarPDF(pedidoContext); // 🔹 Gera o PDF automaticamente
-                                    console.log("Pedido enviado e PDF gerado")
                                     setLoading(false);
                                     setIsCarrinho(true); // Marca o pedido como enviado
                                 } catch (error) {
