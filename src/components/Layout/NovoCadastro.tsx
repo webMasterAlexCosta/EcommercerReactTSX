@@ -257,7 +257,7 @@ const NovoCadastro: React.FC<NovoCadastroProps> = ({ isSubmitted }) => {
                             )}
                         </div>
 
-                        {/* Dados de Endereço */}
+                      
                         <div>
                             <label htmlFor="cep">
                                 <Home sx={{ fontSize: "20px", marginRight: "8px" }} />

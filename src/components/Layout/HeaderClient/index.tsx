@@ -13,24 +13,32 @@ const HeaderClient = () => {
   const { contextIsLogin, setContextIsLogin } = useContext(ContextIsLogin);
   const { iconAdminContext, setIconAdminContext } = useContext(IconAdminContext);
 
-  // Verifica o status do login quando o componente é montado
   useEffect(() => {
     const checkLoginStatus = () => {
       const token = credencialServices.get(TOKEN_KEY);
-      setContextIsLogin(!!token); // Define o login com base na presença do token
+      setContextIsLogin(!!token);
+
+      const userProfile = authService.getAccessTokenPayload()?.perfis;
+      if (userProfile?.includes("ADMIN")) {
+        setIconAdminContext("ADMIN");
+      } else if (userProfile?.includes("CLIENT")) {
+        setIconAdminContext("CLIENT");
+      } else {
+        setIconAdminContext(null);
+      }
     };
 
     checkLoginStatus();
 
-    // Ouvinte para o armazenamento local para refletir as mudanças entre diferentes abas
-    window.addEventListener('storage', checkLoginStatus);
+    window.addEventListener("storage", checkLoginStatus);
 
     return () => window.removeEventListener('storage', checkLoginStatus);
-  }, [setContextIsLogin, iconAdminContext]);
+  }, [setContextIsLogin, setIconAdminContext]);
 
   const getIsActive = ({ isActive }: { isActive: boolean }) => ({ color: isActive ? "red" : "black" });
 
   function handleOnclick(event: React.MouseEvent<HTMLElement> | React.MouseEvent<SVGSVGElement, MouseEvent>, tipo: string): void {
+   
     if (tipo === "logout") {
       event.preventDefault();
       credencialServices.logout();
@@ -38,18 +46,18 @@ const HeaderClient = () => {
       setIconAdminContext(null);
       return;
     }
-    else{
-    if (authService.getAccessTokenPayload()?.perfis.includes("ADMIN")) {
-      
-      return setIconAdminContext("ADMIN");
-    } else if(authService.getAccessTokenPayload()?.perfis.includes("CLIENT")){
-      
-      return setIconAdminContext("CLIENT");
+
+    const userProfile = authService.getAccessTokenPayload()?.perfis;
+  
+
+    if (userProfile?.includes("ADMIN")) {
+      setIconAdminContext("ADMIN");
+    } else if (userProfile?.includes("CLIENT")) {
+      setIconAdminContext("CLIENT");
+    } else {
+      setIconAdminContext(null);
     }
-    else{
-      return setIconAdminContext(null);
-    }
-  }}
+  }
 
   return (
     <header className="dsc-header-client">
@@ -65,7 +73,7 @@ const HeaderClient = () => {
         </NavLink>
 
         <div className="dsc-navbar-right">
-          {/* Verifica se é cliente antes de renderizar o link de perfil */}
+         
           {iconAdminContext === "CLIENT" && (
             <NavLink style={getIsActive} to="/perfil">
               <AccountCircle style={{ fontSize: 40, color: 'black' }} />
@@ -73,7 +81,6 @@ const HeaderClient = () => {
             </NavLink>
           )}
 
-          {/* Link para carrinho */}
           <NavLink to="/carrinho" style={getIsActive}>
             <div className="dsc-menu-item">
               <CartIcon />
@@ -81,7 +88,6 @@ const HeaderClient = () => {
             <h3>Carrinho</h3>
           </NavLink>
 
-          {/* Verifica se é admin antes de renderizar o link administrativo */}
           {iconAdminContext === "ADMIN" && (
             <NavLink style={getIsActive} to="/Administrativo">
               <span className="material-icons">settings</span>
@@ -89,13 +95,14 @@ const HeaderClient = () => {
             </NavLink>
           )}
 
-          {/* Condicional de login/logout */}
           {!contextIsLogin
-            ? <NavLink style={getIsActive} to="/login">
-                <Login style={{ fontSize: 40, color: 'black' }} onClick={(e) => handleOnclick(e, "login")} />
+            ? <NavLink style={getIsActive} to="/login" onClick={(e) => handleOnclick(e, "login")}>
+                <Login style={{ fontSize: 40, color: 'black' }} />
+                <h3>Entrar</h3>
               </NavLink>
             : <NavLink style={getIsActive} to="/catalogo" onClick={(e) => handleOnclick(e, "logout")}>
                 <Logout style={{ fontSize: 40, color: 'black' }} />
+                <h3>Sair</h3>
               </NavLink>
           }
         </div>

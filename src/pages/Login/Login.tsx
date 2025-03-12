@@ -7,7 +7,7 @@ import ContextIsLogin from "../../data/LoginContext";
 import * as authService from "../../services/AuthService";
 import Alert from "../../components/UI/Alert";
 import * as crendincialService from "../../services/CredenciasiService";
-import LoginForm from "../../hooks/loginForm"; // Now using LoginForm component
+import LoginForm from "../../hooks/loginForm"; 
 import IconAdminContext from "../../data/IconAdminContext";
 import { Carregando } from "../../components/UI/Carregando";
 
@@ -18,7 +18,7 @@ const Login = () => {
     senha: ""
   });
   const { setContextIsLogin } = useContext(ContextIsLogin);
-  const {setIconAdminContext} = useContext(IconAdminContext)
+  const { setIconAdminContext } = useContext(IconAdminContext);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [alertData, setAlertData] = useState<{ title: string; text: string; icon: "success" | "error" | "warning" | "info"; } | null>(null);
@@ -41,9 +41,11 @@ const Login = () => {
         setContextIsLogin(true);
 
         const payload = authService.getAccessTokenPayload();
+        const userProfile = payload?.perfis.includes("ADMIN") ? "ADMIN" : (payload?.perfis.includes("CLIENT") ? "CLIENT" : null);
+
+        setIconAdminContext(userProfile); 
         setLoading(false);
-        const perfil = authService.getAccessTokenPayload()?.perfis.includes("ADMIN");
-        setIconAdminContext(perfil ? true : false);
+
         setAlertData({
           title: "Login Aceito",
           text: `Usuário ${payload?.nome} logado com sucesso`,

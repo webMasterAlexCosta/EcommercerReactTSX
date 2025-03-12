@@ -1,5 +1,5 @@
 
-import { ShoppingCartOutlined } from "@mui/icons-material"; // Ícone de carrinho
+import { ShoppingCartOutlined } from "@mui/icons-material"; 
 import { ContinuarComprando } from "../UI/ContinuarComprando";
 
 const AdicionarProdutos = () => {

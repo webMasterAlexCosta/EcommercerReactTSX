@@ -35,10 +35,10 @@ const Carrinho = () => {
   };
 
   const enviarPedido = async (): Promise<AxiosResponse<unknown, unknown>> => {
-    // Primeiro, mostramos o alerta de sucesso
+   
     setAlertData({ title: "Pedido Enviado com Sucesso", text: "Obrigado pela sua compra!", icon: "success" });
     const response = await userService.enviarPedido();
-    // Aguardar um tempo antes de continuar com o envio do pedido
+   
     setTimeout(async () => {
       try {
   
@@ -47,7 +47,7 @@ const Carrinho = () => {
         carrinhoService.removeCarrinho();
         setProdutos([]);
 
-        // O alerta já foi setado acima, então o fluxo está controlado aqui
+     
         return response;
       } catch (error) {
         setAlertData({ title: "Erro ao Enviar Pedido", text: "Ocorreu um erro ao enviar seu pedido. Tente novamente.", icon: "error" });

@@ -30,12 +30,11 @@ const Detalhes = () => {
       try {
         const responseProduto = await produtoService.findById(parseInt(id));
 
-        // Verificar se a resposta contém o produto corretamente
         if (!responseProduto.data || !responseProduto.data.id) {
           setAlertData({ title: "Erro", text: "Produto não encontrado!", icon: "error" });
           console.log("Produto não encontrado!");
         } else {
-          setProdutoAtual(responseProduto.data); // Atualizar estado com o produto encontrado
+          setProdutoAtual(responseProduto.data); 
         }
 
         const responseProdutos = await produtoService.findAll();
@@ -51,7 +50,6 @@ const Detalhes = () => {
     buscarProduto();
   }, [id]);
 
-  // Definir lógica de navegação para próximo e anterior
   const currentIndex = produtos.findIndex(produto => produto.id === produtoAtual?.id);
   const nextProduto = produtos[currentIndex + 1] || null;
   const lastProduto = produtos[currentIndex - 1] || null;
@@ -92,7 +90,7 @@ const Detalhes = () => {
         {produtoAtual ? (
           <DetalheProduto produtoAtual={produtoAtual} />
         ) : (
-          <p>Produto não encontrado!</p> // Exibe uma mensagem quando o produto não for encontrado
+          <p>Produto não encontrado!</p> 
         )}
 
         <div className="dsc-btn-page-container">

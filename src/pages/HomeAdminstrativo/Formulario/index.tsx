@@ -1,16 +1,15 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { ProdutoDTO } from "../../../models/dto/ProdutosDTO"; // ProdutoDTO deve ser um tipo, não um array
+import { ProdutoDTO } from "../../../models/dto/ProdutosDTO"; 
 import "./styles.css";
 import { useEffect, useState } from "react";
 import * as produtoService from "../../../services/ProdutoService";
 
 const Formulario = () => {
-    const { id } = useParams(); // Obtém o id da URL
-    const navigate = useNavigate(); // Para redirecionamento
+    const { id } = useParams();// Obtém o id da URL
+    const navigate = useNavigate(); 
 
     const [produto, setProduto] = useState<ProdutoDTO | null>(null);
 
-    // Estados controlados para os inputs do formulário
     const [categoria, setCategoria] = useState<number>(0);
     const [nomeProduto, setNomeProduto] = useState<string>("");
     const [precoProduto, setPrecoProduto] = useState<number>(0);
@@ -30,7 +29,6 @@ const Formulario = () => {
 
                 setProduto(produtoEncontrado);
 
-                // Atualizar os estados com os valores do produto encontrado
                 setCategoria(produtoEncontrado.categorias[0]?.id || 0);
                 setNomeProduto(produtoEncontrado.nome);
                 setPrecoProduto(produtoEncontrado.preco);
@@ -47,14 +45,14 @@ const Formulario = () => {
         }
     }, [id, navigate]);
 
-    // Função para salvar o produto
+   
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
         if (!produto) return;
 
         const updatedProduto: ProdutoDTO = {
-            ...produto, // Mantém os outros atributos do produto
+            ...produto, 
             nome: nomeProduto,
             preco: precoProduto,
             imgUrl: imagemProduto,

@@ -28,13 +28,12 @@ const findMe = async () => {
         data: { email, cpf },
       };
   
-     // Assuming requestBackEnd is an axios wrapper function.
       const response = await requestBackEnd(config);
   
      
       return response;
     } catch (error) {
-      // You can log the error or return a specific error message based on the type of erro
+   
       console.error('Erro ao recuperar senha:', error);
       throw new Error('Erro ao recuperar senha. Tente novamente mais tarde.');
     }

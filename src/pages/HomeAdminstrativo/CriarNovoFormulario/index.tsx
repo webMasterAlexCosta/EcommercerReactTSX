@@ -1,10 +1,8 @@
 import { useState } from 'react';
-// import { useNavigate } from 'react-router-dom';
-// import ProdutoDTO from "../../../models/dto/ProdutosDTO";
+
 
 
 const CriarNovoProduto = () => {
-  //const navigate = useNavigate();
   const [produto, setProduto] = useState({
     nome: '',
     preco: '',
@@ -13,7 +11,7 @@ const CriarNovoProduto = () => {
     categoria: []
   });
 
-  // Função para lidar com as mudanças no formulário
+  
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setProduto((prevProduto) => ({
@@ -95,7 +93,7 @@ const CriarNovoProduto = () => {
                     <option value="" disabled>Categorias</option>
                     <option value="1">Categoria 1</option>
                     <option value="2">Categoria 2</option>
-                    {/* Adicione outras categorias conforme necessário */}
+                  
                   </select>
                 </div>
                 <div>

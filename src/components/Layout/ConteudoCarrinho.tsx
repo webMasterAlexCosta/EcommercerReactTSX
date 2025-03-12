@@ -104,9 +104,9 @@ const ConteudoCarrinho = ({
                             enviar={async () => {
                                 setLoading(true);
                                 try {
-                                    await enviar(); // 🔹 Envia o pedido
+                                    await enviar();
                                     setLoading(false);
-                                    setIsCarrinho(true); // Marca o pedido como enviado
+                                    setIsCarrinho(true); 
                                 } catch (error) {
                                     console.log(error);
                                     setLoading(false);

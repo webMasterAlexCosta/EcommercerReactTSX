@@ -1,7 +1,6 @@
 import {  storageCarrinho } from "../utils/system";
 import { CarrinhoItem } from "../models/dto/CarrinhoDTO";
 
-// Funções para manipulação do carrinho no localStorage
 const getCarrinho = () => {
     return localStorage.getItem(storageCarrinho);
 };
@@ -15,7 +14,6 @@ const removeCarrinho = (key: string) => {
     return localStorage.removeItem(key);
 };
 
-// Função para enviar o pedido
 
 
 export { getCarrinho, setCarrinho, removeCarrinho };

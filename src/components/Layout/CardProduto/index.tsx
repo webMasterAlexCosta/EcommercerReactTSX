@@ -11,7 +11,6 @@ interface ICard {
 
 const CardProduto = ({ produtos, loading }: ICard) => {
 
-    // Função para renderizar os produtos
     const renderProdutos = () => {
         return produtos.map(itemProduto => (
             <div key={itemProduto.id} className="dsc-card">
@@ -39,10 +38,8 @@ const CardProduto = ({ produtos, loading }: ICard) => {
             {loading ? (
                <Carregando title="Carregando Produtos"/>
             ) : produtos.length === 0 ? (
-                // Quando não houver produtos, mostrar a mensagem de "Nenhum produto encontrado"
                 <Carregando className="nenhum-produto" title="nenhum produto encontrado"/>
             ) : (
-                // Quando houver produtos, renderizar a lista de produtos com a classe dsc-catalog-cards
                 <div className="dsc-catalog-cards dsc-mb20 dsc-mt20">
                     {renderProdutos()}
                 </div>
