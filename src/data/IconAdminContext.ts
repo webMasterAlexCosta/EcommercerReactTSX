@@ -1,11 +1,16 @@
 import { createContext } from "react";
 
-interface IconAdminContext {
-    iconAdminContext: boolean;
-    setIconAdminContext: (iconAdminContext: boolean) => void;
+export type PerfilContext = "CLIENT" | "ADMIN" | null;
+
+interface IconAdminContextProps {
+    iconAdminContext: PerfilContext;
+    setIconAdminContext: (iconAdminContext: PerfilContext) => void;
 }
-const IconAdminContext = createContext<IconAdminContext>({
-    iconAdminContext: false,
-  setIconAdminContext: () => {},
+
+
+const IconAdminContext = createContext<IconAdminContextProps>({
+    iconAdminContext: null,
+    setIconAdminContext: () => {},
 });
+
 export default IconAdminContext;

@@ -10,11 +10,12 @@ export interface EnderecoDTO {
 }
 
 export interface UserDTO {
-  id: string;
+  id?: string;
   nome: string;
   email: string;
+  cpf?: string;
   telefone: string;
   dataNascimento: string;
   perfil: string[];
-  endereco: EnderecoDTO;
+  endereco?: EnderecoDTO;
 }

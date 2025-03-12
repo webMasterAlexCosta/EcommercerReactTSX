@@ -1,0 +1,127 @@
+.registro-formulario {
+  background-color: #fff;
+  width: 100%;
+  max-width: 800px;
+  padding: 40px; /* Aumenta o espaçamento interno */
+  border-radius: 16px; /* Borda mais arredondada */
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12); /* Sombra mais suave */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  margin: 40px auto; /* Centraliza e adiciona margem superior/inferior */
+}
+.registro-formulario:where(:hover, :focus-within, :active) {
+  transform: translateY(-8px); /* Efeito mais perceptível */
+  box-shadow: 0 16px 48px var(  --dsc-color-bg-tertiary); /* Sombra mais intensa */
+}
+
+.formulario-grupo {
+  margin-bottom: 24px; /* Espaçamento mais consistente */
+}
+
+label {
+  display: block;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 8px; /* Espaçamento entre label e input */
+}
+
+input[type="text"],
+input[type="email"],
+input[type="date"] {
+  width: 100%;
+  padding: 14px; /* Mais espaço interno */
+  font-size: 1rem;
+  color: #333;
+  border: 2px solid #e0e0e0; /* Borda mais visível */
+  border-radius: 10px;
+  background-color: #f9f9f9;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+input:focus {
+  border-color: #007bff; /* Destaca o campo ativo */
+  background-color: #ffffff;
+  outline: none;
+}
+
+input[readonly] {
+  background-color: #f0f0f0;
+  cursor: not-allowed;
+  border-color: #dcdcdc;
+}
+
+.container-btns {
+  display: flex;
+  gap: 16px;
+  width: 100%;
+  margin-top: 32px;
+}
+
+button {
+  width: 100%;
+  padding: 14px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+button:hover {
+  background-color: #0056b3;
+  transform: scale(1.05);
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
+button#botao {
+  background-color: #dc3545; /* Cor diferente para o botão "Sair" */
+}
+
+button#botao:hover {
+  background-color: #b02a37;
+}
+
+#historico-pedidos {
+  background-color: #fafafa;
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 32px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+#historico-pedidos ul {
+  list-style: none;
+  padding: 0;
+}
+
+#historico-pedidos li {
+  padding: 14px;
+  border-bottom: 1px solid #eaeaea;
+  font-size: 1rem;
+  color: #444;
+  transition: background-color 0.3s ease;
+}
+
+#historico-pedidos li:hover {
+  background-color: #f0f8ff; /* Cor clara ao passar o mouse */
+}
+
+#historico-pedidos li:last-child {
+  border-bottom: none;
+}
+@media (max-width: 768px) {
+  .container-btns {
+    flex-direction: column; /* Botões empilhados em telas menores */
+  }
+
+  button {
+    width: 100%;
+    margin-bottom: 12px;
+  }
+}

@@ -12,14 +12,14 @@ import CriarNovoProduto from './pages/HomeAdminstrativo/CriarNovoFormulario/inde
 import HeaderClient from './components/Layout/HeaderClient';
 import Formulario from './pages/HomeAdminstrativo/Formulario';
 import ContextIsLogin from './data/LoginContext';
-import IconAdminContext from './data/IconAdminContext';
+import IconAdminContext, { PerfilContext } from './data/IconAdminContext';
 import { PrivateRoute } from './components/Private/Router';
-
+import { Perfil } from './pages/HomeClient/Perfil';
 
 const App = () => {
   const [contextCartCount, setContextCartCount] = useState<number>(0);
   const [contextIsLogin, setContextIsLogin] = useState<boolean>(false);
-  const [iconAdminContext, setIconAdminContext] = useState<boolean>(false);
+  const [iconAdminContext, setIconAdminContext] = useState<PerfilContext>(null);
 
 
   return (
@@ -30,6 +30,7 @@ const App = () => {
             <div className="app-container">
               <Routes>
                 <Route path="/" element={<><HeaderClient /><Outlet /></>}>
+                  <Route path="/Perfil" element={<Perfil />} />
                   <Route path="Carrinho" element={<Carrinho />} />
                   <Route path="Catalogo" element={<Catalogo />}>
                     <Route path="Detalhes/:id" element={<Detalhes />} />
