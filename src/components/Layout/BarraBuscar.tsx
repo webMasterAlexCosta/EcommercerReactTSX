@@ -14,14 +14,14 @@ const BarraBuscar = ({ onSearch }: SearchProps) => {
 
   return (
     <form className="dsc-search-bar" onSubmit={handleSubmit}>
-      <button type="submit">🔎︎</button>
+      <button className="pesquisa-submit"  type="submit">🔎︎</button>
       <input
         type="text"
         value={textInput}
         onChange={(e) => setTextInput(e.target.value)}
         placeholder="Nome do produto"
       />
-      <button type="reset" onClick={() => setTextInput("")}>🗙</button>
+      <button className="reset" type="reset" onClick={() => setTextInput("")}>🗙</button>
     </form>
   );
 };

@@ -7,7 +7,7 @@
 .dsc-cart-total-container {
   padding: 10px 20px;
   display: flex;
-  justify-content: space-between; /* Alinha o total à direita */
+  justify-content: f; 
   align-items: center;
 }
 
@@ -38,6 +38,7 @@
 }
 
 .dsc-cart-item-quantity-container {
+  width: 30px;
   font-size: 14px;
   font-weight: 600;
   display: flex;

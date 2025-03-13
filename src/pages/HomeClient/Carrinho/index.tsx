@@ -9,11 +9,12 @@ import { AdicionarProdutos } from '../../../components/Layout/AdicionarProdutos'
 import { Carregando } from '../../../components/UI/Carregando';
 import { PedidoFeito } from '../../../models/dto/CarrinhoDTO';
 import gerarPDF from './../../../components/UI/Pdf';
-
+import * as authService from "../../../services/AuthService"
+import { useNavigate } from 'react-router-dom';
 const Carrinho = () => {
   const { produtos, loading, handleQuantityChange, cartIconNumber, setProdutos, setContextCartCount } = useCarrinho();
   const [alertData, setAlertData] = useState<{ title: string; text: string; icon: "success" | "error" } | null>(null);
-  
+  const navigate = useNavigate();
 
   const subtotais = useMemo(() => produtos.map((item) => item.preco * item.quantidade), [produtos]);
   const totalCarrinho = useMemo(() => subtotais.reduce((total, subtotal) => total + subtotal, 0), [subtotais]);
@@ -36,6 +37,18 @@ const Carrinho = () => {
 
   const enviarPedido = async (): Promise<AxiosResponse<unknown, unknown>> => {
    
+    const isUserAutenticado= authService.isAuthenticated();
+    
+      if(!isUserAutenticado){
+        setAlertData({ title: "Você precisa estar autenticado", text: "", icon: "error" });
+        setTimeout(() => {
+          navigate("/login"); 
+        }
+        , 1000);
+        return Promise.reject(new Error("Usuário não autenticado"));
+      }
+    
+
     setAlertData({ title: "Pedido Enviado com Sucesso", text: "Obrigado pela sua compra!", icon: "success" });
     const response = await userService.enviarPedido();
    
