@@ -1,6 +1,6 @@
 
 
-export const BASE_URL_LOCAL2="http://localhost:8080"
+export const BASE_URL_LOCA2="http://localhost:8080"
 export const BASE_URL_LOCAL="https://quaint-adele-alevivaldi-a5632bd1.koyeb.app/"
 
 
