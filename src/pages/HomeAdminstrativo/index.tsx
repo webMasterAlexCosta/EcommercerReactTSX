@@ -17,7 +17,11 @@ const HomeAdminstrativo = () => {
   }, [])
   return (
     <div>
-      <HeaderAdmin user={usuario?.nome} />
+      <HeaderAdmin 
+        user={usuario?.nome} 
+        setViewerHeaderClient={() => {}}
+        setContextIsLogin={() => {}}
+      />
       <AdminHome user={usuario?.nome} />
       <Outlet />
     </div>

@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Outlet, Link } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Outlet, Link, useLocation } from 'react-router-dom';
 import './App.css';
 import { useState } from 'react';
 import ContextCartCount from './data/CartCountContext';
@@ -15,12 +15,28 @@ import IconAdminContext, { PerfilContext } from './data/IconAdminContext';
 import { PrivateRoute } from './components/Private/Router';
 import { Perfil } from './pages/HomeClient/Perfil';
 import { Header } from './components/UI/Header';
-import CardPaymentComponent from './components/Layout/CardPaymentComponent';
+import WelcomePage from './components/Layout/WelcomePage';
+import CertificadoPage from './components/Layout/CertificadoPage';
+import CertificadoDetailPage from './components/Layout/CertificadoPage/CertificadoDetailPage';
+
+// Componente condicional para renderizar o layout principal
+const MainLayout = () => {
+  const location = useLocation();
+
+  return (
+    <>
+      <Header />
+      {/* Renderizar o WelcomePage apenas na rota raiz ("/") */}
+      {location.pathname === '/' && <WelcomePage />}
+      <Outlet />
+    </>
+  );
+};
+
 const App = () => {
   const [contextCartCount, setContextCartCount] = useState<number>(0);
   const [contextIsLogin, setContextIsLogin] = useState<boolean>(false);
   const [iconAdminContext, setIconAdminContext] = useState<PerfilContext>(null);
-
 
   return (
     <IconAdminContext.Provider value={{ iconAdminContext, setIconAdminContext }}>
@@ -29,17 +45,25 @@ const App = () => {
           <BrowserRouter>
             <div className="app-container">
               <Routes>
-                <Route path="/" element={<><Header /><Outlet /></>}>
+                {/* Rotas públicas */}
+                <Route path="/" element={<MainLayout />}>
+                  <Route index element={null} /> {/* Rota raiz */}
                   <Route path="/Perfil" element={<Perfil />} />
                   <Route path="Carrinho" element={<Carrinho />} />
-                  <Route path="/" element={<CardPaymentComponent />} />
-
-
                   <Route path="Catalogo" element={<Catalogo />}>
                     <Route path="Detalhes/:id" element={<Detalhes />} />
                   </Route>
+                  <Route path="/certificados" element={<CertificadoPage />} />
+                  <Route path="/certificado/:id" element={<CertificadoDetailPage />} />
                   <Route path="/Login" element={<Login />} />
-                  <Route path="*" element={<Link to='/'><h1 style={{ color: "red" }}>404 - Página não encontrada</h1></Link>} />
+                  <Route
+                    path="*"
+                    element={
+                      <Link to="/">
+                        <h1 style={{ color: "red" }}>404 - Página não encontrada</h1>
+                      </Link>
+                    }
+                  />
                 </Route>
 
                 {/* Rotas administrativas */}
@@ -55,6 +79,6 @@ const App = () => {
       </ContextIsLogin.Provider>
     </IconAdminContext.Provider>
   );
-}
+};
 
 export default App;
