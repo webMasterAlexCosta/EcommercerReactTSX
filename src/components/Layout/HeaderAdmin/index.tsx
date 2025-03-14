@@ -8,7 +8,7 @@ import * as credenciaisServices from "../../../services/CredenciasiService";
 
 interface HeaderAdminProps {
   user: string | undefined;
-  setViewerHeaderClient: (value: boolean) => void;  // Updated to accept setter function
+  setViewerHeaderClient: (value: boolean) => void; 
   setContextIsLogin: (value: boolean) => void;
 }
 
@@ -18,9 +18,10 @@ const HeaderAdmin = ({ user, setViewerHeaderClient,setContextIsLogin }: HeaderAd
     isActive ? { color: "red" } : { color: "black" };
 
   const handlerClick = () => {
+    credenciaisServices.logout();
     setViewerHeaderClient(false);  
     setContextIsLogin(false);
-    return credenciaisServices.logout();
+    return 
   };
 
   return (

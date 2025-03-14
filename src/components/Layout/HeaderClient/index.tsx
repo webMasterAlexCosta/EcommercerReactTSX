@@ -95,7 +95,7 @@ const HeaderClient = () => {
             </NavLink>
           )}
 
-          {!contextIsLogin 
+          {!contextIsLogin
             ? <NavLink style={getIsActive} to="/login" onClick={(e) => handleOnclick(e, "login")}>
                 <Login style={{ fontSize: 40, color: 'black' }} />
                 <h3>Entrar</h3>

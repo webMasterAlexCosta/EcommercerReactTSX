@@ -44,8 +44,13 @@ const Login = () => {
 
         const payload = authService.getAccessTokenPayload();
         const userProfile = payload?.perfis.includes("ADMIN") ? "ADMIN" : (payload?.perfis.includes("CLIENT") ? "CLIENT" : null);
-        setIconAdminContext(userProfile); 
+        setIconAdminContext(userProfile);
 
+        if(userProfile ==="ADMIN"){
+          navigate("/administrativo")
+        }else{
+          navigate("/catalogo")
+        }
         setLoading(false);
         setAlertData({
           title: "Login Aceito",
