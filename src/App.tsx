@@ -9,12 +9,12 @@ import Administrativo from './pages/HomeAdminstrativo';
 import Listagem from './pages/HomeAdminstrativo/Listagem';
 import Detalhes from './pages/HomeClient/Catalogo/Detalhes';
 import CriarNovoProduto from './pages/HomeAdminstrativo/CriarNovoFormulario/index';
-import HeaderClient from './components/Layout/HeaderClient';
 import Formulario from './pages/HomeAdminstrativo/Formulario';
 import ContextIsLogin from './data/LoginContext';
 import IconAdminContext, { PerfilContext } from './data/IconAdminContext';
 import { PrivateRoute } from './components/Private/Router';
 import { Perfil } from './pages/HomeClient/Perfil';
+import { Header } from './components/UI/Header';
 
 const App = () => {
   const [contextCartCount, setContextCartCount] = useState<number>(0);
@@ -29,7 +29,7 @@ const App = () => {
           <BrowserRouter>
             <div className="app-container">
               <Routes>
-                <Route path="/" element={<><HeaderClient /><Outlet /></>}>
+                <Route path="/" element={<><Header /><Outlet /></>}>
                   <Route path="/Perfil" element={<Perfil />} />
                   <Route path="Carrinho" element={<Carrinho />} />
                   <Route path="Catalogo" element={<Catalogo />}>

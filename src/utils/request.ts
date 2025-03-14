@@ -4,7 +4,6 @@ import * as credentialRespository from "../repository/CredenciaisRepository";
 
 const requestBackEnd = (config: AxiosRequestConfig) => {
     const token = credentialRespository.get(TOKEN_KEY);
-
     const headers = {
         ...config.headers,
         Authorization: token ? `Bearer ${token}` : undefined,
@@ -31,11 +30,15 @@ axios.interceptors.response.use(
         if (error.response) {
             if (error.response.status === 401) {
                
-                window.location.href = "/login";
+               // console.warn("⚠️ Erro 401: Não autorizado");
+                // Agora, em vez de recarregar a página, apenas rejeitamos a Promise
+                return Promise.reject(error);
             }
 
             if (error.response.status === 403) {
-                window.location.href = "/catalogo";
+              //  console.warn("⛔ Erro 403: Acesso negado");
+            
+                return Promise.reject(error);
             }
         }
         return Promise.reject(error);

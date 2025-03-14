@@ -15,8 +15,10 @@ const Alert = ({ title, text, icon, onClose }: AlertProps) => {
       text,
       icon,
       confirmButtonText: "Fechar",
-    }).then(() => onClose?.());
-  }, [title, text, icon, onClose]); // Evita re-renderizações desnecessárias
+    }).then(() => {
+      if (onClose) onClose(); 
+    });
+  }, [title, text, icon, onClose]);
 
   return null;
 };

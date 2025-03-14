@@ -10,6 +10,7 @@ import * as crendincialService from "../../services/CredenciasiService";
 import LoginForm from "../../hooks/loginForm"; 
 import IconAdminContext from "../../data/IconAdminContext";
 import { Carregando } from "../../components/UI/Carregando";
+import { AxiosError } from "axios";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -17,8 +18,9 @@ const Login = () => {
     email: "",
     senha: ""
   });
+
   const { setContextIsLogin } = useContext(ContextIsLogin);
-  const { setIconAdminContext } = useContext(IconAdminContext);
+  const {iconAdminContext, setIconAdminContext } = useContext(IconAdminContext);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [alertData, setAlertData] = useState<{ title: string; text: string; icon: "success" | "error" | "warning" | "info"; } | null>(null);
@@ -42,22 +44,32 @@ const Login = () => {
 
         const payload = authService.getAccessTokenPayload();
         const userProfile = payload?.perfis.includes("ADMIN") ? "ADMIN" : (payload?.perfis.includes("CLIENT") ? "CLIENT" : null);
-
         setIconAdminContext(userProfile); 
-        setLoading(false);
 
+        setLoading(false);
         setAlertData({
           title: "Login Aceito",
           text: `Usuário ${payload?.nome} logado com sucesso`,
           icon: "success"
         });
       } catch (error) {
-        console.error("Erro no login:", error);
         setLoading(false);
+
+        let errorMessage = "Falha no login. Verifique seus dados.";
+        
+        if (error instanceof AxiosError && error.response) {
+         
+
+          if (error.response.data.trace) {
+            errorMessage = error.response.data.trace; 
+          } else if (error.response.data.error) {
+            errorMessage = error.response.data.error; 
+          }
+        }
 
         setAlertData({
           title: "Erro",
-          text: "Falha no login. Verifique seus dados.",
+          text: errorMessage,
           icon: "error"
         });
       }
@@ -67,12 +79,15 @@ const Login = () => {
   };
 
   const handleAlertClose = () => {
+   
     if (alertData?.icon === "success") {
+      if(iconAdminContext === "ADMIN") {
+        navigate("/Administrativo");
+      } else if(iconAdminContext === "CLIENT") {  
       navigate("/catalogo");
     } else {
-      navigate("/login");
-    }
-    setAlertData(null);
+      setAlertData(null);
+    }}
   };
 
   return (
