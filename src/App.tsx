@@ -5,7 +5,7 @@ import ContextCartCount from './data/CartCountContext';
 import Carrinho from './pages/HomeClient/Carrinho';
 import Catalogo from './pages/HomeClient/Catalogo';
 import Login from './pages/Login/Login';
-import Administrativo from './pages/HomeAdminstrativo'; 
+import Administrativo from './pages/HomeAdminstrativo';
 import Listagem from './pages/HomeAdminstrativo/Listagem';
 import Detalhes from './pages/HomeClient/Catalogo/Detalhes';
 import CriarNovoProduto from './pages/HomeAdminstrativo/CriarNovoFormulario/index';
@@ -15,7 +15,7 @@ import IconAdminContext, { PerfilContext } from './data/IconAdminContext';
 import { PrivateRoute } from './components/Private/Router';
 import { Perfil } from './pages/HomeClient/Perfil';
 import { Header } from './components/UI/Header';
-
+import CardPaymentComponent from './components/Layout/CardPaymentComponent';
 const App = () => {
   const [contextCartCount, setContextCartCount] = useState<number>(0);
   const [contextIsLogin, setContextIsLogin] = useState<boolean>(false);
@@ -32,6 +32,9 @@ const App = () => {
                 <Route path="/" element={<><Header /><Outlet /></>}>
                   <Route path="/Perfil" element={<Perfil />} />
                   <Route path="Carrinho" element={<Carrinho />} />
+                  <Route path="/" element={<CardPaymentComponent />} />
+
+
                   <Route path="Catalogo" element={<Catalogo />}>
                     <Route path="Detalhes/:id" element={<Detalhes />} />
                   </Route>
