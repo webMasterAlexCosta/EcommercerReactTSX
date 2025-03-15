@@ -18,13 +18,14 @@ import { Header } from './components/UI/Header';
 import PaginaAviso from './components/Layout/PaginaAviso';
 import CertificadoPage from './components/Layout/CertificadoPage';
 import CertificadoDetailPage from './components/Layout/CertificadoPage/CertificadoDetailPage';
+//import CardPaymentComponent from './components/Layout/CardPaymentComponent';
 
 const MainLayout = () => {
   const location = useLocation();
 
   return (
     <>
-     CKC <Header />
+      <Header />
       {location.pathname === '/' && <PaginaAviso />}
       <Outlet />
     </>
@@ -43,8 +44,9 @@ const App = () => {
           <BrowserRouter>
             <div className="app-container">
               <Routes>
-                {/* Rotas públicas */}
-                <Route path="/" element={<MainLayout />}>                  
+               
+                <Route path="/" element={<MainLayout />}>
+                  {/* <Route path="/Pagamento" element={<CardPaymentComponent />} />                   */}
                   <Route path="/Perfil" element={<Perfil />} />
                   <Route path="Carrinho" element={<Carrinho />} />
                   <Route path="Catalogo" element={<Catalogo />}>
@@ -63,7 +65,7 @@ const App = () => {
                   />
                 </Route>
 
-                {/* Rotas administrativas */}
+                
                 <Route path="/Administrativo" element={<PrivateRoute><Administrativo /></PrivateRoute>}>
                   <Route path="Listagem" element={<PrivateRoute><Listagem /></PrivateRoute>} />
                   <Route path="Formulario/:id" element={<PrivateRoute><Formulario /></PrivateRoute>} />

@@ -25,7 +25,7 @@ const PaginaAviso: React.FC = () => {
       {/* Header */}
       <header className="welcome-header">
        
-       <h1> <p className="sub-title">Este projeto é fictício. Nada é Real, sinta se a vontade pra explorar  </p></h1>
+       <h1> <p className="sub-title">Este projeto é fictício. Nada é Real, sinta se a vontade pra explorar</p></h1>
       </header>
 
       {/* Hero Section */}
@@ -67,22 +67,26 @@ const PaginaAviso: React.FC = () => {
 
       {/* Social Links */}
       <section className="social-section">
-        <h2>Conecte-se comigo:</h2>
-        <div className="social-links">
-          {socialLinks.map((link, index) => (
-            <a
-              key={index}
-              href={link.href}
-              target={link.href === "/Certificados" ? undefined : "_blank"}
-              rel="noopener noreferrer"
-              className="social-link"
-              aria-label={link.label}
-            >
-              {link.icon}
-            </a>
-          ))}
+  <h2>Conecte-se comigo:</h2>
+  <div className="social-links">
+    {socialLinks.map((link, index) => (
+      <a
+        key={index}
+        href={link.href}
+        target={link.href === "/Certificados" ? undefined : "_blank"}
+        rel="noopener noreferrer"
+        className="social-link"
+        aria-label={link.label}
+      >
+        <div className="icon-container">
+          {link.icon}
         </div>
-      </section>
+        <p>{link.label}</p>
+      </a>
+    ))}
+  </div>
+</section>
+
     </div>
   );
 };
