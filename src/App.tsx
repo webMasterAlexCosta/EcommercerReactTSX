@@ -18,7 +18,7 @@ import { Header } from './components/UI/Header';
 import PaginaAviso from './components/Layout/PaginaAviso';
 import CertificadoPage from './components/Layout/CertificadoPage';
 import CertificadoDetailPage from './components/Layout/CertificadoPage/CertificadoDetailPage';
-//import CardPaymentComponent from './components/Layout/CardPaymentComponent';
+import CardPaymentComponent2 from './components/Layout/CardPaymentComponent2';
 
 const MainLayout = () => {
   const location = useLocation();
@@ -46,7 +46,7 @@ const App = () => {
               <Routes>
                
                 <Route path="/" element={<MainLayout />}>
-                  {/* <Route path="/Pagamento" element={<CardPaymentComponent />} />                   */}
+                  <Route path="/Pagamento" element={<CardPaymentComponent2 />} />                  
                   <Route path="/Perfil" element={<Perfil />} />
                   <Route path="Carrinho" element={<Carrinho />} />
                   <Route path="Catalogo" element={<Catalogo />}>
