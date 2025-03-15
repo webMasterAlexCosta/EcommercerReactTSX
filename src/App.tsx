@@ -46,8 +46,7 @@ const App = () => {
             <div className="app-container">
               <Routes>
                 {/* Rotas públicas */}
-                <Route path="/" element={<MainLayout />}>
-                  <Route index element={null} /> {/* Rota raiz */}
+                <Route path="/" element={<MainLayout />}>                  
                   <Route path="/Perfil" element={<Perfil />} />
                   <Route path="Carrinho" element={<Carrinho />} />
                   <Route path="Catalogo" element={<Catalogo />}>
