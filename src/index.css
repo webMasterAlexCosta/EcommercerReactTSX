@@ -147,6 +147,12 @@ header {
     gap: 10px; /* Reduzir espaçamento entre elementos em telas menores */
   }
 }
+@media (max-width: 575px) {
+  header {
+    height: auto; /* Adapta a altura do header para dispositivos menores */
+    padding: 10px 20px; /* Ajuste o padding para garantir que o conteúdo não fique apertado */
+  }
+}
 
 /*-----------------------------------------------------------------*/
 /* card styles */

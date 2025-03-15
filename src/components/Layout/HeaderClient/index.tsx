@@ -35,10 +35,9 @@ const HeaderClient = () => {
     return () => window.removeEventListener('storage', checkLoginStatus);
   }, [setContextIsLogin, setIconAdminContext]);
 
-  const getIsActive = ({ isActive }: { isActive: boolean }) => ({ color: isActive ? "red" : "black" });
+  const getIsActive = ({ isActive }: { isActive: boolean }) => (isActive ? { color: "red" } : { color: "black" });
 
   function handleOnclick(event: React.MouseEvent<HTMLElement> | React.MouseEvent<SVGSVGElement, MouseEvent>, tipo: string): void {
-   
     if (tipo === "logout") {
       event.preventDefault();
       credencialServices.logout();
@@ -48,7 +47,6 @@ const HeaderClient = () => {
     }
 
     const userProfile = authService.getAccessTokenPayload()?.perfis;
-  
 
     if (userProfile?.includes("ADMIN")) {
       setIconAdminContext("ADMIN");
@@ -62,20 +60,19 @@ const HeaderClient = () => {
   return (
     <header className="dsc-header-client">
       <nav className="dsc-container">
-        <NavLink style={getIsActive} to="/">
+        <NavLink to="/" style={getIsActive}>
           <Home style={{ fontSize: 40, color: 'black' }} />
           <h3>Inicio</h3>
         </NavLink>
 
-        <NavLink style={getIsActive} to="/catalogo">
+        <NavLink to="/catalogo" style={getIsActive}>
           <MenuBook style={{ fontSize: 40, color: 'black' }} />
           <h3>Catalogo</h3>
         </NavLink>
 
         <div className="dsc-navbar-right">
-         
           {iconAdminContext === "CLIENT" && (
-            <NavLink style={getIsActive} to="/perfil">
+            <NavLink to="/perfil" style={getIsActive}>
               <AccountCircle style={{ fontSize: 40, color: 'black' }} />
               <h3>Perfil</h3>
             </NavLink>
@@ -89,18 +86,18 @@ const HeaderClient = () => {
           </NavLink>
 
           {iconAdminContext === "ADMIN" && (
-            <NavLink style={getIsActive} to="/Administrativo">
+            <NavLink to="/Administrativo" style={getIsActive}>
               <span className="material-icons">settings</span>
               <h3>Admin</h3>
             </NavLink>
           )}
 
           {!contextIsLogin
-            ? <NavLink style={getIsActive} to="/login" onClick={(e) => handleOnclick(e, "login")}>
+            ? <NavLink to="/login" onClick={(e) => handleOnclick(e, "login")} style={getIsActive}>
                 <Login style={{ fontSize: 40, color: 'black' }} />
                 <h3>Entrar</h3>
               </NavLink>
-            : <NavLink style={getIsActive} to="/catalogo" onClick={(e) => handleOnclick(e, "logout")}>
+            : <NavLink to="/catalogo" onClick={(e) => handleOnclick(e, "logout")} style={getIsActive}>
                 <Logout style={{ fontSize: 40, color: 'black' }} />
                 <h3>Sair</h3>
               </NavLink>

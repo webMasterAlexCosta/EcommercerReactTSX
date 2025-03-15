@@ -3,7 +3,7 @@ import { FaGithub, FaLinkedin, FaWhatsapp, FaFacebook, FaCertificate } from "rea
 import './style.css'; // Estilo localizado
 import { Link } from "react-router-dom";
 
-const WelcomePage: React.FC = () => {
+const PaginaAviso: React.FC = () => {
   const socialLinks = [
     { href: "https://github.com/alevivaldi", icon: <FaGithub size={30} />, label: "GitHub" },
     { href: "https://www.linkedin.com/in/alexcosta2025/", icon: <FaLinkedin size={30} />, label: "LinkedIn" },
@@ -25,7 +25,7 @@ const WelcomePage: React.FC = () => {
       {/* Header */}
       <header className="welcome-header">
        
-       <h1> <p className="sub-title">Este projeto é fictício. Sinta-se à vontade para explorar!</p></h1>
+       <h1> <p className="sub-title">Este projeto é fictício. Nada é Real, sinta se a vontade pra explorar  </p></h1>
       </header>
 
       {/* Hero Section */}
@@ -89,4 +89,4 @@ const WelcomePage: React.FC = () => {
 
 
 
-export default WelcomePage;
+export default PaginaAviso;

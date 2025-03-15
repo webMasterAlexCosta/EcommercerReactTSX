@@ -15,19 +15,17 @@ import IconAdminContext, { PerfilContext } from './data/IconAdminContext';
 import { PrivateRoute } from './components/Private/Router';
 import { Perfil } from './pages/HomeClient/Perfil';
 import { Header } from './components/UI/Header';
-import WelcomePage from './components/Layout/WelcomePage';
+import PaginaAviso from './components/Layout/PaginaAviso';
 import CertificadoPage from './components/Layout/CertificadoPage';
 import CertificadoDetailPage from './components/Layout/CertificadoPage/CertificadoDetailPage';
 
-// Componente condicional para renderizar o layout principal
 const MainLayout = () => {
   const location = useLocation();
 
   return (
     <>
-      <Header />
-      {/* Renderizar o WelcomePage apenas na rota raiz ("/") */}
-      {location.pathname === '/' && <WelcomePage />}
+     CKC <Header />
+      {location.pathname === '/' && <PaginaAviso />}
       <Outlet />
     </>
   );
