@@ -1,7 +1,7 @@
 
 
-export const BASE_URL_LOCAL="http://localhost:8080/api"
-export const BASE_URL_LOCAL2="https://quaint-adele-alevivaldi-a5632bd1.koyeb.app/api"
+export const BASE_URL_LOCAL2="http://localhost:8080/api"
+export const BASE_URL_LOCAL="https://quaint-adele-alevivaldi-a5632bd1.koyeb.app/api"
 
 
 export const storageCarrinho = "br.com.alexcosta/carrinho"

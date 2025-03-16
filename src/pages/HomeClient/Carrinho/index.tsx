@@ -35,7 +35,7 @@ const Carrinho = () => {
   
   const pedidoFeito = async (): Promise<AxiosResponse<unknown, unknown>> => {
     setFazerPedido(true);
-    console.log("Pedido Feito");
+    //console.log("Pedido Feito");
     
     navigate("/Carrinho/Pagamento");
    // return enviarPedido();
