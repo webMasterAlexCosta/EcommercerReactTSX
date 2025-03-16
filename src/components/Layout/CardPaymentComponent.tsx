@@ -1,144 +1,169 @@
-import  "../../pages/HomeClient/Carrinho/styles.css"
 import React, { useEffect } from 'react';
-import { PUBLIC_KEY } from '../../utils/system';
 
 declare global {
   interface Window {
-    MercadoPago: {
-      new (publicKey: string, options?: { locale: string }): {
-        bricks: () => {
-          create: (type: string, containerId: string, settings: { initialization: { amount: number; payer: { email: string; }; }; customization: { visual: { style: { theme: string; customVariables: object; }; }; paymentMethods: { maxInstallments: number; }; }; callbacks: { onReady: () => void; onSubmit: (cardFormData: unknown) => Promise<void>; onError: (error: unknown) => void; }; }) => Promise<unknown>;
-        };
-      };
-    };
-    cardPaymentBrickController?: ReturnType<ReturnType<InstanceType<typeof window.MercadoPago>['bricks']>['create']>;
+    paymentBrickController: unknown;
   }
 }
+import { PUBLIC_KEY } from './../../utils/system';
 
-const CardPaymentComponent: React.FC = () => {
+interface MercadoPagoInstance {
+  bricks: () => MercadoPagoBricks;
+}
+
+interface MercadoPagoBricks {
+  create: (type: string, containerId: string, settings: Record<string, unknown>) => Promise<unknown>;
+}
+
+interface MercadoPagoConstructor {
+  new(publicKey: string, options: { locale: string }): MercadoPagoInstance;
+}
+
+// Tipagem para os dados do Payment Brick
+interface FormData {
+  token: string; // Token gerado pelo Payment Brick
+  issuer_id: string; // ID do emissor do cartão
+  payment_method_id: string; // Método de pagamento (ex.: "visa", "master")
+  transaction_amount: number; // Valor da transação
+  installments: number; // Número de parcelas
+  payer: {
+    email: string; // E-mail do pagador
+    firstName: string; // Nome do pagador
+    identification: {
+      type: string; // Tipo de identificação (ex.: "CPF")
+      number: string; // Número da identificação
+    },
+  };
+}
+
+const CardPaymentComponent2: React.FC = () => {
   useEffect(() => {
     const script = document.createElement('script');
     script.src = 'https://sdk.mercadopago.com/js/v2';
     script.async = true;
     script.onload = () => {
-      const mp = new window.MercadoPago(PUBLIC_KEY, {
-        locale: 'pt-BR'
-      });
+      console.log('MercadoPago SDK loaded successfully');
+
+      const mp = new ((window as unknown as { MercadoPago: MercadoPagoConstructor }).MercadoPago)(PUBLIC_KEY, { locale: 'pt-BR' });
       const bricksBuilder = mp.bricks();
-    interface Payer {
-      email: string;
-    }
 
-    interface Initialization {
-      amount: number;
-      payer: Payer;
-    }
-
-    interface CustomVariables {
-          [key: string]: unknown;
-    }
-
-    interface Style {
-      theme: string;
-      customVariables: CustomVariables;
-    }
-
-    interface Visual {
-      style: Style;
-    }
-
-    interface PaymentMethods {
-      maxInstallments: number;
-    }
-
-    interface Customization {
-      visual: Visual;
-      paymentMethods: PaymentMethods;
-    }
-
-    interface Callbacks {
-      onReady: () => void;
-      onSubmit: (cardFormData: { [key: string]: string | number | boolean }) => Promise<void>;
-      onError: (error: Error) => void;
-    }
-
-    interface Settings {
-      initialization: Initialization;
-      customization: Customization;
-      callbacks: Callbacks;
-    }
-
-    const renderCardPaymentBrick = async (bricksBuilder: ReturnType<typeof window.MercadoPago.prototype.bricks>) => {
-      const settings: Settings = {
-        initialization: {
-        amount: 100, // valor total a ser pago
-        payer: {
-          email: "",
-        },
-        },
-        customization: {
-        visual: {
-          style: {
-            theme: 'default', // | 'dark' | 'bootstrap' | 'flat'
-            customVariables: {
-            }
-          }
-        },
-        paymentMethods: {
-          maxInstallments: 1,
-        }
-        },
-        callbacks: {
-        onReady: () => {
-          // callback chamado quando o Brick estiver pronto
-        },
-        onSubmit: (cardFormData: { [key: string]: string | number | boolean }) => {
-          //  callback chamado o usuário clicar no botão de submissão dos dados
-          //  exemplo de envio dos dados coletados pelo Brick para seu servidor
-          return new Promise((resolve, reject) => {
-            fetch("/process_payment", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
+      const renderPaymentBrick = async () => {
+        const settings = {
+          initialization: {
+            amount: 100, // Valor total da transação (em reais)
+          },
+          customization: {
+            visual: {
+              style: {
+                theme: 'default', // Tema visual do Payment Brick
+              },
             },
-            body: JSON.stringify(cardFormData)
-            })
-            .then((response) => {
-              console.log(response);
-              resolve();
-            })
-            .catch((error) => {
-                console.error(error);
-              reject();
-            })
-          });
-        },
-        onError: (error: Error) => {
-            console.error(error);
-        },
-        },
+            paymentMethods: {
+              creditCard: 'all',
+              debitCard: 'all',
+              ticket: 'all',
+              bankTransfer: 'all',
+            },
+          },
+          callbacks: {
+            onReady: () => {
+              console.log('Payment Brick is ready');
+            },
+            onSubmit: async ({ formData }: { formData: FormData }) => {
+              console.log('FormData received:', formData);
+
+              try {
+                // Validação dos campos obrigatórios
+                if (!formData.token) {
+                  console.error('Erro: Token não encontrado.');
+                  alert('Erro: Token do cartão não encontrado.');
+                  return;
+                }
+                if (!formData.transaction_amount) {
+                  console.error('Erro: Valor da transação não encontrado.');
+                  alert('Erro: Valor da transação não encontrado.');
+                  return;
+                }
+
+                // Montar a requisição de pagamento
+                const paymentRequest = {
+                  transactionAmount: formData.transaction_amount.toString(), // Converta para string
+                  token: formData.token, // Token gerado pelo Payment Brick
+                  description: "Pagamento via Payment Brick",
+                  installments: formData.installments,
+                  paymentMethodId: formData.payment_method_id,
+                  payer: {
+                    email: formData.payer.email,
+                    firstName: formData.payer.firstName,
+                    identification: {
+                      type: formData.payer.identification.type,
+                      number: formData.payer.identification.number,
+                    },
+                  },
+                };
+
+                console.log('Payment Request:', paymentRequest);
+
+                // Enviar a requisição para o backend
+                const paymentResponse = await fetch('http://localhost:8080/api/payment/credit-card', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify(paymentRequest),
+                });
+
+                if (!paymentResponse.ok) {
+                  console.error('Erro ao processar pagamento:', paymentResponse.statusText);
+                  throw new Error('Erro ao processar pagamento');
+                }
+
+                const paymentResult = await paymentResponse.json();
+                console.log('Pagamento realizado com sucesso:', paymentResult);
+                alert(`Pagamento realizado com sucesso! ID: ${paymentResult.paymentId}`);
+              } catch (error) {
+                console.error('Erro ao processar o pagamento:', error);
+                alert('Erro ao processar o pagamento. Verifique os logs.');
+              }
+            },
+            onError: (error: unknown) => {
+              console.error('Payment Brick error:', error);
+              alert('Ocorreu um erro ao processar o pagamento. Verifique os logs.');
+            },
+          },
+        };
+
+        try {
+          window.paymentBrickController = await bricksBuilder.create(
+            'payment',
+            'paymentBrick_container',
+            settings
+          );
+        } catch (error) {
+          console.error('Error initializing MercadoPago payment brick', error);
+        }
       };
-      window.cardPaymentBrickController = await bricksBuilder.create('cardPayment', 'cardPaymentBrick_container', settings);
+
+      renderPaymentBrick();
     };
-      renderCardPaymentBrick(bricksBuilder);
+
+    script.onerror = () => {
+      console.error('Failed to load MercadoPago SDK');
     };
-    document.head.appendChild(script);
+
+    document.body.appendChild(script);
 
     return () => {
-      document.head.removeChild(script);
+      document.body.removeChild(script);
     };
   }, []);
 
   return (
-    <div id="cardPaymentBrick_container" style={{
-        width: '400px',
-        height: '400px',
-        marginTop: '20px',
-        padding: '20px',
-        borderRadius: '5px',
-        margin: '0 auto',
-    }}></div>
+    <div>
+      <h1>Realize seu Pagamento</h1>
+      <div id="paymentBrick_container" style={{ width: '600px', height: '400px' }}></div>
+    </div>
   );
 };
 
-export default CardPaymentComponent;
+export default CardPaymentComponent2;
