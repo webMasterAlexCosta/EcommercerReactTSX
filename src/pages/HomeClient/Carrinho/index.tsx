@@ -3,22 +3,19 @@ import useCarrinho from '../../../hooks/useCarrinho';
 import { useMemo, useState } from 'react';
 import { AxiosResponse } from 'axios';
 import * as carrinhoService from "../../../services/CarrinhoService"
-import * as userService from "../../../services/UserServices";
 import { ConteudoCarrinho } from '../../../components/Layout/ConteudoCarrinho';
 import { AdicionarProdutos } from '../../../components/Layout/AdicionarProdutos';
 import { Carregando } from '../../../components/UI/Carregando';
-import { PedidoFeito } from '../../../models/dto/CarrinhoDTO';
-import gerarPDF from './../../../components/UI/Pdf';
-import * as authService from "../../../services/AuthService"
-import { useNavigate } from 'react-router-dom';
+
+import { Outlet, useNavigate } from 'react-router-dom';
 const Carrinho = () => {
   const { produtos, loading, handleQuantityChange, cartIconNumber, setProdutos, setContextCartCount } = useCarrinho();
   const [alertData, setAlertData] = useState<{ title: string; text: string; icon: "success" | "error" } | null>(null);
   const navigate = useNavigate();
-
   const subtotais = useMemo(() => produtos.map((item) => item.preco * item.quantidade), [produtos]);
   const totalCarrinho = useMemo(() => subtotais.reduce((total, subtotal) => total + subtotal, 0), [subtotais]);
   const totalFormatado = totalCarrinho.toFixed(2).replace('.', ',');
+  const [fazerPedido, setFazerPedido] = useState(false);
 
   const limparCarrinho = () => {
 
@@ -35,45 +32,20 @@ const Carrinho = () => {
     }, 2000);
   };
 
-  const enviarPedido = async (): Promise<AxiosResponse<unknown, unknown>> => {
-   
-    const isUserAutenticado= authService.isAuthenticated();
-    
-      if(!isUserAutenticado){
-        setAlertData({ title: "Você precisa estar autenticado", text: "", icon: "error" });
-        setTimeout(() => {
-          navigate("/login"); 
-        }
-        , 1000);
-        return Promise.reject(new Error("Usuário não autenticado"));
-      }
-    
-
-    setAlertData({ title: "Pedido Enviado com Sucesso", text: "Obrigado pela sua compra!", icon: "success" });
-    const response = await userService.enviarPedido();
-   
-    setTimeout(async () => {
-      try {
   
-        await gerarPDF(response.data as PedidoFeito); 
-        setContextCartCount(0);
-        carrinhoService.removeCarrinho();
-        setProdutos([]);
-
-     
-        return response;
-      } catch (error) {
-        setAlertData({ title: "Erro ao Enviar Pedido", text: "Ocorreu um erro ao enviar seu pedido. Tente novamente.", icon: "error" });
-        console.error("Erro ao enviar pedido: ", error);
-        throw error;
-      }
-    }, 2000);
-    return Promise.resolve({} as AxiosResponse<unknown, unknown>);
+  const pedidoFeito = async (): Promise<AxiosResponse<unknown, unknown>> => {
+    setFazerPedido(true);
+    console.log("Pedido Feito");
+    
+    navigate("/Carrinho/Pagamento");
+   // return enviarPedido();
+   return Promise.resolve({} as AxiosResponse<unknown, unknown>);
   };
-
   return (
     <main>
-      {loading ? (
+      {fazerPedido ? (
+        <Outlet /> // Renderiza apenas o componente de pagamento (rota /pagamento)
+      ) : loading ? (
         <Carregando title="Carregando Produtos" />
       ) : produtos.length === 0 ? (
         <AdicionarProdutos />
@@ -88,8 +60,8 @@ const Carrinho = () => {
           produtos={produtos}
           setProdutos={setProdutos}
           subtotais={subtotais}
-          enviar={enviarPedido}
-         
+      //    enviar={enviarPedido}
+          clickpedido={pedidoFeito}
         />
       )}
     </main>

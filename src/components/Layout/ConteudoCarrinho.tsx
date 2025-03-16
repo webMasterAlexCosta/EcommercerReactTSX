@@ -1,4 +1,3 @@
-import { AxiosResponse } from "axios";
 import { ProdutoDTO } from "../../models/dto/ProdutosDTO";
 import Alert from "../UI/Alert";
 import { ContinuarComprando } from "../UI/ContinuarComprando";
@@ -17,9 +16,9 @@ interface IConteudoCarrinho {
     setAlertData: React.Dispatch<React.SetStateAction<{ title: string; text: string; icon: "success" | "error" } | null>>;
     produtos: ProdutoDTO[];
     subtotais: number[];
-    enviar: () => Promise<AxiosResponse<unknown>>;
+ //   enviar: () => Promise<AxiosResponse<unknown>>;
     setProdutos: React.Dispatch<React.SetStateAction<ProdutoDTO[]>>;
-   
+    clickpedido: () => void;
 }
 
 const ConteudoCarrinho = ({
@@ -31,8 +30,8 @@ const ConteudoCarrinho = ({
     setAlertData,
     produtos,
     subtotais,
-    enviar,
-   
+   // enviar,
+    clickpedido,
 }: IConteudoCarrinho) => {
     const [loading, setLoading] = useState<boolean>(false);
     const [isCarrinho, setIsCarrinho] = useState<boolean>(false);
@@ -48,7 +47,7 @@ const ConteudoCarrinho = ({
             setTimeout(() => {
                 setAlertData(null);
             }, 5000);
-
+            setLoading(false);    
             setIsCarrinho(false);
         }
     }, [isCarrinho, setAlertData]);
@@ -99,29 +98,31 @@ const ConteudoCarrinho = ({
                         </div>
                     </div>
                     <div className="dsc-btn-page-container">
+                       
                         <FinalizarPedido
                             title="Finalizar Pedido"
-                            enviar={async () => {
-                                setLoading(true);
-                                try {
-                                    await enviar();
-                                    setLoading(false);
-                                    setIsCarrinho(true); 
-                                } catch (error) {
-                                    console.log(error);
-                                    setLoading(false);
-                                    setAlertData({
-                                        title: "Erro ao Enviar Pedido",
-                                        icon: "error",
-                                        text: "Ocorreu um erro ao enviar seu pedido. Tente novamente.",
-                                    });
-                                }
-                            }}
+                            // enviar={async () => {
+                            //     setLoading(true);
+                            //     try {
+                            //         await enviar();
+                            //         setLoading(false);
+                            //         setIsCarrinho(true); 
+                            //     } catch (error) {
+                            //         console.log(error);
+                            //         setLoading(false);
+                            //         setAlertData({
+                            //             title: "Erro ao Enviar Pedido",
+                            //             icon: "error",
+                            //             text: "Ocorreu um erro ao enviar seu pedido. Tente novamente.",
+                            //         });
+                            //     }
+                            // }}
+                            clickpedido={clickpedido}
                         />
                         <ContinuarComprando link="/catalogo" title="Continuar Comprando" />
                         <Limpar onClickHandle={limparCarrinho} title="Limpar Carrinho" />
 
-                        {alertData && <Alert {...alertData} onClose={() => setAlertData(null)} />}
+                        {alertData && <Alert {...alertData} onClose={() => setAlertData(null)}  />}
                     </div>
                 </section>
             )}

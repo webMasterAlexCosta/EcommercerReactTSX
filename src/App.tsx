@@ -44,12 +44,14 @@ const App = () => {
           <BrowserRouter>
             <div className="app-container">
               <Routes>
-               
+
                 <Route path="/" element={<MainLayout />}>
-                  <Route path="/Pagamento" element={<CardPaymentComponent />} />                  
+
                   <Route path="/Perfil" element={<Perfil />} />
-                  <Route path="Carrinho" element={<Carrinho />} />
-                  <Route path="Catalogo" element={<Catalogo />}>
+                  <Route path="/Carrinho" element={<Carrinho />} >
+                    <Route path="Pagamento" element={<CardPaymentComponent />} />
+                  </Route>
+                  <Route path="/Catalogo" element={<Catalogo />}>
                     <Route path="Detalhes/:id" element={<Detalhes />} />
                   </Route>
                   <Route path="/certificados" element={<CertificadoPage />} />
@@ -65,7 +67,7 @@ const App = () => {
                   />
                 </Route>
 
-                
+
                 <Route path="/Administrativo" element={<PrivateRoute><Administrativo /></PrivateRoute>}>
                   <Route path="Listagem" element={<PrivateRoute><Listagem /></PrivateRoute>} />
                   <Route path="Formulario/:id" element={<PrivateRoute><Formulario /></PrivateRoute>} />

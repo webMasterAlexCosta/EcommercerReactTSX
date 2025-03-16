@@ -1,12 +1,13 @@
 interface IFinalizarPedido{
     title: string;
-    enviar: () => void;
+   // enviar: () => void;
+    clickpedido: () => void;    
 }
 
-const FinalizarPedido = ({title , enviar} : IFinalizarPedido) => {
+const FinalizarPedido = ({title  , clickpedido} : IFinalizarPedido) => {
     return (
         <>
-    <div className="dsc-btn dsc-btn-blue" onClick={enviar}>{title}</div>
+            <div className="dsc-btn dsc-btn-blue" onClick={() => {  clickpedido(); }}>{title}</div>
         </>
     )
 }
