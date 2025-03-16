@@ -11,7 +11,7 @@ export interface CadastroUserDTO {
     endereco: {
         logradouro: string;
         cep: string;
-        numero: number;
+        numero: string;
         cidade: string;
         bairro: string;
         complemento: string;

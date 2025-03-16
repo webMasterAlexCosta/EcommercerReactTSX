@@ -1,10 +1,18 @@
 import { useState } from "react";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import Alert from "../UI/Alert";
 import { Carregando } from "../UI/Carregando";
 import { PersonAdd, LockOutlined, PersonOutline, MailOutline, Phone, CalendarToday, Description, Home, LocationCity, Public } from "@mui/icons-material";
 import { CadastroUserDTO } from "../../models/dto/CadastroUserDTO";
 import * as userServices from "../../services/UserServices"
+
+interface ViaCepResponse {
+    erro?: boolean;
+    logradouro: string;
+    bairro: string;
+    localidade: string;
+    uf: string;
+}
 
 interface NovoCadastroProps {
     isSubmitted: boolean;
@@ -29,7 +37,7 @@ const NovoCadastro: React.FC<NovoCadastroProps> = ({ isSubmitted }) => {
         endereco: {
             logradouro: "",
             cep: "",
-            numero: Number(""),
+            numero: "",
             cidade: "",
             bairro: "",
             complemento: "",
@@ -37,76 +45,117 @@ const NovoCadastro: React.FC<NovoCadastroProps> = ({ isSubmitted }) => {
         }
     });
 
-    const buscarEnderecoPorCep = async (cep: string) => {
-        if (cep.length === 8) {
-            try {
-                setLoading(true);
-                const response = await axios.get(`https://viacep.com.br/ws/${cep}/json/`);
+ 
 
-                if (response.data.erro) {
-                    setAlertData({
-                        title: "Erro",
-                        text: "CEP não encontrado.",
-                        icon: "error"
-                    });
-                } else {
-                    setFormData((prevState) => ({
-                        ...prevState,
-                        endereco: {
-                            ...prevState.endereco,
-                            logradouro: response.data.logradouro,
-                            bairro: response.data.bairro,
-                            cidade: response.data.localidade,
-                            uf: response.data.uf
-                        }
-                    }));
-                }
-            } catch (error) {
-                console.log(error);
+const buscarEnderecoPorCep = async (cep: string) => {
+    if (cep.length === 8) {
+        setLoading(true);
+
+        try {
+            // Atrasar a busca em 1 segundo
+            const response: AxiosResponse<ViaCepResponse> = await new Promise((resolve) =>
+                setTimeout(() => resolve(axios.get(`https://viacep.com.br/ws/${cep}/json/`)), 2000)
+            );
+
+            // Verifique se a resposta contém erro
+            if (response.data.erro) {
                 setAlertData({
                     title: "Erro",
-                    text: "Não foi possível buscar o CEP.",
+                    text: "CEP não encontrado.",
                     icon: "error"
                 });
-            } finally {
-                setLoading(false);
+            } else {
+                // Atualizar o estado com os dados recebidos
+                setFormData((prevState) => ({
+                    ...prevState,
+                    endereco: {
+                        ...prevState.endereco,
+                        logradouro: response.data.logradouro,
+                        bairro: response.data.bairro,
+                        cidade: response.data.localidade,
+                        uf: response.data.uf
+                    }
+                }));
             }
+        } catch (error) {
+            console.log(error);
+            setAlertData({
+                title: "Erro",
+                text: "Não foi possível buscar o CEP.",
+                icon: "error"
+            });
+        } finally {
+            setLoading(false);
         }
-    };
+    }
+};
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
 
-        if (name === "cep") {
+const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+
+    if (name === "telefone" || name === "cpf") {
+        const numericValue = value.replace(/\D/g, '').replace(/^0+/, '').replace('e', ''); 
+
+        // Permitir apenas até 11 dígitos
+        if (numericValue.length <= 11) {
+            setFormData((prevState) => ({
+                ...prevState,
+                [name]: numericValue
+            }));
+        }
+    } else if (name === "cep") {
+        const numericCep = value.replace(/\D/g, '')
+
+        if (numericCep.length <= 8) {
             setFormData((prevState) => ({
                 ...prevState,
                 endereco: {
                     ...prevState.endereco,
-                    cep: value
+                    cep: numericCep
                 }
             }));
+        }
 
-            if (value.length === 8) {
-                buscarEnderecoPorCep(value);
-            }
-        } else {
+        if (numericCep.length === 8) {
+            buscarEnderecoPorCep(numericCep);
+        }
+    } else {
+      
+        setFormData((prevState) => ({
+            ...prevState,
+            [name]: value
+        }));
+    }
+};
+
+    
+    
+
+    const handleEnderecoChange = (e: React.ChangeEvent<HTMLInputElement>, field: string) => {
+        const { value } = e.target;
+
+        // Permitir digitar até 11 dígitos ou apagar os dígitos
+        if (field === "numero" && (value.length <= 11 || value.length < formData.endereco.numero.length)) {
             setFormData((prevState) => ({
                 ...prevState,
-                [name]: value
+                endereco: {
+                    ...prevState.endereco,
+                    [field]: value
+                }
+            }));
+            
+        }else{
+            setFormData((prevState) => ({
+                ...prevState,
+                endereco: {
+                    ...prevState.endereco,
+                    [field]: value
+                }
             }));
         }
     };
 
-    const handleEnderecoChange = (e: React.ChangeEvent<HTMLInputElement>, field: string) => {
-        const { value } = e.target;
-        setFormData((prevState) => ({
-            ...prevState,
-            endereco: {
-                ...prevState.endereco,
-                [field]: value
-            }
-        }));
-    };
 
     const handleCadastroSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -115,13 +164,17 @@ const NovoCadastro: React.FC<NovoCadastroProps> = ({ isSubmitted }) => {
         try {
             const response = await userServices.cadastrarNovoUsuario(formData);
 
-        
-                setAlertData({
-                    title: "Cadastro realizado com sucesso!",
-                    text: `Foi enviado link de ativacao para ${response.data.email}`,
-                    icon: "success"
-               
+
+            setAlertData({
+                title: "Cadastro realizado com sucesso!",
+                text: `Foi enviado link de ativacao para ${response.data.email}`,
+                icon: "success"
+
             });
+            setTimeout(() => {
+                window.location.reload();
+            }
+                , 3000);
         } catch (error) {
             console.log(error)
             setAlertData({
@@ -195,10 +248,10 @@ const NovoCadastro: React.FC<NovoCadastroProps> = ({ isSubmitted }) => {
                                 onChange={handleChange}
                                 placeholder="Digite seu Telefone"
                                 required
+                                min={0}
+                                max={11} 
                             />
-                            {isSubmitted && (
-                                <div className="dsc-form-error">Campo obrigatório</div>
-                            )}
+                            {isSubmitted && <div className="dsc-form-error">Campo obrigatório</div>}
                         </div>
 
                         <div>
@@ -257,7 +310,7 @@ const NovoCadastro: React.FC<NovoCadastroProps> = ({ isSubmitted }) => {
                             )}
                         </div>
 
-                      
+
                         <div>
                             <label htmlFor="cep">
                                 <Home sx={{ fontSize: "20px", marginRight: "8px" }} />
@@ -287,6 +340,8 @@ const NovoCadastro: React.FC<NovoCadastroProps> = ({ isSubmitted }) => {
                                 placeholder="Digite o Número"
                                 required
                                 min={0}
+                                max={999999999}
+
                             />
                         </div>
                         <div>

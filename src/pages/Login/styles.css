@@ -47,6 +47,18 @@
 .suporte-user span:last-child {
   padding-left: 15px; /* Espaçamento extra à esquerda da segunda opção */
 }
+/* Remover as setas do input type="number" */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: none;
+}
+
 @media (min-width: 576px) {
   #login-section {
     padding: 40px 0;
