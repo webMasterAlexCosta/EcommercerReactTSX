@@ -17,7 +17,7 @@ export interface PedidoData {
         imgUrl: string;
         quantidade: number;
         categorias: string[];
-        subTotal: string;
+        subTotal: number;
     }[];
 }
 export interface PedidoFeito {
@@ -35,5 +35,5 @@ export  interface PedidoItem {
     imgUrl: string;
     quantidade: number;
     categorias: string[];
-    subTotal: string;
+    subTotal: number;
   }

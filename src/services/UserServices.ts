@@ -34,7 +34,7 @@ const recuperarSenha = (email: string,cpf:string) => {
                 imgUrl: item.imgUrl,
                 quantidade: item.quantidade,
                 categorias: item.categorias || [],
-                subTotal: (item.preco * item.quantidade).toFixed(2)
+                subTotal: (item.preco * item.quantidade)
             }))
         };
 
