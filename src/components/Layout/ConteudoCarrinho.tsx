@@ -3,9 +3,8 @@ import Alert from "../UI/Alert";
 import { ContinuarComprando } from "../UI/ContinuarComprando";
 import { FinalizarPedido } from "../UI/FinalizarPedido";
 import { Limpar } from "../UI/Limpar";
-import {  useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Carregando } from "../UI/Carregando";
-
 
 interface IConteudoCarrinho {
     handleQuantityChange: (id: number, action: "+" | "-") => void;
@@ -16,9 +15,9 @@ interface IConteudoCarrinho {
     setAlertData: React.Dispatch<React.SetStateAction<{ title: string; text: string; icon: "success" | "error" } | null>>;
     produtos: ProdutoDTO[];
     subtotais: number[];
- //   enviar: () => Promise<AxiosResponse<unknown>>;
     setProdutos: React.Dispatch<React.SetStateAction<ProdutoDTO[]>>;
     clickpedido: () => void;
+    fazerPedido: boolean; 
 }
 
 const ConteudoCarrinho = ({
@@ -30,8 +29,8 @@ const ConteudoCarrinho = ({
     setAlertData,
     produtos,
     subtotais,
-   // enviar,
     clickpedido,
+    fazerPedido, 
 }: IConteudoCarrinho) => {
     const [loading, setLoading] = useState<boolean>(false);
     const [isCarrinho, setIsCarrinho] = useState<boolean>(false);
@@ -51,6 +50,7 @@ const ConteudoCarrinho = ({
             setIsCarrinho(false);
         }
     }, [isCarrinho, setAlertData]);
+
     return (
         <>
             {loading ? (
@@ -97,28 +97,16 @@ const ConteudoCarrinho = ({
                             <h3>Total: R$ {totalFormatado} </h3>
                         </div>
                     </div>
+
                     <div className="dsc-btn-page-container">
-                       
-                        <FinalizarPedido
-                            title="Finalizar Pedido"
-                            // enviar={async () => {
-                            //     setLoading(true);
-                            //     try {
-                            //         await enviar();
-                            //         setLoading(false);
-                            //         setIsCarrinho(true); 
-                            //     } catch (error) {
-                            //         console.log(error);
-                            //         setLoading(false);
-                            //         setAlertData({
-                            //             title: "Erro ao Enviar Pedido",
-                            //             icon: "error",
-                            //             text: "Ocorreu um erro ao enviar seu pedido. Tente novamente.",
-                            //         });
-                            //     }
-                            // }}
-                            clickpedido={clickpedido}
-                        />
+                        {/* Condiciona a exibição do botão Finalizar Pedido */}
+                        {!fazerPedido && (
+                            <FinalizarPedido
+                                title="Finalizar Pedido"
+                                clickpedido={clickpedido}  // Passa a função de finalizar pedido
+                            />
+                        )}
+
                         <ContinuarComprando link="/catalogo" title="Continuar Comprando" />
                         <Limpar onClickHandle={limparCarrinho} title="Limpar Carrinho" />
 

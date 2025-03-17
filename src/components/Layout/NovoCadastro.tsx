@@ -50,7 +50,7 @@ const NovoCadastro: React.FC<NovoCadastroProps> = ({ isSubmitted }) => {
 const buscarEnderecoPorCep = async (cep: string) => {
     if (cep.length === 8) {
         setLoading(true);
-
+        
         try {
             // Atrasar a busca em 1 segundo
             const response: AxiosResponse<ViaCepResponse> = await new Promise((resolve) =>
@@ -95,7 +95,7 @@ const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
     if (name === "telefone" || name === "cpf") {
-        const numericValue = value.replace(/\D/g, '').replace(/^0+/, '').replace('e', ''); 
+        const numericValue = value.replace(/\D/g, '');
 
         // Permitir apenas até 11 dígitos
         if (numericValue.length <= 11) {
@@ -161,7 +161,7 @@ const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
 
         setLoading(true);
-        try {
+        
             const response = await userServices.cadastrarNovoUsuario(formData);
 
 
@@ -175,16 +175,9 @@ const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
                 window.location.reload();
             }
                 , 3000);
-        } catch (error) {
-            console.log(error)
-            setAlertData({
-                title: "Erro",
-                text: "Erro ao enviar o cadastro.",
-                icon: "error"
-            });
-        } finally {
+        
             setLoading(false);
-        }
+        
     };
 
     return (

@@ -7,6 +7,7 @@ import { CarrinhoItem, PedidoData, PedidoItem } from "../models/dto/CarrinhoDTO"
 import { getCarrinho } from "../services/CarrinhoService";
 
 
+
 const findMe = async () => {
     return userRepository.findMe();
 };
@@ -19,7 +20,7 @@ const recuperarSenha = (email: string,cpf:string) => {
   }
   const enviarPedido = async (): Promise<AxiosResponse<unknown>> => {
     const carrinhoAtual: CarrinhoItem[] = getCarrinho();
-
+   
     if (carrinhoAtual.length === 0) {
         return Promise.reject("Carrinho está vazio");
     }
@@ -51,7 +52,9 @@ const recuperarSenha = (email: string,cpf:string) => {
         if (enviado.status === 200 || enviado.status === 201) {
             const numeroPedido = (enviado.data.numeroPedido); // Captura o número do pedido
             console.log("Número do Pedido:", numeroPedido); // Confirmação no console
-
+            setTimeout(()=>{
+               window.location.href="/Carrinho";
+            },4000)
             return enviado;
         }
 

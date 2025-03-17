@@ -18,7 +18,7 @@ import { Header } from './components/UI/Header';
 import PaginaAviso from './components/Layout/PaginaAviso';
 import CertificadoPage from './components/Layout/CertificadoPage';
 import CertificadoDetailPage from './components/Layout/CertificadoPage/CertificadoDetailPage';
-import CardPaymentComponent from './components/Layout/CardPaymentComponent';
+import CardPaymentComponent from './components/UI/CardPaymentComponent';
 
 const MainLayout = () => {
   const location = useLocation();

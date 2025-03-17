@@ -5,6 +5,17 @@ interface Estado {
   cpf: string;
 }
 
+export const validateCpf = (cpf: string) => {
+  const cpfVerificado = /^\d{11}$/;
+  return cpfVerificado.test(cpf);
+};
+
+export const validateTelefone = (telefone: string) => {
+  const tel = /^\d{11}$/;
+  return tel.test(telefone);
+};
+
+
 export const useHandleOnChange = (initialState: Estado) => {
   const [estado, setEstado] = useState<Estado>(initialState);
 
@@ -19,5 +30,5 @@ export const useHandleOnChange = (initialState: Estado) => {
     }));
   };
 
-  return { estado, handleOnChange };
+  return { estado, handleOnChange  };
 };
