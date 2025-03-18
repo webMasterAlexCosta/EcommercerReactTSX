@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import LockResetIcon from '@mui/icons-material/LockReset';
-import PersonAddIcon from '@mui/icons-material/PersonAdd'; 
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import { LoginSharp } from "@mui/icons-material";
 import RedefinirSenha from "../components/UI/RedefinirSenha";
 import { NovoCadastro } from "../components/Layout/NovoCadastro";
-
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import { IPasswordVisibilityState, PasswordVisibility } from "../utils/funcoes";
 
 interface LoginFormProps {
   onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
@@ -17,7 +19,7 @@ interface LoginFormProps {
 const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, onChange, formData, isSubmitted, loading }) => {
   const [resetSenha, setResetSenha] = useState<boolean>(false);
   const [cadastro, setCadastro] = useState<boolean>(false);
-  
+  const [isPasswordVisible, setIsPasswordVisible] = useState<IPasswordVisibilityState>({ senha: false })
 
   return (
     <div className="dsc-login-form-container">
@@ -42,15 +44,18 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, onChange, formData, isS
                   <div className="dsc-form-error">Campo obrigatório</div>
                 )}
               </div>
-              <div>
+              <div className="input-container">
                 <input
                   name="senha"
                   value={formData.senha}
                   onChange={onChange}
                   className={`dsc-form-control ${isSubmitted && !formData.senha ? "dsc-input-error" : ""}`}
-                  type="password"
+                  type={isPasswordVisible.senha ? "text" : "password"}
                   placeholder="Senha"
                 />
+                <span className="password-icon" onClick={() => PasswordVisibility('senha', setIsPasswordVisible)}>
+                  {isPasswordVisible.senha ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                </span>
                 {isSubmitted && !formData.senha && (
                   <div className="dsc-form-error">Campo obrigatório</div>
                 )}
@@ -77,8 +82,8 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, onChange, formData, isS
         :
         resetSenha ? (
           <RedefinirSenha
-          isSubmitted={isSubmitted}
-           
+            isSubmitted={isSubmitted}
+
           />
         ) : cadastro ? (
           <NovoCadastro isSubmitted={isSubmitted} />

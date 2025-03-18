@@ -2,15 +2,15 @@ import React, { useState } from "react";
 import { LockOutlined } from "@mui/icons-material";
 import * as userServices from '../../services/UserServices';
 import Alert from "./Alert";
-import { useHandleOnChange, useHandleOnChangeAutenticado } from "../../utils/funcoes";
+import { PasswordVisibility, IPasswordVisibilityState, useHandleOnChange, useHandleOnChangeAutenticado } from "../../utils/funcoes";
 import { Carregando } from "./Carregando";
 import { useNavigate } from "react-router-dom";
-import VisibilityIcon from '@mui/icons-material/Visibility';         // Ícone para mostrar a senha
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';    // Ícone para ocultar a senha
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 
 interface RedefinirSenhaProps {
   isSubmitted?: boolean;
-  isToken?: boolean
+  isToken?: boolean;
 }
 
 const RedefinirSenha: React.FC<RedefinirSenhaProps> = ({ isSubmitted, isToken }) => {
@@ -21,15 +21,12 @@ const RedefinirSenha: React.FC<RedefinirSenhaProps> = ({ isSubmitted, isToken })
   const navigate = useNavigate();
   const { alterarSenhaAutenticado, handleOnChangeAutenticado } = useHandleOnChangeAutenticado({ senhaAntiga: "", novaSenha: "" });
 
-  const [isPasswordVisible, setIsPasswordVisible] = useState({ senhaAntiga: false, novaSenha: false });
-  const [isCpfVisible, setIsCpfVisible] = useState(false);  
+  const [isPasswordVisible, setIsPasswordVisible] = useState<IPasswordVisibilityState>({
+    senhaAntiga: false,
+    novaSenha: false,
+  });
 
-  const PasswordVisibility = (field: 'senhaAntiga' | 'novaSenha') => {
-    setIsPasswordVisible(prevState => ({
-      ...prevState,
-      [field]: !prevState[field]
-    }));
-  };
+  const [isCpfVisible, setIsCpfVisible] = useState(false);
 
   const CpfVisibility = () => {
     setIsCpfVisible(prevState => !prevState);
@@ -122,7 +119,6 @@ const RedefinirSenha: React.FC<RedefinirSenhaProps> = ({ isSubmitted, isToken })
           <LockOutlined sx={{ fontSize: "24px", color: "#007bff" }} />
           <h2>Redefinir Senha</h2>
           <div className="dsc-form-controls-container">
-
             {isToken ? (
               <>
                 <div className="input-container">
@@ -135,7 +131,7 @@ const RedefinirSenha: React.FC<RedefinirSenhaProps> = ({ isSubmitted, isToken })
                     placeholder="Digite Senha Antiga"
                     required
                   />
-                  <span className="password-icon" onClick={() => PasswordVisibility('senhaAntiga')}>
+                  <span className="password-icon" onClick={() => PasswordVisibility('senhaAntiga', setIsPasswordVisible)}>
                     {isPasswordVisible.senhaAntiga ? <VisibilityOffIcon /> : <VisibilityIcon />}
                   </span>
                   {isSubmitted && !alterarSenhaAutenticado.senhaAntiga && (
@@ -153,7 +149,7 @@ const RedefinirSenha: React.FC<RedefinirSenhaProps> = ({ isSubmitted, isToken })
                     placeholder="Digite Nova Senha"
                     required
                   />
-                  <span className="password-icon" onClick={() => PasswordVisibility('novaSenha')}>
+                  <span className="password-icon" onClick={() => PasswordVisibility('novaSenha', setIsPasswordVisible)}>
                     {isPasswordVisible.novaSenha ? <VisibilityOffIcon /> : <VisibilityIcon />}
                   </span>
                   {isSubmitted && !alterarSenhaAutenticado.novaSenha && (
@@ -183,7 +179,7 @@ const RedefinirSenha: React.FC<RedefinirSenhaProps> = ({ isSubmitted, isToken })
                     value={redefinicaoSenha.cpf}
                     onChange={handleOnChange}
                     className={`dsc-form-control ${isSubmitted && !redefinicaoSenha.cpf ? "dsc-input-error" : ""}`}
-                    type={isCpfVisible ? "text" : "password"}  // Alterado para CPF ser ocultado
+                    type={isCpfVisible ? "text" : "password"}
                     placeholder="Digite seu CPF"
                     required
                   />

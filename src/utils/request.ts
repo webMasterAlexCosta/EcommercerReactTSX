@@ -32,8 +32,8 @@ axios.interceptors.response.use(
         confirmButtonText: "OK",
       });
       setTimeout(() => {
-        window.location.reload()
-      }, 5000);
+      //  window.location.reload();
+      }, 3000);
     } else {
       Swal.fire({
         title: "Erro inesperado!",
@@ -46,7 +46,7 @@ axios.interceptors.response.use(
         caso eu queria propagar o erro pro catch do codigo uso
         Promisse.resolve(error)
         */
-    return Promise.reject(error); 
+    return Promise.reject(error);
   }
 );
 

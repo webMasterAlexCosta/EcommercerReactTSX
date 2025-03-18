@@ -17,4 +17,5 @@ export interface AccessTokenPayloadDTO{
     perfis:perfil[];
     exp:number;
     endereco:EnderecoDTO;
+    fotoPerfil?:string
 }

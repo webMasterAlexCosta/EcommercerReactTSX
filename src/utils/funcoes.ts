@@ -1,12 +1,12 @@
 import { useState } from "react";
 
-interface RedefinicaoSenha {
+interface IRedefinicaoSenha {
   email: string;
   cpf: string;
 }
-interface AlterarSenhaAutenticado{
-  senhaAntiga:string
-  novaSenha:string
+interface IAlterarSenhaAutenticado {
+  senhaAntiga: string;
+  novaSenha: string;
 }
 
 export const validateCpf = (cpf: string) => {
@@ -19,14 +19,17 @@ export const validateTelefone = (telefone: string) => {
   return tel.test(telefone);
 };
 
-
-export const useHandleOnChange = (initialState: RedefinicaoSenha ) => {
-  const [redefinicaoSenha, setRedefinicaoSenha] = useState<RedefinicaoSenha>(initialState);
+export const useHandleOnChange = (initialState: IRedefinicaoSenha) => {
+  const [redefinicaoSenha, setRedefinicaoSenha] =
+    useState<IRedefinicaoSenha>(initialState);
 
   const handleOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
 
-    const newValue = name === "cpf" || name === "telefone" ? value.replace(/[^0-9]/g, "") : value;
+    const newValue =
+      name === "cpf" || name === "telefone"
+        ? value.replace(/[^0-9]/g, "")
+        : value;
 
     setRedefinicaoSenha((prevState) => ({
       ...prevState,
@@ -34,17 +37,19 @@ export const useHandleOnChange = (initialState: RedefinicaoSenha ) => {
     }));
   };
 
-  return { redefinicaoSenha, handleOnChange  };
+  return { redefinicaoSenha, handleOnChange };
 };
 
+export const useHandleOnChangeAutenticado = (
+  initialState: IAlterarSenhaAutenticado
+) => {
+  const [alterarSenhaAutenticado, setAlterarSenhaAutenticado] =
+    useState<IAlterarSenhaAutenticado>(initialState);
 
-export const useHandleOnChangeAutenticado = (initialState: AlterarSenhaAutenticado ) => {
-  const [alterarSenhaAutenticado, setAlterarSenhaAutenticado] = useState<AlterarSenhaAutenticado>(initialState);
-
-  const handleOnChangeAutenticado = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleOnChangeAutenticado = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const { name, value } = event.target;
-
-    
 
     setAlterarSenhaAutenticado((prevState) => ({
       ...prevState,
@@ -52,5 +57,23 @@ export const useHandleOnChangeAutenticado = (initialState: AlterarSenhaAutentica
     }));
   };
 
-  return { alterarSenhaAutenticado, handleOnChangeAutenticado  };
+  return { alterarSenhaAutenticado, handleOnChangeAutenticado };
+};
+
+export interface IPasswordVisibilityState {
+  senhaAntiga?: boolean;
+  novaSenha?: boolean;
+  senha?: boolean;
+}
+
+export const PasswordVisibility = <K extends keyof IPasswordVisibilityState>(
+  value: K,
+  setPasswordVisible: React.Dispatch<
+    React.SetStateAction<IPasswordVisibilityState>
+  >
+) => {
+  setPasswordVisible((prevState) => ({
+    ...prevState,
+    [value]: !prevState[value],
+  }));
 };
