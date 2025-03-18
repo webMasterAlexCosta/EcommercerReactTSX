@@ -25,7 +25,6 @@ axios.interceptors.response.use(
         error.response.data?.error ||
         "Ocorreu um erro ao tentar processar a solicitação.";
 
-      // Exibe o alerta com SweetAlert2
       Swal.fire({
         title: "Erro!",
         text: mensagemErro,
@@ -33,8 +32,8 @@ axios.interceptors.response.use(
         confirmButtonText: "OK",
       });
       setTimeout(() => {
-        // window.location.reload()
-      }, 300000000);
+        window.location.reload()
+      }, 5000);
     } else {
       Swal.fire({
         title: "Erro inesperado!",
@@ -47,7 +46,7 @@ axios.interceptors.response.use(
         caso eu queria propagar o erro pro catch do codigo uso
         Promisse.resolve(error)
         */
-    return Promise.reject(error); // trato o erro para ser tratado no código se necessário
+    return Promise.reject(error); 
   }
 );
 

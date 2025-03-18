@@ -10,7 +10,6 @@ import * as crendincialService from "../../services/CredenciasiService";
 import LoginForm from "../../hooks/loginForm"; 
 import IconAdminContext from "../../data/IconAdminContext";
 import { Carregando } from "../../components/UI/Carregando";
-import { AxiosError } from "axios";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -37,7 +36,7 @@ const Login = () => {
     setLoading(true);
 
     if (formData.email && formData.senha) {
-      try {
+      
         const response = await loginRequest(formData);
         crendincialService.save(response.data.token);
         setContextIsLogin(true);
@@ -57,27 +56,7 @@ const Login = () => {
           text: `Usuário ${payload?.nome} logado com sucesso`,
           icon: "success"
         });
-      } catch (error) {
-        setLoading(false);
-
-        let errorMessage = "Falha no login. Verifique seus dados.";
-        
-        if (error instanceof AxiosError && error.response) {
-         
-
-          if (error.response.data.trace) {
-            errorMessage = error.response.data.trace; 
-          } else if (error.response.data.error) {
-            errorMessage = error.response.data.error; 
-          }
-        }
-
-        setAlertData({
-          title: "Erro",
-          text: errorMessage,
-          icon: "error"
-        });
-      }
+      
     } else {
       setLoading(false);
     }
