@@ -6,6 +6,9 @@ import requestBackEnd from '../../../utils/request';
 import { AxiosRequestConfig } from 'axios';
 import { HISTORICO_PEDIDO_USER } from '../../../utils/system';
 import { PedidoHistorico } from '../../../models/dto/CarrinhoDTO';
+import { Link } from 'react-router-dom';
+import { MudarSenha } from '../../../components/Layout/MudarSenha';
+
 
 const Perfil = () => {
     const [usuario, setUsuario] = useState<UserDTO>({
@@ -20,7 +23,7 @@ const Perfil = () => {
     });
 
     const [historicoPedidos, setHistoricoPedidos] = useState<PedidoHistorico[]>([]); // Estado para armazenar os pedidos
-
+    const [mudarSenha,setMudarSenha] = useState<boolean>(false)
     useEffect(() => {
         // Função para obter as informações do usuário
         const obterUsuario = async () => {
@@ -64,6 +67,9 @@ const Perfil = () => {
 
     return (
         <main>
+            {mudarSenha ?(
+                <MudarSenha/>)
+                :(
             <section className="registro-formulario">
                 <h2>Perfil do Usuário</h2>
                 {/* Detalhes do perfil do usuário */}
@@ -111,9 +117,9 @@ const Perfil = () => {
                 {/* Botões para mudar senha e endereço */}
                 <div className="container-btns">
                     <div className="formulario-grupo">
-                        <a href="mudarSenha.html">
-                            <button id="botao2">Mudar Senha</button>
-                        </a>
+                        <Link to='/perfil/MudarSenha'>
+                            <button id="botao2" onClick={()=> setMudarSenha(true)}>Mudar Senha</button>
+                       </Link>
                     </div>
                     <div className="formulario-grupo">
                         <a href="mudarEndereco.html">
@@ -159,7 +165,8 @@ const Perfil = () => {
                         )}
                     </ul>
                 </div>
-            </section>
+            </section>)}
+            
         </main>
     );
 };

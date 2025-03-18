@@ -12,14 +12,15 @@ import CriarNovoProduto from './pages/HomeAdminstrativo/CriarNovoFormulario/inde
 import Formulario from './pages/HomeAdminstrativo/Formulario';
 import ContextIsLogin from './data/LoginContext';
 import IconAdminContext, { PerfilContext } from './data/IconAdminContext';
-import { PrivateRoute } from './components/Private/Router';
+import { PrivateRouteAdmin } from './components/Private/Router/ADMIN/index';
+import { PrivateRouteClient } from './components/Private/Router/CLIENT';
 import { Perfil } from './pages/HomeClient/Perfil';
 import { Header } from './components/UI/Header';
 import PaginaAviso from './components/Layout/PaginaAviso';
 import CertificadoPage from './components/Layout/CertificadoPage';
 import CertificadoDetailPage from './components/Layout/CertificadoPage/CertificadoDetailPage';
 import CardPaymentComponent from './components/UI/CardPaymentComponent';
-
+import {MudarSenha} from "./components/Layout/MudarSenha/index"
 const MainLayout = () => {
   const location = useLocation();
 
@@ -47,7 +48,11 @@ const App = () => {
 
                 <Route path="/" element={<MainLayout />}>
 
-                  <Route path="/Perfil" element={<Perfil />} />
+                  <Route path="/Perfil" element={<PrivateRouteClient><Perfil /></PrivateRouteClient>} >
+                    <Route path='MudarSenha' element={<PrivateRouteClient><MudarSenha/></PrivateRouteClient>}>
+
+                    </Route>
+                  </Route>
                   <Route path="/Carrinho" element={<Carrinho />} >
                     <Route path="Pagamento" element={<CardPaymentComponent />} />
                   </Route>
@@ -68,10 +73,10 @@ const App = () => {
                 </Route>
 
 
-                <Route path="/Administrativo" element={<PrivateRoute><Administrativo /></PrivateRoute>}>
-                  <Route path="Listagem" element={<PrivateRoute><Listagem /></PrivateRoute>} />
-                  <Route path="Formulario/:id" element={<PrivateRoute><Formulario /></PrivateRoute>} />
-                  <Route path="CriarNovoProduto/:id" element={<PrivateRoute><CriarNovoProduto /></PrivateRoute>} />
+                <Route path="/Administrativo" element={<PrivateRouteAdmin><Administrativo /></PrivateRouteAdmin>}>
+                  <Route path="Listagem" element={<PrivateRouteAdmin><Listagem /></PrivateRouteAdmin>} />
+                  <Route path="Formulario/:id" element={<PrivateRouteAdmin><Formulario /></PrivateRouteAdmin>} />
+                  <Route path="CriarNovoProduto/:id" element={<PrivateRouteAdmin><CriarNovoProduto /></PrivateRouteAdmin>} />
                 </Route>
               </Routes>
             </div>

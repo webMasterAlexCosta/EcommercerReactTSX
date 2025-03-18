@@ -4,6 +4,10 @@ interface RedefinicaoSenha {
   email: string;
   cpf: string;
 }
+interface AlterarSenhaAutenticado{
+  senhaAntiga:string
+  novaSenha:string
+}
 
 export const validateCpf = (cpf: string) => {
   const cpfVerificado = /^\d{11}$/;
@@ -16,7 +20,7 @@ export const validateTelefone = (telefone: string) => {
 };
 
 
-export const useHandleOnChange = (initialState: RedefinicaoSenha) => {
+export const useHandleOnChange = (initialState: RedefinicaoSenha ) => {
   const [redefinicaoSenha, setRedefinicaoSenha] = useState<RedefinicaoSenha>(initialState);
 
   const handleOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -31,4 +35,22 @@ export const useHandleOnChange = (initialState: RedefinicaoSenha) => {
   };
 
   return { redefinicaoSenha, handleOnChange  };
+};
+
+
+export const useHandleOnChangeAutenticado = (initialState: AlterarSenhaAutenticado ) => {
+  const [alterarSenhaAutenticado, setAlterarSenhaAutenticado] = useState<AlterarSenhaAutenticado>(initialState);
+
+  const handleOnChangeAutenticado = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+
+    
+
+    setAlterarSenhaAutenticado((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
+  return { alterarSenhaAutenticado, handleOnChangeAutenticado  };
 };

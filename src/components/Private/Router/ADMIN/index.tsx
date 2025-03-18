@@ -1,12 +1,12 @@
 import React from 'react';
-import * as authService from "../../../services/AuthService"
+import * as authService from "../../../../services/AuthService"
 import { Navigate } from 'react-router-dom';
 
 interface props {
     children: React.ReactNode;
 }
 
-const PrivateRoute: React.FC<props> = ({ children }: props) => {
+const PrivateRouteAdmin: React.FC<props> = ({ children }: props) => {
 
     if (authService.isAuthenticated() && authService.getAccessTokenPayload()?.perfis.includes("ADMIN")) {
 
@@ -14,4 +14,4 @@ const PrivateRoute: React.FC<props> = ({ children }: props) => {
     }
     return <Navigate to="/catalogo" />;
 }
-export { PrivateRoute }
+export { PrivateRouteAdmin }

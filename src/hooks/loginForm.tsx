@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import LockResetIcon from '@mui/icons-material/LockReset';
 import PersonAddIcon from '@mui/icons-material/PersonAdd'; 
 import { LoginSharp } from "@mui/icons-material";
-import RedefinirSenha from "../components/Layout/RedefinirSenha";
+import RedefinirSenha from "../components/UI/RedefinirSenha";
 import { NovoCadastro } from "../components/Layout/NovoCadastro";
 
 

@@ -8,7 +8,7 @@ export const CLIENT_ID = "myclientid"
 export const CLIENT_SECRET="myclientsecret"
 export const LOGIN = "/api/login/cliente3"
 export const RECUPERAR_SENHA = "/api/recuperacao/solicitar"
-
+export const ALTERAR_SENHA_AUTENTICADO = "/api/recuperacao/alterar"
 export const CADASTRO_NOVO_USUARIO = "/api/usuarios/cadastro"
 
 export const ENVIAR_PEDIDO = "/api/pedidos/salvar"

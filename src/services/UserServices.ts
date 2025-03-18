@@ -1,7 +1,7 @@
 import { AxiosRequestConfig, AxiosResponse } from "axios";
 import { CadastroUserDTO } from "../models/dto/CadastroUserDTO";
 import * as userRepository from "../repository/UserRepository";
-import { ENVIAR_PEDIDO } from "../utils/system";
+import { ALTERAR_SENHA_AUTENTICADO, ENVIAR_PEDIDO } from "../utils/system";
 import requestBackEnd from "../utils/request";
 import {
   CarrinhoItem,
@@ -9,6 +9,8 @@ import {
   PedidoItem,
 } from "../models/dto/CarrinhoDTO";
 import { getCarrinho } from "../services/CarrinhoService";
+import * as authService from "../services/AuthService"
+
 
 const findMe = async () => {
   return userRepository.findMe();
@@ -70,4 +72,24 @@ const enviarPedido = async (): Promise<AxiosResponse<unknown>> => {
     return Promise.reject("Erro ao enviar o pedido");
   }
 };
-export { findMe, recuperarSenha, cadastrarNovoUsuario, enviarPedido };
+
+const alterarSenhaAutenticado=(antigaSenha:string , novaSenha:string)=>{
+      if(authService.isAuthenticated()){
+        const email = authService.getAccessTokenPayload()?.email
+      
+        const config: AxiosRequestConfig={
+          method:"POST",
+          url:ALTERAR_SENHA_AUTENTICADO,
+          headers: { "Content-Type": "application/json" },
+          withCredentials:true,
+          
+          data:{antigaSenha,novaSenha,email}
+        }
+        console.log(config)
+        return requestBackEnd(config)  
+      }
+        
+
+}
+
+export { findMe, recuperarSenha, cadastrarNovoUsuario, enviarPedido,alterarSenhaAutenticado };
