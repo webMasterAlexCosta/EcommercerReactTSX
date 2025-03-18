@@ -5,17 +5,23 @@ import { useEffect, useState } from "react"
 const MudarSenha = () => {
     const token = authService.isAuthenticated()
     const [isToken, setIsToken] = useState<boolean>(false)
+    const [isSubmitted, setIsSubmitted] = useState(false);
+
     useEffect(() => {
         if (token) {
             setIsToken(token)
         }
     }, [token])
 
+    useEffect   (()=>{  
+        setIsSubmitted(false)
+    },[isSubmitted])
+
     return (
         <>
             <main>
                 
-                <RedefinirSenha isToken={isToken} />
+                <RedefinirSenha isToken={isToken} isSubmitted={isSubmitted} />
             </main>
         </>
     )
