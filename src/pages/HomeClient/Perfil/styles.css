@@ -24,7 +24,10 @@ label {
   color: #333;
   margin-bottom: 8px; /* Espaçamento entre label e input */
 }
-
+.img-pedido{
+  width: 20%;
+  border-radius: 50%;
+}
 input[type="text"],
 input[type="email"],
 input[type="date"] {

@@ -6,8 +6,8 @@ const findAll = async (page?: number) => {
   try {
     const url =
       page !== undefined
-        ? requestBackEnd({ url: `/produtos/paginas?page=${page}&size=8` })
-        : requestBackEnd({ url: `/produtos/lista` });
+        ? requestBackEnd({ url: `/api/produtos/paginas?page=${page}&size=8` })
+        : requestBackEnd({ url: `/api/produtos/lista` });
 
     return await url;
   } catch (error) {
@@ -18,7 +18,7 @@ const findAll = async (page?: number) => {
 
 const findById = async (id: number) => {
   try {
-    const prod = await requestBackEnd({ url: `/produtos/${id}` });
+    const prod = await requestBackEnd({ url: `/api/produtos/${id}` });
    
     return prod;
   } catch (error) {
@@ -29,7 +29,7 @@ const findById = async (id: number) => {
 
 const findByRequest = async (item: string) => {
   try {
-    const prod = await requestBackEnd({ url: `/produtos/buscar?nome=${item}` });
+    const prod = await requestBackEnd({ url: `/api/produtos/buscar?nome=${item}` });
     console.log(prod);
     return prod;
   } catch (error) {
@@ -42,7 +42,7 @@ const updatedProduto = async (produto: ProdutoDTO) => {
   try {
     const config: AxiosRequestConfig = {
       method: "PUT",
-      url: `/produtos/${produto.id}/atualizar`,
+      url: `/api/produtos/${produto.id}/atualizar`,
       data: produto,
     };
     return await requestBackEnd(config);

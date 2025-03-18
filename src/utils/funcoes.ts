@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-interface Estado {
+interface RedefinicaoSenha {
   email: string;
   cpf: string;
 }
@@ -16,19 +16,19 @@ export const validateTelefone = (telefone: string) => {
 };
 
 
-export const useHandleOnChange = (initialState: Estado) => {
-  const [estado, setEstado] = useState<Estado>(initialState);
+export const useHandleOnChange = (initialState: RedefinicaoSenha) => {
+  const [redefinicaoSenha, setRedefinicaoSenha] = useState<RedefinicaoSenha>(initialState);
 
   const handleOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
 
     const newValue = name === "cpf" || name === "telefone" ? value.replace(/[^0-9]/g, "") : value;
 
-    setEstado((prevState) => ({
+    setRedefinicaoSenha((prevState) => ({
       ...prevState,
       [name]: newValue,
     }));
   };
 
-  return { estado, handleOnChange  };
+  return { redefinicaoSenha, handleOnChange  };
 };

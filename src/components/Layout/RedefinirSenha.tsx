@@ -14,13 +14,14 @@ interface RedefinirSenhaProps {
 const RedefinirSenha: React.FC<RedefinirSenhaProps> = ({ isSubmitted }) => {
 
   const [alertData, setAlertData] = useState<{ title: string; text: string; icon: "success" | "error" | "warning" | "info" } | null>(null);
-  const { estado, handleOnChange } = useHandleOnChange({ email: "", cpf: "" });
-  const [voltar, setVoltar] = useState<boolean>(false)
+  const { redefinicaoSenha, handleOnChange } = useHandleOnChange({ email: "", cpf: "" });
+  const [voltar, setVoltar] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+
   const onSubmitReset = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const { email, cpf } = estado;
+    const { email, cpf } = redefinicaoSenha;
 
   
     if (!cpf || cpf.length<11) {
@@ -44,7 +45,7 @@ const RedefinirSenha: React.FC<RedefinirSenhaProps> = ({ isSubmitted }) => {
       email.includes("@oi.com") ||
       email.includes("@yahoo.com.br");
 
-    const novoEmail = dominioPublico ? email : "";
+    const novoEmail = dominioPublico ? email.toString().toLowerCase() : "";
 
     if (novoEmail === "") {
       setAlertData({
@@ -59,10 +60,13 @@ const RedefinirSenha: React.FC<RedefinirSenhaProps> = ({ isSubmitted }) => {
     setLoading(true);
 
     try {
+      console.log("cpf",cpf )
+      console.log("email", novoEmail)
       const result = await userServices.recuperarSenha(novoEmail, cpf);
+      console.log(result)
       setAlertData({
         title: "Recuperação Bem Sucedida",
-        text: `A senha foi enviada para o email: ${result.data}`,
+        text: ` ${result.data}`,
         icon: "success"
       });
       setVoltar(true)
@@ -93,28 +97,28 @@ const RedefinirSenha: React.FC<RedefinirSenhaProps> = ({ isSubmitted }) => {
             <div>
               <input
                 name="email"
-                value={estado.email}
+                value={redefinicaoSenha.email}
                 onChange={handleOnChange}
-                className={`dsc-form-control ${isSubmitted && !estado.email ? "dsc-input-error" : ""}`}
+                className={`dsc-form-control ${isSubmitted && !redefinicaoSenha.email ? "dsc-input-error" : ""}`}
                 type="email"
                 placeholder="Digite seu Email"
                 required
               />
-              {isSubmitted && !estado.email && (
+              {isSubmitted && !redefinicaoSenha.email && (
                 <div className="dsc-form-error">Campo obrigatório</div>
               )}
             </div>
             <div>
               <input
                 name="cpf"
-                value={estado.cpf}
+                value={redefinicaoSenha.cpf}
                 onChange={handleOnChange}
-                className={`dsc-form-control ${isSubmitted && !estado.cpf ? "dsc-input-error" : ""}`}
+                className={`dsc-form-control ${isSubmitted && !redefinicaoSenha.cpf ? "dsc-input-error" : ""}`}
                 type="text"
                 placeholder="Digite seu CPF"
                 required
               />
-              {isSubmitted && !estado.cpf && (
+              {isSubmitted && !redefinicaoSenha.cpf && (
                 <div className="dsc-form-error">Campo obrigatório</div>
               )}
             </div>

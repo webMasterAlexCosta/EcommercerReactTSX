@@ -1,6 +1,6 @@
 import QueryString from "qs";
 import { CredenciaisDTO } from "../models/dto/CredenciaisDTO";
-import { CLIENT_ID, CLIENT_SECRET } from "../utils/system";
+import { CLIENT_ID, CLIENT_SECRET, LOGIN } from "../utils/system";
 import { AxiosRequestConfig } from "axios";
 import requestBackEnd from "../utils/request";
 import * as credenciaisRepository from "../repository/CredenciaisRepository";
@@ -17,7 +17,7 @@ const loginRequest = (loginDados: CredenciaisDTO) => {
   const config: AxiosRequestConfig = {
     method: "POST",
     headers: header,
-    url: "/login/cliente3",
+    url: LOGIN,
     data: requestBody,
   };
   return requestBackEnd(config);

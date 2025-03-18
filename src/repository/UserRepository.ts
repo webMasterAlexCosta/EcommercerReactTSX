@@ -21,22 +21,19 @@ const findMe = async () => {
     }
   };
   const recuperarSenha = async (email: string, cpf: string) => {
-    try {
+    
       const config: AxiosRequestConfig = {
         method: "POST",
         url: RECUPERAR_SENHA,
         data: { email, cpf },
+        
       };
   
       const response = await requestBackEnd(config);
   
      
       return response;
-    } catch (error) {
-   
-      console.error('Erro ao recuperar senha:', error);
-      throw new Error('Erro ao recuperar senha. Tente novamente mais tarde.');
-    }
+    
   };
   
 
