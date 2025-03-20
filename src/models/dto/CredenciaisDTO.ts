@@ -23,7 +23,6 @@ export interface Endereco {
   }
   
    export interface Usuario {
-    id: string;
     nome: string;
     email: string;
     telefone: string;
@@ -33,8 +32,6 @@ export interface Endereco {
   }
   
   export interface Login {
-    message: string;
-    user: Usuario;
     token: string;
   }
   

@@ -31,36 +31,38 @@ const Login = () => {
   };
 
   const handleSubmitLogin = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setIsSubmitted(true);
-    setLoading(true);
+  event.preventDefault();
+  setIsSubmitted(true);
+  setLoading(true);
 
-    if (formData.email && formData.senha) {
-      
-        const response = await loginRequest(formData);
-        crendincialService.save(response.data);
-        setContextIsLogin(true);
+  if (formData.email && formData.senha) {
+   
+      const response = await loginRequest(formData);
+      await crendincialService.save(response.data);  // Chama a função save para garantir que os dados sejam salvos primeiro
+      setContextIsLogin(true);
 
-        const payload = authService.getUser();
-        const userProfile = payload?.perfis.includes("ADMIN") ? "ADMIN" : (payload?.perfis.includes("CLIENTE") ? "CLIENTE" : null);
-        setIconAdminContext(userProfile);
+      const userProfile = authService.getUser()?.perfis.includes("ADMIN") ? "ADMIN" : "CLIENTE";
+      setIconAdminContext(userProfile);
 
-        if(userProfile ==="ADMIN"){
-          navigate("/administrativo")
-        }else{
-          navigate("/catalogo")
-        }
-        setLoading(false);
-        setAlertData({
-          title: "Login Aceito",
-          text: `Usuário ${payload?.nome} logado com sucesso`,
-          icon: "success"
-        });
-      
-    } else {
+      if (userProfile === "ADMIN") {
+        navigate("/administrativo");
+      } else {
+        navigate("/catalogo");
+      }
+
       setLoading(false);
-    }
-  };
+      setAlertData({
+        title: "Login Aceito",
+        text: `Usuário ${authService.getUser()?.nome} logado com sucesso`,
+        icon: "success"
+      });
+    } 
+   else {
+    setLoading(false);
+    
+  }
+};
+
 
   const handleAlertClose = () => {
    

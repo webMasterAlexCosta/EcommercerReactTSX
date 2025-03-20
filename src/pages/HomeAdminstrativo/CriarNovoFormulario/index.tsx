@@ -20,23 +20,7 @@ const CriarNovoProduto = () => {
     }));
   };
 
-  // Função para salvar o novo produto
-  // const handleSubmit = (e: React.FormEvent) => {
-  //   e.preventDefault();
-  //   // Converte "preco" de string para number para garantir a compatibilidade de tipos
-  //   const newProduto = {
-  //     ...produto,
-  //     preco: Number(produto.preco)
-  //   };
-  //   // Aqui você pode adicionar o produto à sua base de dados ou array
-  //   ProdutoDTO.push({
-  //     id: ProdutoDTO.length + 1,  // Você pode usar um ID único aqui, de acordo com sua lógica
-  //     ...newProduto
-  //   });
 
-  //   // Após salvar o produto, redirecionamos para a listagem de produtos
-  //   navigate("/Administrativo/Listagem");
-  // };
 
   return (
     <>

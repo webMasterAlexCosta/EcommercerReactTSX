@@ -12,12 +12,16 @@ const HeaderClient = () => {
   const { contextIsLogin, setContextIsLogin } = useContext(ContextIsLogin);
   const { iconAdminContext, setIconAdminContext } = useContext(IconAdminContext);
 
+
+
+
+
   useEffect(() => {
     const checkLoginStatus = () => {
       const token = credencialServices.getToken();
       setContextIsLogin(!!token); // Define se o usuário está logado baseado no token
 
-      const userProfile = authService.getUser()?.perfils;
+      const userProfile = authService.getUser()?.perfis;
       console.log(userProfile);
 
       // Verifica os perfis do usuário e atualiza o contexto
@@ -96,13 +100,13 @@ const HeaderClient = () => {
 
           {!contextIsLogin
             ? <NavLink to="/login" onClick={(e) => handleOnclick(e, "login")} style={getIsActive}>
-                <Login style={{ fontSize: 40, color: 'black' }} />
-                <h3>Entrar</h3>
-              </NavLink>
+              <Login style={{ fontSize: 40, color: 'black' }} />
+              <h3>Entrar</h3>
+            </NavLink>
             : <NavLink to="/catalogo" onClick={(e) => handleOnclick(e, "logout")} style={getIsActive}>
-                <Logout style={{ fontSize: 40, color: 'black' }} />
-                <h3>Sair</h3>
-              </NavLink>
+              <Logout style={{ fontSize: 40, color: 'black' }} />
+              <h3>Sair</h3>
+            </NavLink>
           }
         </div>
       </nav>

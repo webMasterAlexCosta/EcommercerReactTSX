@@ -7,7 +7,7 @@ export const storageCarrinho = "br.com.alexcosta/carrinho"
 
 export const CLIENTE_ID = "myclientid"
 export const CLIENTE_SECRET="myclientsecret"
-export const LOGIN = "/api/login/cliente"
+export const LOGIN = "/api/login/cliente3"
 export const RECUPERAR_SENHA = "/api/recuperacao/solicitar"
 export const ALTERAR_SENHA_AUTENTICADO = "/api/recuperacao/alterar"
 export const CADASTRO_NOVO_USUARIO = "/api/usuarios/cadastro"

@@ -3,16 +3,16 @@ import HeaderAdmin from '../../components/Layout/HeaderAdmin';
 import { useEffect, useState } from 'react';
 import *as authServices from "../../services/AuthService"
 import AdminHome from './AdminLayout';
-import { AccessTokenPayloadDTO } from '../../models/dto/CredenciaisDTO';
+import {  Usuario } from '../../models/dto/CredenciaisDTO';
 
 const HomeAdminstrativo = () => {
-  const [usuario, setUsuario] = useState<AccessTokenPayloadDTO>()
+  const [usuario, setUsuario] = useState<Usuario>()
 
   useEffect(() => {
   
-    const response = authServices.getAccessTokenPayload()
+    const response = authServices.getUser()
     if (response !== undefined) {
-      setUsuario(response)
+      setUsuario(JSON.parse(response))
     }
   }, [])
   return (

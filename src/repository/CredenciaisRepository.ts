@@ -1,28 +1,27 @@
 import { Login } from "../models/dto/CredenciaisDTO";
 import { DADOS_USER, TOKEN_KEY } from "../utils/system";
+import * as userRepository from "./UserRepository";
 
 const logout = () => {
   sessionStorage.removeItem(DADOS_USER);
   return localStorage.removeItem(TOKEN_KEY);
 };
-const save = (response: Login) => {
-  sessionStorage.setItem(
-    DADOS_USER,
-    JSON.stringify({
-      nome: response.user.nome,
-      email: response.user.email,
-      telefone: response.user.telefone,
-      dataNascimento: response.user.dataNascimento,
-      perfis: response.user.perfis,
-      endereco:response.user.endereco
-    })
-  );
 
-  return localStorage.setItem(TOKEN_KEY, response.token);
+const save = async (response: Login) => {
+  localStorage.setItem(TOKEN_KEY, response.token);
+  
+   await setUser();
 };
 
 const getToken = () => {
   return localStorage.getItem(TOKEN_KEY);
+};
+
+const setUser = async () => {
+  const usuario = await userRepository.getMe();
+  sessionStorage.setItem(DADOS_USER, JSON.stringify(usuario.data));
+  return Promise.resolve();
+
 };
 
 const getUser = () => {
@@ -31,8 +30,7 @@ const getUser = () => {
     return JSON.parse(dados);
   }
   return null;
-
-
 };
 
-export { logout, save, getToken, getUser };
+
+export { logout, save, getToken, getUser, setUser };
