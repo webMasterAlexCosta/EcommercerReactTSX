@@ -1,10 +1,10 @@
-export const BASE_URL_LOCAL="http://localhost:8080"
-export const BASE_URL_LOCAL2="https://quaint-adele-alevivaldi-a5632bd1.koyeb.app"
+export const BASE_URL_LOCAL2="http://localhost:8080"
+export const BASE_URL_LOCAL="https://quaint-adele-alevivaldi-a5632bd1.koyeb.app"
 
 export const TOKEN_KEY = "br.com.alexcosta/token"
 export const DADOS_USER = "br.com.alexcosta/user"
 export const storageCarrinho = "br.com.alexcosta/carrinho"
-
+export const API_IMGBB="4671c94564fd2e734147b9ed2d523b71"
 export const CLIENTE_ID = "myclientid"
 export const CLIENTE_SECRET="myclientsecret"
 export const LOGIN = "/api/login/cliente3"
