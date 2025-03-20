@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { EnderecoDTO, UserDTO } from '../../../models/dto/UserDTO';
 import './styles.css';
 import * as authService from '../../../services/AuthService';
 import requestBackEnd from '../../../utils/request';
@@ -9,18 +8,18 @@ import { PedidoHistorico } from '../../../models/dto/CarrinhoDTO';
 import { Link } from 'react-router-dom';
 import { MudarSenha } from '../../../components/Layout/MudarSenha';
 import { FormularioUser } from '../../../components/UI/Formulario';
+import { Endereco, Usuario } from '../../../models/dto/CredenciaisDTO';
 
 
 const Perfil = () => {
-    const [usuario, setUsuario] = useState<UserDTO>({
+    const [usuario, setUsuario] = useState<Usuario>({
         id: "",
         nome: "",
         email: "",
         telefone: "",
-        cpf: "",
         dataNascimento: "",
-        perfil: [],
-        endereco: {} as EnderecoDTO
+        perfis: [],
+        endereco: {} as Endereco
     });
 
     const [historicoPedidos, setHistoricoPedidos] = useState<PedidoHistorico[]>([]); // Estado para armazenar os pedidos
@@ -29,16 +28,16 @@ const Perfil = () => {
         // Função para obter as informações do usuário
         const obterUsuario = async () => {
             if (authService.isAuthenticated()) {
-                const usuarioLogado = authService.getAccessTokenPayload();
+                const usuarioLogado = authService.getUser();
+                console.log(usuarioLogado)
                 setUsuario({
                     id: usuarioLogado?.id || "",
                     nome: usuarioLogado?.nome || "",
                     email: usuarioLogado?.email || "",
                     telefone: usuarioLogado?.telefone || "",
-                    cpf: usuarioLogado?.cpf || "",
                     dataNascimento: usuarioLogado?.dataNascimento || "",
-                    perfil: usuarioLogado?.perfis || [],
-                    endereco: usuarioLogado?.endereco || {} as EnderecoDTO
+                    perfis: usuarioLogado?.perfis || [],
+                    endereco: usuarioLogado?.endereco || {} as Endereco
                 });
             }
         };

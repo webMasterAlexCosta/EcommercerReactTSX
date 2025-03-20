@@ -1,6 +1,6 @@
 import { createContext } from "react";
 
-export type PerfilContext = "CLIENT" | "ADMIN" | null;
+export type PerfilContext = "CLIENTE" | "ADMIN" | null;
 
 interface IconAdminContextProps {
     iconAdminContext: PerfilContext;

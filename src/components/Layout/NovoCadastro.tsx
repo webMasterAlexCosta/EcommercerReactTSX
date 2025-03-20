@@ -5,7 +5,10 @@ import { Carregando } from "../UI/Carregando";
 import { PersonAdd, LockOutlined, PersonOutline, MailOutline, Phone, CalendarToday, Description, Home, LocationCity, Public } from "@mui/icons-material";
 import { CadastroUserDTO } from "../../models/dto/CadastroUserDTO";
 import * as userServices from "../../services/UserServices"
-
+import { TEXTO_PADRAO_SOLICITACAO } from "../../utils/system";
+import { IPasswordVisibilityState, PasswordVisibility, formatTelefoneParaExibicao, formatTelefoneParaSalvar } from "../../utils/funcoes";
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 interface ViaCepResponse {
     erro?: boolean;
     logradouro: string;
@@ -26,7 +29,8 @@ const NovoCadastro: React.FC<NovoCadastroProps> = ({ isSubmitted }) => {
     } | null>(null);
 
     const [loading, setLoading] = useState<boolean>(false);
-
+    const [isPasswordVisible, setIsPasswordVisible] = useState<IPasswordVisibilityState>({ senha: false });
+    const [textoCarregando, setTextoCarregando] = useState(TEXTO_PADRAO_SOLICITACAO)
     const [formData, setFormData] = useState<CadastroUserDTO>({
         nome: "",
         email: "",
@@ -45,112 +49,114 @@ const NovoCadastro: React.FC<NovoCadastroProps> = ({ isSubmitted }) => {
         }
     });
 
- 
 
-const buscarEnderecoPorCep = async (cep: string) => {
-    if (cep.length === 8) {
-        setLoading(true);
-        
-        try {
-            // Atrasar a busca em 1 segundo
-            const response: AxiosResponse<ViaCepResponse> = await new Promise((resolve) =>
-                setTimeout(() => resolve(axios.get(`https://viacep.com.br/ws/${cep}/json/`)), 2000)
-            );
 
-            // Verifique se a resposta contém erro
-            if (response.data.erro) {
+    const buscarEnderecoPorCep = async (cep: string) => {
+        if (cep.length === 8) {
+            setTextoCarregando("Aguarde, buscado seu CEP")
+            setLoading(true);
+
+            try {
+                const response: AxiosResponse<ViaCepResponse> = await new Promise((resolve) =>
+                    setTimeout(() => resolve(axios.get(`https://viacep.com.br/ws/${cep}/json/`)), 1000)
+                );
+
+                if (response.data.erro) {
+                    setAlertData({
+                        title: "Erro",
+                        text: "CEP não encontrado.",
+                        icon: "error"
+                    });
+                } else {
+                    setFormData((prevState) => ({
+                        ...prevState,
+                        endereco: {
+                            ...prevState.endereco,
+                            logradouro: response.data.logradouro,
+                            bairro: response.data.bairro,
+                            cidade: response.data.localidade,
+                            uf: response.data.uf
+                        }
+                    }));
+                }
+            } catch (error) {
+                console.log(error);
                 setAlertData({
                     title: "Erro",
-                    text: "CEP não encontrado.",
+                    text: "Não foi possível buscar o CEP.",
                     icon: "error"
                 });
-            } else {
-                // Atualizar o estado com os dados recebidos
+            } finally {
+                setLoading(false);
+                setTextoCarregando(TEXTO_PADRAO_SOLICITACAO)
+            }
+        }
+    };
+
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+
+        if (name === "telefone") {
+            const formattedTelefone = formatTelefoneParaSalvar(value);
+            setFormData((prevState) => ({
+                ...prevState,
+                [name]: formattedTelefone
+            }));
+        } else if (name === "cpf" || name === "cep") {
+            const numericValue = value.replace(/\D/g, '');
+            if (name === "cpf" && numericValue.length <= 11) {
+                setFormData((prevState) => ({
+                    ...prevState,
+                    [name]: numericValue
+                }));
+            } else if (name === "cep" && numericValue.length <= 8) {
                 setFormData((prevState) => ({
                     ...prevState,
                     endereco: {
                         ...prevState.endereco,
-                        logradouro: response.data.logradouro,
-                        bairro: response.data.bairro,
-                        cidade: response.data.localidade,
-                        uf: response.data.uf
+                        [name]: numericValue
                     }
                 }));
-            }
-        } catch (error) {
-            console.log(error);
-            setAlertData({
-                title: "Erro",
-                text: "Não foi possível buscar o CEP.",
-                icon: "error"
-            });
-        } finally {
-            setLoading(false);
-        }
-    }
-};
-
-
-const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-
-    if (name === "telefone" || name === "cpf") {
-        const numericValue = value.replace(/\D/g, '');
-
-        // Permitir apenas até 11 dígitos
-        if (numericValue.length <= 11) {
-            setFormData((prevState) => ({
-                ...prevState,
-                [name]: numericValue
-            }));
-        }
-    } else if (name === "cep") {
-        const numericCep = value.replace(/\D/g, '')
-
-        if (numericCep.length <= 8) {
-            setFormData((prevState) => ({
-                ...prevState,
-                endereco: {
-                    ...prevState.endereco,
-                    cep: numericCep
+                if (numericValue.length === 8) {
+                    buscarEnderecoPorCep(numericValue);
                 }
+            }
+        } else if (name === "email") {
+            setFormData((prevState) => ({
+                ...prevState,
+                [name]: value.toLocaleLowerCase()
+            }));
+        } else {
+            setFormData((prevState) => ({
+                ...prevState,
+                [name]: value
             }));
         }
+    };
 
-        if (numericCep.length === 8) {
-            buscarEnderecoPorCep(numericCep);
-        }
-    } else {
-      
-        setFormData((prevState) => ({
-            ...prevState,
-            [name]: value
-        }));
-    }
-};
 
-    
-    
 
-    const handleEnderecoChange = (e: React.ChangeEvent<HTMLInputElement>, field: string) => {
+
+
+    const handleEnderecoChange = (e: React.ChangeEvent<HTMLInputElement>, valor: string) => {
         const { value } = e.target;
 
-        // Permitir digitar até 11 dígitos ou apagar os dígitos
-        if (field === "numero" && (value.length <= 11 || value.length < formData.endereco.numero.length)) {
+        if (valor === "numero" && (value.length <= 11 || value.length < formData.endereco.numero.length)) {
             setFormData((prevState) => ({
                 ...prevState,
                 endereco: {
                     ...prevState.endereco,
-                    [field]: value
+                    [valor]: value
                 }
             }));
-            
-        }else{
+
+        } else {
             setFormData((prevState) => ({
                 ...prevState,
                 endereco: {
                     ...prevState.endereco,
-                    [field]: value
+                    [valor]: value
                 }
             }));
         }
@@ -161,29 +167,29 @@ const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
 
         setLoading(true);
-        
-            const response = await userServices.cadastrarNovoUsuario(formData);
+
+        const response = await userServices.cadastrarNovoUsuario(formData);
 
 
-            setAlertData({
-                title: "Cadastro realizado com sucesso!",
-                text: `Foi enviado link de ativacao para ${response.data.email}`,
-                icon: "success"
+        setAlertData({
+            title: "Cadastro realizado com sucesso!",
+            text: `Foi enviado link de ativacao para ${response.data.email}`,
+            icon: "success"
 
-            });
-            setTimeout(() => {
-                window.location.reload();
-            }
-                , 3000);
-        
-            setLoading(false);
-        
+        });
+        setTimeout(() => {
+            window.location.reload();
+        }
+            , 3000);
+
+        setLoading(false);
+
     };
 
     return (
         <div className="dsc-login-form-container">
             {loading ? (
-                <Carregando title="Aguarde, estamos processando sua solicitação..." />
+                <Carregando title={textoCarregando} />
             ) : (
                 <form className="dsc-card dsc-form" onSubmit={handleCadastroSubmit}>
                     <PersonAdd sx={{ fontSize: "24px", color: "#007bff" }} />
@@ -237,13 +243,13 @@ const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
                                 name="telefone"
                                 className={`dsc-form-control ${isSubmitted ? "dsc-input-error" : ""}`}
                                 type="text"
-                                value={formData.telefone}
+                                value={formatTelefoneParaExibicao(formData.telefone)} 
                                 onChange={handleChange}
                                 placeholder="Digite seu Telefone"
                                 required
-                                min={0}
-                                max={11} 
+                                maxLength={15} 
                             />
+
                             {isSubmitted && <div className="dsc-form-error">Campo obrigatório</div>}
                         </div>
 
@@ -265,23 +271,28 @@ const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
                             )}
                         </div>
 
-                        <div>
+                        <div >
                             <label htmlFor="senha">
                                 <LockOutlined sx={{ fontSize: "20px", marginRight: "8px" }} />
                                 Senha
                             </label>
-                            <input
-                                name="senha"
-                                className={`dsc-form-control ${isSubmitted ? "dsc-input-error" : ""}`}
-                                type="password"
-                                value={formData.senha}
-                                onChange={handleChange}
-                                placeholder="Digite sua Senha"
-                                required
-                            />
-                            {isSubmitted && (
-                                <div className="dsc-form-error">Campo obrigatório</div>
-                            )}
+                            <div className="input-container">
+                                <input
+                                    name="senha"
+                                    className={`dsc-form-control ${isSubmitted ? "dsc-input-error" : ""}`}
+                                    type={isPasswordVisible.senha ? "text" : "password"}
+                                    value={formData.senha}
+                                    onChange={handleChange}
+                                    placeholder="Digite sua Senha"
+                                    required
+                                />
+                                <span className="password-icon" onClick={() => PasswordVisibility('senha', setIsPasswordVisible)}>
+                                    {isPasswordVisible.senhaAntiga ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                                </span>
+                                {isSubmitted && (
+                                    <div className="dsc-form-error">Campo obrigatório</div>
+                                )}
+                            </div>
                         </div>
 
                         <div>

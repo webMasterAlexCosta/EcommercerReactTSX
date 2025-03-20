@@ -10,8 +10,8 @@ const setCarrinho = (value: CarrinhoItem[]) => {
 };
 
 
-const removeCarrinho = (key: string) => {
-    return localStorage.removeItem(key);
+const removeCarrinho = () => {
+    return localStorage.removeItem(storageCarrinho);
 };
 
 

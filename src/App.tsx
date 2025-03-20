@@ -13,7 +13,7 @@ import Formulario from './pages/HomeAdminstrativo/Formulario';
 import ContextIsLogin from './data/LoginContext';
 import IconAdminContext, { PerfilContext } from './data/IconAdminContext';
 import { PrivateRouteAdmin } from './components/Private/Router/ADMIN/index';
-import { PrivateRouteClient } from './components/Private/Router/CLIENT';
+import { PrivateRouteClient } from './components/Private/Router/CLIENTE/index';
 import { Perfil } from './pages/HomeClient/Perfil';
 import { Header } from './components/UI/Header';
 import PaginaAviso from './components/Layout/PaginaAviso';

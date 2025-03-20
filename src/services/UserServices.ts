@@ -12,8 +12,8 @@ import { getCarrinho } from "../services/CarrinhoService";
 import * as authService from "../services/AuthService"
 
 
-const findMe = async () => {
-  return userRepository.findMe();
+const getMe = async () => {
+  return userRepository.getMe();
 };
 
 const recuperarSenha = (email: string, cpf: string) => {
@@ -75,7 +75,7 @@ const enviarPedido = async (): Promise<AxiosResponse<unknown>> => {
 
 const alterarSenhaAutenticado=(antigaSenha:string , novaSenha:string)=>{
       if(authService.isAuthenticated()){
-        const email = authService.getAccessTokenPayload()?.email
+        const email = authService.getUser()?.email;
       
         const config: AxiosRequestConfig={
           method:"POST",
@@ -92,4 +92,4 @@ const alterarSenhaAutenticado=(antigaSenha:string , novaSenha:string)=>{
 
 }
 
-export { findMe, recuperarSenha, cadastrarNovoUsuario, enviarPedido,alterarSenhaAutenticado };
+export { getMe, recuperarSenha, cadastrarNovoUsuario, enviarPedido,alterarSenhaAutenticado };

@@ -2,7 +2,6 @@ import './Styles.css';
 import { NavLink } from "react-router-dom";
 import { useContext, useEffect } from 'react';
 import ContextIsLogin from '../../../data/LoginContext';
-import { TOKEN_KEY } from '../../../utils/system';
 import * as credencialServices from "../../../services/CredenciasiService";
 import * as authService from "../../../services/AuthService";
 import IconAdminContext from '../../../data/IconAdminContext';
@@ -15,24 +14,27 @@ const HeaderClient = () => {
 
   useEffect(() => {
     const checkLoginStatus = () => {
-      const token = credencialServices.get(TOKEN_KEY);
-      setContextIsLogin(!!token);
+      const token = credencialServices.getToken();
+      setContextIsLogin(!!token); // Define se o usuário está logado baseado no token
 
-      const userProfile = authService.getAccessTokenPayload()?.perfis;
+      const userProfile = authService.getUser()?.perfils;
+      console.log(userProfile);
+
+      // Verifica os perfis do usuário e atualiza o contexto
       if (userProfile?.includes("ADMIN")) {
         setIconAdminContext("ADMIN");
-      } else if (userProfile?.includes("CLIENT")) {
-        setIconAdminContext("CLIENT");
+      } else if (userProfile?.includes("CLIENTE")) {
+        setIconAdminContext("CLIENTE");
       } else {
         setIconAdminContext(null);
       }
     };
 
-    checkLoginStatus();
+    checkLoginStatus(); // Checa o login e perfil ao carregar
 
-    window.addEventListener("storage", checkLoginStatus);
+    window.addEventListener("storage", checkLoginStatus); // Escuta mudanças no storage
 
-    return () => window.removeEventListener('storage', checkLoginStatus);
+    return () => window.removeEventListener('storage', checkLoginStatus); // Limpa o event listener ao desmontar
   }, [setContextIsLogin, setIconAdminContext]);
 
   const getIsActive = ({ isActive }: { isActive: boolean }) => (isActive ? { color: "red" } : { color: "black" });
@@ -46,12 +48,12 @@ const HeaderClient = () => {
       return;
     }
 
-    const userProfile = authService.getAccessTokenPayload()?.perfis;
+    const userProfile = authService.getUser()?.perfis
 
     if (userProfile?.includes("ADMIN")) {
       setIconAdminContext("ADMIN");
-    } else if (userProfile?.includes("CLIENT")) {
-      setIconAdminContext("CLIENT");
+    } else if (userProfile?.includes("CLIENTE")) {
+      setIconAdminContext("CLIENTE");
     } else {
       setIconAdminContext(null);
     }
@@ -71,7 +73,7 @@ const HeaderClient = () => {
         </NavLink>
 
         <div className="dsc-navbar-right">
-          {iconAdminContext === "CLIENT" && (
+          {iconAdminContext === "CLIENTE" && (
             <NavLink to="/perfil" style={getIsActive}>
               <AccountCircle style={{ fontSize: 40, color: 'black' }} />
               <h3>Perfil</h3>

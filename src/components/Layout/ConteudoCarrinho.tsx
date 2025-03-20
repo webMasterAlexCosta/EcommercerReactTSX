@@ -17,7 +17,7 @@ interface IConteudoCarrinho {
     subtotais: number[];
     setProdutos: React.Dispatch<React.SetStateAction<ProdutoDTO[]>>;
     clickpedido: () => void;
-    fazerPedido: boolean; 
+    fazerPedido: boolean;
 }
 
 const ConteudoCarrinho = ({
@@ -30,7 +30,7 @@ const ConteudoCarrinho = ({
     produtos,
     subtotais,
     clickpedido,
-    fazerPedido, 
+    fazerPedido,
 }: IConteudoCarrinho) => {
     const [loading, setLoading] = useState<boolean>(false);
     const [isCarrinho, setIsCarrinho] = useState<boolean>(false);
@@ -46,7 +46,7 @@ const ConteudoCarrinho = ({
             setTimeout(() => {
                 setAlertData(null);
             }, 5000);
-            setLoading(false);    
+            setLoading(false);
             setIsCarrinho(false);
         }
     }, [isCarrinho, setAlertData]);
@@ -99,18 +99,17 @@ const ConteudoCarrinho = ({
                     </div>
 
                     <div className="dsc-btn-page-container">
-                        {/* Condiciona a exibição do botão Finalizar Pedido */}
                         {!fazerPedido && (
                             <FinalizarPedido
                                 title="Finalizar Pedido"
-                                clickpedido={clickpedido}  // Passa a função de finalizar pedido
+                                clickpedido={clickpedido}  
                             />
                         )}
 
                         <ContinuarComprando link="/catalogo" title="Continuar Comprando" />
                         <Limpar onClickHandle={limparCarrinho} title="Limpar Carrinho" />
 
-                        {alertData && <Alert {...alertData} onClose={() => setAlertData(null)}  />}
+                        {alertData && <Alert {...alertData} onClose={() => setAlertData(null)} />}
                     </div>
                 </section>
             )}

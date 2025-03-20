@@ -1,10 +1,10 @@
 import axios, { AxiosRequestConfig } from "axios";
-import Swal from "sweetalert2"; // Importa SweetAlert2
-import { BASE_URL_LOCAL, TOKEN_KEY } from "./system";
+import Swal from "sweetalert2"; 
+import { BASE_URL_LOCAL } from "./system";
 import * as credentialRespository from "../repository/CredenciaisRepository";
 
 const requestBackEnd = (config: AxiosRequestConfig) => {
-  const token = credentialRespository.get(TOKEN_KEY);
+  const token = credentialRespository.getToken();
   const headers = {
     ...config.headers,
     Authorization: token ? `Bearer ${token}` : undefined,
@@ -12,6 +12,8 @@ const requestBackEnd = (config: AxiosRequestConfig) => {
 
   return axios({ ...config, baseURL: BASE_URL_LOCAL, headers });
 };
+
+
 
 axios.interceptors.response.use(
   function (response) {
@@ -32,7 +34,7 @@ axios.interceptors.response.use(
         confirmButtonText: "OK",
       });
       setTimeout(() => {
-      //  window.location.reload();
+       window.location.reload();
       }, 3000);
     } else {
       Swal.fire({

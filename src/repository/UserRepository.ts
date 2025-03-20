@@ -4,9 +4,9 @@ import { CADASTRO_NOVO_USUARIO, RECUPERAR_SENHA } from "../utils/system";
 import { CadastroUserDTO } from "../models/dto/CadastroUserDTO";
 
 
-const findMe = async () => {
+const getMe = async () => {
   const config : AxiosRequestConfig={
-    url:"/users/me",
+    url:"/api/users/me",
     withCredentials:true
     
   }
@@ -53,4 +53,4 @@ const findMe = async () => {
     }
   }
 
-  export {findMe , recuperarSenha,cadastrarNovoUsuario}
+  export {getMe , recuperarSenha,cadastrarNovoUsuario}

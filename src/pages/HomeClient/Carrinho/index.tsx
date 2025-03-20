@@ -15,15 +15,15 @@ const Carrinho = () => {
   const [alertData, setAlertData] = useState<{ title: string; text: string; icon: "success" | "error" } | null>(null);
   const navigate = useNavigate();
 
-  // Calcular subtotais e o total do carrinho
+ 
   const subtotais = useMemo(() => produtos.map((item) => item.preco * item.quantidade), [produtos]);
   const totalCarrinho = useMemo(() => subtotais.reduce((total, subtotal) => total + subtotal, 0), [subtotais]);
   const totalFormatado = totalCarrinho.toFixed(2).replace('.', ',');
 
-  // Estado para controlar se o pedido foi feito
+  
   const [fazerPedido, setFazerPedido] = useState<boolean>(false);
 
-  // Função para limpar o carrinho
+ 
   const limparCarrinho = () => {
     setAlertData({ title: "Limpeza Carrinho", text: "Carrinho foi limpo", icon: "success" });
     setTimeout(() => {
@@ -38,10 +38,9 @@ const Carrinho = () => {
     }, 2000);
   };
 
-  // Função que é chamada quando o pedido é feito
   const pedidoFeito= async (): Promise<AxiosResponse<  PedidoFeito,  PedidoFeito>> => {
-    setFazerPedido(true);  // Marca que o pedido foi feito
-    navigate("/Carrinho/Pagamento"); // Navega para a página de pagamento
+    setFazerPedido(true); 
+    navigate("/Carrinho/Pagamento"); 
 
     return Promise.resolve({} as AxiosResponse<PedidoFeito, PedidoFeito>);
   };
@@ -64,7 +63,6 @@ const Carrinho = () => {
           setProdutos={setProdutos}
           subtotais={subtotais}
           clickpedido={pedidoFeito}
-          //aqui estou  passando o estado para saber se o pedido foi feito
           fazerPedido={fazerPedido}  
         />
       )}

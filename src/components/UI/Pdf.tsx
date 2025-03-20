@@ -2,17 +2,9 @@ import { jsPDF } from "jspdf";
 import * as QRCode from "qrcode";
 import * as carrinhoService from "../../services/CarrinhoService";
 import * as authService from "../../services/AuthService";
-import { EnderecoDTO } from "../../models/dto/UserDTO";
+import { Endereco } from "../../models/dto/CredenciaisDTO";
 
-interface PayloadDTO {
-    perfis: string[];
-    sub: string;
-    endereco: EnderecoDTO | null;
-    iss: string;
-    nome: string;
-    exp: number;
-    email: string;
-}
+
 
 interface ProdutoCarrinhoPDF {
     nome: string;
@@ -21,7 +13,7 @@ interface ProdutoCarrinhoPDF {
 }
 
 const gerarPDF = async (pedido: { numeroPedido: string } | null) => {
-    const payload = authService.getAccessTokenPayload() as PayloadDTO;
+    const user = authService.getUser()
     const carrinho = carrinhoService.getCarrinho() || [];
 
     const cart: ProdutoCarrinhoPDF[] = carrinho.map(item => ({
@@ -36,9 +28,9 @@ const gerarPDF = async (pedido: { numeroPedido: string } | null) => {
     }
 
     const numeroPed = pedido?.numeroPedido;
-    const nome = payload.nome || "Não especificado";
-    const email = payload.email || "Não especificado";
-    const endereco: EnderecoDTO | null = payload.endereco || null;
+    const nome = user.nome || "Não especificado";
+    const email = user.email || "Não especificado";
+    const endereco: Endereco | null = user.endereco || null;
 
     const doc = new jsPDF();
     doc.setFont("Helvetica");

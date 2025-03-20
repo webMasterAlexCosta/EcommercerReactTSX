@@ -66,6 +66,7 @@ const CardPaymentComponent2: React.FC = () => {
           const response = await requestBackEnd({
             method: "get",
             url: `/api/create-payment-intent?amount=${valor}`,
+            withCredentials:true
           });
 
           setClientSecret(response.data.clientSecret);

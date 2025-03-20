@@ -38,11 +38,11 @@ const Login = () => {
     if (formData.email && formData.senha) {
       
         const response = await loginRequest(formData);
-        crendincialService.save(response.data.token);
+        crendincialService.save(response.data);
         setContextIsLogin(true);
 
-        const payload = authService.getAccessTokenPayload();
-        const userProfile = payload?.perfis.includes("ADMIN") ? "ADMIN" : (payload?.perfis.includes("CLIENT") ? "CLIENT" : null);
+        const payload = authService.getUser();
+        const userProfile = payload?.perfis.includes("ADMIN") ? "ADMIN" : (payload?.perfis.includes("CLIENTE") ? "CLIENTE" : null);
         setIconAdminContext(userProfile);
 
         if(userProfile ==="ADMIN"){
@@ -67,7 +67,7 @@ const Login = () => {
     if (alertData?.icon === "success") {
       if(iconAdminContext === "ADMIN") {
         navigate("/Administrativo");
-      } else if(iconAdminContext === "CLIENT") {  
+      } else if(iconAdminContext === "CLIENTE") {  
       navigate("/catalogo");
     } else {
       setAlertData(null);

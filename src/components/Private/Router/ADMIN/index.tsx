@@ -8,7 +8,7 @@ interface props {
 
 const PrivateRouteAdmin: React.FC<props> = ({ children }: props) => {
 
-    if (authService.isAuthenticated() && authService.getAccessTokenPayload()?.perfis.includes("ADMIN")) {
+    if (authService.isAuthenticated() && authService.getUser()?.perfis?.includes("ADMIN")) {
 
         return children;
     }

@@ -6,7 +6,7 @@ import { useContext } from 'react';
 import ContextIsLogin from './../../data/LoginContext';
 
 const Header = ()=>{    
-    const isAdmin = authService.getAccessTokenPayload()?.perfis.includes("ADMIN")?"ADMIN" : "CLIENT"
+    const isAdmin = authService.getUser()?.perfis.includes("ADMIN")?"ADMIN" : "CLIENTE"
     const [viewerHeaderClient , setViewerHeaderClient] = useState<boolean>(false)
     const { setContextIsLogin } = useContext(ContextIsLogin);
 
@@ -16,7 +16,7 @@ const Header = ()=>{
        <>
          {isAdmin === "ADMIN" && viewerHeaderClient === true 
          ? 
-         <HeaderAdmin user={authService.getAccessTokenPayload()?.nome} 
+         <HeaderAdmin user={authService.getUser()?.user?.nome} 
          setViewerHeaderClient={setViewerHeaderClient} 
          setContextIsLogin={setContextIsLogin}
          /> 

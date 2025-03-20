@@ -1,21 +1,41 @@
-import { EnderecoDTO } from "./UserDTO";
 
 export interface CredenciaisDTO{
     email:string;
     senha:string;
 }
-export type perfil = "CLIENT" | "ADMIN";
+export type perfis = "CLIENTE" | "ADMIN";
 
 
 export interface AccessTokenPayloadDTO{
-    id?:string;
-    nome:string;
-    email:string;
-    telefone?:string;
-    cpf?:string;
-    dataNascimento?:string;
-    perfis:perfil[];
+    sub:string;
     exp:number;
-    endereco:EnderecoDTO;
-    fotoPerfil?:string
+    iss:string
 }
+export interface Endereco {
+    id: number;
+    logradouro: string;
+    cep: string;
+    numero: number;
+    cidade: string;
+    bairro: string;
+    complemento: string;
+    uf: string;
+  }
+  
+   export interface Usuario {
+    id: string;
+    nome: string;
+    email: string;
+    telefone: string;
+    dataNascimento: string;
+    perfis: perfis[];
+    endereco: Endereco;
+  }
+  
+  export interface Login {
+    message: string;
+    user: Usuario;
+    token: string;
+  }
+  
+ 
