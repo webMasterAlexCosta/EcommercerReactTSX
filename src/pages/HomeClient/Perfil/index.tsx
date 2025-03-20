@@ -13,7 +13,6 @@ import { Endereco, Usuario } from '../../../models/dto/CredenciaisDTO';
 
 const Perfil = () => {
     const [usuario, setUsuario] = useState<Usuario>({
-        id: "",
         nome: "",
         email: "",
         telefone: "",
@@ -22,16 +21,14 @@ const Perfil = () => {
         endereco: {} as Endereco
     });
 
-    const [historicoPedidos, setHistoricoPedidos] = useState<PedidoHistorico[]>([]); // Estado para armazenar os pedidos
+    const [historicoPedidos, setHistoricoPedidos] = useState<PedidoHistorico[]>([]); 
     const [mudarSenha, setMudarSenha] = useState<boolean>(false)
     useEffect(() => {
-        // Função para obter as informações do usuário
         const obterUsuario = async () => {
             if (authService.isAuthenticated()) {
                 const usuarioLogado = authService.getUser();
                 console.log(usuarioLogado)
                 setUsuario({
-                    id: usuarioLogado?.id || "",
                     nome: usuarioLogado?.nome || "",
                     email: usuarioLogado?.email || "",
                     telefone: usuarioLogado?.telefone || "",
@@ -43,7 +40,6 @@ const Perfil = () => {
         };
         obterUsuario();
 
-        // Função para obter o histórico de pedidos
         const obterHisticoPedido = async () => {
             const config: AxiosRequestConfig = {
                 method: "GET",
@@ -51,18 +47,18 @@ const Perfil = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                withCredentials: true,  // Se precisar enviar cookies, mantém esta linha
+                withCredentials: true,  
             };
 
             try {
                 const response = await requestBackEnd(config);
-                setHistoricoPedidos(response.data);  // Atualiza o estado com o histórico de pedidos
+                setHistoricoPedidos(response.data);  
             } catch (error) {
                 console.error('Erro ao obter histórico de pedidos', error);
             }
         };
 
-        obterHisticoPedido();  // Chama a função para buscar o histórico de pedidos
+        obterHisticoPedido();  
     }, []);
 
     return (
@@ -172,7 +168,6 @@ const Perfil = () => {
                             readOnly
                         />
 
-                        {/* Botões para mudar senha e endereço */}
                         <div className="container-btns">
                             <div className="formulario-grupo">
                                 <Link to='/perfil/MudarSenha'>
@@ -184,10 +179,9 @@ const Perfil = () => {
                                     <button id="botao1">Mudar Endereço</button>
                                 </a>
                             </div>
-
                         </div>
 
-                        {/* Histórico de Pedidos */}
+                       
                         <h3>Histórico de Pedidos</h3>
                         <div id="historico-pedidos">
                             <ul>
