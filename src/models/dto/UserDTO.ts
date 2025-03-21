@@ -2,7 +2,7 @@ import { perfis } from "./CredenciaisDTO";
 
 export interface EnderecoDTO {
   id?: number;
-  uf: string;
+  uf?: string;
   cidade: string;
   complemento: string;
   numero: number;

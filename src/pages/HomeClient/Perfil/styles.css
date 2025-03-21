@@ -1,42 +1,45 @@
+/* Estilo Geral */
 .registro-formulario {
   background-color: #fff;
   width: 100%;
   max-width: 800px;
-  padding: 40px; /* Aumenta o espaçamento interno */
-  border-radius: 16px; /* Borda mais arredondada */
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12); /* Sombra mais suave */
+  padding: 32px; /* Espaçamento interno ajustado */
+  border-radius: 16px; /* Bordas arredondadas */
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1); /* Sombra suave */
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  margin: 40px auto; /* Centraliza e adiciona margem superior/inferior */
-}
-.registro-formulario:where(:hover, :focus-within, :active) {
-  transform: translateY(-8px); /* Efeito mais perceptível */
-  box-shadow: 0 16px 48px var(  --dsc-color-bg-tertiary); /* Sombra mais intensa */
+  margin: 40px auto; /* Centraliza e adiciona margem */
 }
 
+.registro-formulario:hover {
+  transform: translateY(-5px); /* Efeito de elevação ao passar o mouse */
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15); /* Sombra mais intensa */
+}
+
+/* Formulário */
 .formulario-grupo {
-  margin-bottom: 24px; /* Espaçamento mais consistente */
-}
-
-label {
-  display: block;
-  font-size: 1rem;
-  font-weight: 600;
-  color: #333;
-  margin-bottom: 8px; /* Espaçamento entre label e input */
+  margin-bottom: 20px; /* Espaçamento consistente entre os campos */
 }
 .img-pedido{
   width: 20%;
   border-radius: 50%;
 }
+label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 8px; /* Espaçamento entre label e input */
+}
+
 input[type="text"],
 input[type="email"],
 input[type="date"] {
   width: 100%;
-  padding: 14px; /* Mais espaço interno */
-  font-size: 1rem;
+  padding: 12px; /* Menor espaço interno */
+  font-size: 0.9rem;
   color: #333;
-  border: 2px solid #e0e0e0; /* Borda mais visível */
-  border-radius: 10px;
+  border: 1px solid #ddd; /* Borda mais sutil */
+  border-radius: 8px;
   background-color: #f9f9f9;
   transition: border-color 0.3s ease, background-color 0.3s ease;
 }
@@ -45,6 +48,7 @@ input:focus {
   border-color: #007bff; /* Destaca o campo ativo */
   background-color: #ffffff;
   outline: none;
+  box-shadow: 0 0 8px rgba(0, 123, 255, 0.2); /* Sombra leve ao focar */
 }
 
 input[readonly] {
@@ -53,87 +57,35 @@ input[readonly] {
   border-color: #dcdcdc;
 }
 
+/* Botões */
 .container-btns {
   display: flex;
-  gap: 16px;
+  gap: 12px;
   width: 100%;
-  margin-top: 32px;
+  margin-top: 24px;
+  flex-wrap: wrap; /* Permite que os botões se ajustem em telas menores */
 }
 
 button {
-  width: 100%;
-  padding: 14px;
-  font-size: 1rem;
-  font-weight: 600;
+  padding: 10px 16px; /* Botões menores */
+  font-size: 0.9rem;
+  font-weight: 500;
   color: #fff;
   background-color: #007bff;
   border: none;
-  border-radius: 10px;
+  border-radius: 8px;
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.3s ease;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  flex: 1; /* Botões ocupam espaço igualmente */
 }
-.foto-perfil-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 20px;
-}
-
-.foto-perfil {
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
-  object-fit: cover; /* Isso faz a imagem se ajustar ao tamanho do container mantendo a proporção */
-  border: 2px solid #ccc; /* Borda sutil para a imagem */
-  margin-bottom: 15px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Sombra para dar um leve destaque */
-}
-
-.foto-perfil-container p {
-  font-size: 16px;
-  color: #666;
-  margin-bottom: 10px;
-}
-
-.foto-perfil-container input[type="file"] {
-  display: none; /* Esconde o input file */
-}
-
-.foto-perfil-container button {
-  padding: 10px 20px;
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 14px;
-  transition: background-color 0.3s ease;
-}
-
-.foto-perfil-container button:hover {
-  background-color: #0056b3;
-}
-
-.foto-perfil-container .erro-upload {
-  color: red;
-  font-size: 14px;
-  margin-top: 10px;
-}
-
-.foto-perfil-container .erro-upload,
-.foto-perfil-container p {
-  text-align: center;
-}
-
 
 button:hover {
   background-color: #0056b3;
-  transform: scale(1.05);
+  transform: scale(1.03); /* Efeito de crescimento ao passar o mouse */
 }
 
 button:active {
-  transform: scale(0.98);
+  transform: scale(0.98); /* Efeito de clique */
 }
 
 button#botao {
@@ -144,6 +96,59 @@ button#botao:hover {
   background-color: #b02a37;
 }
 
+/* Botão de Perfil */
+button.perfil-button {
+  background-color: #28a745; /* Verde para destaque */
+  padding: 12px 20px;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+button.perfil-button:hover {
+  background-color: #218838;
+  transform: scale(1.05);
+}
+
+/* Foto de Perfil */
+.foto-perfil-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.foto-perfil {
+  width: 120px; /* Tamanho reduzido */
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #ccc;
+  margin-bottom: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.foto-perfil-container p {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 8px;
+}
+
+.foto-perfil-container button {
+  padding: 8px 16px; /* Botões menores */
+  font-size: 0.9rem;
+  margin: 4px;
+}
+
+.foto-perfil-container .erro-upload {
+  color: red;
+  font-size: 0.9rem;
+  margin-top: 8px;
+}
+
+/* Histórico de Pedidos */
 #historico-pedidos {
   background-color: #fafafa;
   border-radius: 12px;
@@ -158,27 +163,108 @@ button#botao:hover {
 }
 
 #historico-pedidos li {
-  padding: 14px;
+  padding: 12px;
   border-bottom: 1px solid #eaeaea;
-  font-size: 1rem;
+  font-size: 0.9rem;
   color: #444;
   transition: background-color 0.3s ease;
 }
 
 #historico-pedidos li:hover {
-  background-color: #f0f8ff; /* Cor clara ao passar o mouse */
+  background-color: #f0f8ff;
 }
 
 #historico-pedidos li:last-child {
   border-bottom: none;
 }
+
+/* Modal de Câmera */
+.camera-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.camera-modal-content {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 600px;
+  text-align: center;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.camera-video {
+  width: 50%;
+  height: auto;
+  margin-bottom: 16px;
+  border-radius: 8px;
+  background-color: #000; /* Fundo preto enquanto a câmera carrega */
+}
+
+.camera-buttons button {
+  margin: 8px;
+  padding: 10px 16px;
+  font-size: 0.9rem;
+}
+.captured-image{
+  width: 50%;
+  height: auto;
+  margin-bottom: 16px;
+  border-radius: 8px;
+  background-color: #000; /* Fundo preto enquanto a câmera carrega */
+}
+.close-modal {
+  background-color: #dc3545;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.close-modal:hover {
+  background-color: #b02a37;
+}
+
+/* Responsividade */
 @media (max-width: 768px) {
   .container-btns {
-    flex-direction: column; /* Botões empilhados em telas menores */
+    flex-direction: column;
   }
 
   button {
     width: 100%;
     margin-bottom: 12px;
   }
+}
+.remove-button {
+  background-color: #dc3545;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.remove-button:hover {
+  background-color: #b02a37;
+  transform: scale(1.03);
+}
+
+.remove-button:active {
+  transform: scale(0.98);
 }
