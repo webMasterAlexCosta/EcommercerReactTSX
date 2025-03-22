@@ -2,18 +2,17 @@ import { AxiosRequestConfig } from "axios";
 import requestBackEnd from "../utils/request";
 import { CADASTRO_NOVO_USUARIO, RECUPERAR_SENHA } from "../utils/system";
 import { CadastroUserDTO } from "../models/dto/CadastroUserDTO";
+import { Endereco } from "../models/dto/CredenciaisDTO";
 
 
 const getMe = async () => {
   const config : AxiosRequestConfig={
     url:"/api/users/me",
     withCredentials:true
-    
   }
     
     try {
       const response=await requestBackEnd(config)
-      
       return response
     } catch (error) {
       console.error(error);
@@ -52,5 +51,13 @@ const getMe = async () => {
       throw new Error ("Erro ao realizar cadastro")
     }
   }
-
-  export {getMe , recuperarSenha,cadastrarNovoUsuario}
+const mudarEnderecoUserAutenticado =(enderecoUsuario:Endereco, id:string)=>{
+  const config:AxiosRequestConfig={
+    method:"POST",
+    url:`/api/usuarios/${id}/endereco`,
+    data:enderecoUsuario,
+    withCredentials:true
+  }
+  return requestBackEnd(config)
+}
+  export {getMe , recuperarSenha,cadastrarNovoUsuario,mudarEnderecoUserAutenticado}

@@ -1,5 +1,5 @@
 import axios, { AxiosRequestConfig } from "axios";
-import Swal from "sweetalert2";
+import Swal from "sweetalert2"; 
 import { BASE_URL_LOCAL } from "./system";
 import * as credentialRespository from "../repository/CredenciaisRepository";
 
@@ -13,6 +13,8 @@ const requestBackEnd = (config: AxiosRequestConfig) => {
   return axios({ ...config, baseURL: BASE_URL_LOCAL, headers });
 };
 
+
+
 axios.interceptors.response.use(
   function (response) {
     return response;
@@ -25,25 +27,15 @@ axios.interceptors.response.use(
         error.response.data?.error ||
         "Ocorreu um erro ao tentar processar a solicitação.";
 
-      if (error.response.status === 401) {
-      
-        credentialRespository.logout();  
-        Swal.fire({
-          title: "Sessão expirada!",
-          text: "Sua sessão expirou, por favor, faça login novamente.",
-          icon: "warning",
-          confirmButtonText: "OK",
-        }).then(() => {
-          window.location.href = "/login";
-        });
-      } else {
-        Swal.fire({
-          title: "Erro!",
-          text: mensagemErro,
-          icon: "error",
-          confirmButtonText: "OK",
-        });
-      }
+      Swal.fire({
+        title: "Erro!",
+        text: mensagemErro,
+        icon: "error",
+        confirmButtonText: "OK",
+      });
+      setTimeout(() => {
+    // window.location.reload();
+      }, 3000);
     } else {
       Swal.fire({
         title: "Erro inesperado!",
@@ -52,7 +44,10 @@ axios.interceptors.response.use(
         confirmButtonText: "OK",
       });
     }
-
+    /*
+        caso eu queria propagar o erro pro catch do codigo uso
+        Promisse.resolve(error)
+        */
     return Promise.reject(error);
   }
 );

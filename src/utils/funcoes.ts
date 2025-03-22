@@ -1,3 +1,4 @@
+import axios, { AxiosResponse } from "axios";
 import { useState } from "react";
 
 interface IRedefinicaoSenha {
@@ -8,7 +9,14 @@ interface IAlterarSenhaAutenticado {
   senhaAntiga: string;
   novaSenha: string;
 }
-
+export interface ViaCepResponse {
+  cep?:string
+  erro?: boolean;
+  logradouro: string;
+  bairro: string;
+  localidade: string;
+  uf: string;
+}
 export const validateCpf = (cpf: string) => {
   const cpfVerificado = /^\d{11}$/;
   return cpfVerificado.test(cpf);
@@ -79,23 +87,32 @@ export const PasswordVisibility = <K extends keyof IPasswordVisibilityState>(
 };
 
 export const formatTelefoneParaSalvar = (telefone: string): string => {
-  
-  return telefone.replace(/\D/g, '');  
+
+  return telefone.replace(/\D/g, '');
 };
 
 export const formatTelefoneParaExibicao = (telefone: string): string => {
   if (!telefone) return '';
-  const numericValue = telefone.replace(/\D/g, '');  
+  const numericValue = telefone.replace(/\D/g, '');
 
   if (numericValue.length <= 2) {
-    return `(${numericValue}`; 
+    return `(${numericValue}`;
   } else if (numericValue.length <= 6) {
-    return `(${numericValue.slice(0, 2)}) ${numericValue.slice(2, 6)}`; 
+    return `(${numericValue.slice(0, 2)}) ${numericValue.slice(2, 6)}`;
   } else if (numericValue.length <= 10) {
-    return `(${numericValue.slice(0, 2)}) ${numericValue.slice(2, 7)}-${numericValue.slice(7, 10)}`; 
+    return `(${numericValue.slice(0, 2)}) ${numericValue.slice(2, 7)}-${numericValue.slice(7, 10)}`;
   } else if (numericValue.length <= 11) {
-    return `(${numericValue.slice(0, 2)}) ${numericValue.slice(2, 7)} ${numericValue.slice(7, 11)}`; 
+    return `(${numericValue.slice(0, 2)}) ${numericValue.slice(2, 7)} ${numericValue.slice(7, 11)}`;
   }
-  return numericValue; 
+  return numericValue;
 };
 
+export const ViaCepService = async (cep: string) => {
+
+  if (cep.length === 8) {
+    const response: AxiosResponse<ViaCepResponse> = await new Promise((resolve) =>
+      setTimeout(() => resolve(axios.get(`https://viacep.com.br/ws/${cep}/json/`)), 1000)
+    );
+    return response;
+  }
+};

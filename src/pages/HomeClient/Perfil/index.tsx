@@ -1,270 +1,278 @@
-import { useEffect, useState, useRef } from 'react';
-import './styles.css';
-import * as authService from '../../../services/AuthService';
-import requestBackEnd from '../../../utils/request';
-import axios, { AxiosRequestConfig } from 'axios';
-import { API_IMGBB, HISTORICO_PEDIDO_USER } from '../../../utils/system';
-import { PedidoHistorico } from '../../../models/dto/CarrinhoDTO';
-import { Link } from 'react-router-dom';
-import { MudarSenha } from '../../../components/Layout/MudarSenha';
-import { FormularioUser } from '../../../components/UI/Formulario';
-import { EnderecoDTO, UserDTO } from '../../../models/dto/UserDTO';
-import { PhotoCamera, UploadFile, Delete, Send, AccountCircle, Error } from '@mui/icons-material';
-import { CircularProgress } from '@mui/material';
+    import { useEffect, useState, useRef } from 'react';
+    import './styles.css';
+    import * as authService from '../../../services/AuthService';
+    import requestBackEnd from '../../../utils/request';
+    import axios, { AxiosRequestConfig } from 'axios';
+    import { API_IMGBB, HISTORICO_PEDIDO_USER } from '../../../utils/system';
+    import { PedidoHistorico } from '../../../models/dto/CarrinhoDTO';
+    import { Link, useNavigate } from 'react-router-dom';
+    import { MudarSenha } from '../../../components/Layout/MudarSenha';
+    import { FormularioUser } from '../../../components/UI/Formulario';
+    import { EnderecoDTO, UserDTO } from '../../../models/dto/UserDTO';
+    import { PhotoCamera, UploadFile, Delete, Send, AccountCircle, Error } from '@mui/icons-material';
+    import { CircularProgress } from '@mui/material';
+    import { NovoEndereco } from '../../../components/Layout/NovoEndereco';
+    import * as credenciaisServices from "../../../services/CredenciasiService"
+    const Perfil = () => {
+        const [usuario, setUsuario] = useState<UserDTO>({
+            id: "",
+            nome: "",
+            email: "",
+            telefone: "",
+            cpf: "",
+            dataNascimento: "",
+            perfil: [],
+            endereco: {} as EnderecoDTO
+        });
+        const [historicoPedidos, setHistoricoPedidos] = useState<PedidoHistorico[]>([]);
+        const [mudarSenha, setMudarSenha] = useState<boolean>(false);
+        const [mudarEndereco, setMudarEndereco] = useState<boolean>(false);
+        const [fotoPerfil, setFotoPerfil] = useState<string>('');
+        const [fotoSelecionada, setFotoSelecionada] = useState<File | null>(null);
+        const [uploading, setUploading] = useState<boolean>(false);
+        const [erroUpload, setErroUpload] = useState<string | null>(null);
+        const navigate = useNavigate()
+        const [stream, setStream] = useState<MediaStream | null>(null);
+        const videoRef = useRef<HTMLVideoElement | null>(null);
+        const canvasRef = useRef<HTMLCanvasElement | null>(null);
+        const [capturedImage, setCapturedImage] = useState<string | null>(null);
+        const [showCameraModal, setShowCameraModal] = useState<boolean>(false);
+        const uploadFotoRef = useRef<HTMLInputElement | null>(null);
 
-const Perfil = () => {
-    const [usuario, setUsuario] = useState<UserDTO>({
-        id: "",
-        nome: "",
-        email: "",
-        telefone: "",
-        cpf: "",
-        dataNascimento: "",
-        perfil: [],
-        endereco: {} as EnderecoDTO
-    });
-    const [historicoPedidos, setHistoricoPedidos] = useState<PedidoHistorico[]>([]);
-    const [mudarSenha, setMudarSenha] = useState<boolean>(false);
-    const [fotoPerfil, setFotoPerfil] = useState<string>('');
-    const [fotoSelecionada, setFotoSelecionada] = useState<File | null>(null);
-    const [uploading, setUploading] = useState<boolean>(false);
-    const [erroUpload, setErroUpload] = useState<string | null>(null);
+        useEffect(() => {
 
-    const [stream, setStream] = useState<MediaStream | null>(null);
-    const videoRef = useRef<HTMLVideoElement | null>(null);
-    const canvasRef = useRef<HTMLCanvasElement | null>(null);
-    const [capturedImage, setCapturedImage] = useState<string | null>(null);
-    const [showCameraModal, setShowCameraModal] = useState<boolean>(false);
-    const uploadFotoRef = useRef<HTMLInputElement | null>(null);
+            if (!(credenciaisServices.getToken() && authService.isAuthenticated())) {
+                navigate("/login")
+                throw  Error;
+              }
 
-    useEffect(() => {
-        const obterUsuario = async () => {
-            const idUserToken = authService.getAccessTokenPayload()?.sub;
-            if (authService.isAuthenticated()) {
-                const usuarioLogado = authService.getUser();
-                setUsuario({
-                    id: idUserToken || "",
-                    nome: usuarioLogado?.nome || "",
-                    email: usuarioLogado?.email || "",
-                    telefone: usuarioLogado?.telefone || "",
-                    cpf: usuarioLogado?.cpf || "",
-                    dataNascimento: usuarioLogado?.dataNascimento || "",
-                    perfil: usuarioLogado?.perfis || [],
-                    endereco: usuarioLogado?.endereco || {} as EnderecoDTO
-                });
-            }
-        };
-
-        const obterHistoricoPedido = async () => {
-            const config: AxiosRequestConfig = {
-                method: "GET",
-                url: HISTORICO_PEDIDO_USER,
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                withCredentials: true,
+            const obterUsuario = async () => {
+                const idUserToken = authService.getAccessTokenPayload()?.sub;
+                if (authService.isAuthenticated()) {
+                    const usuarioLogado = authService.getUser();
+                    setUsuario({
+                        id: idUserToken || "",
+                        nome: usuarioLogado?.nome || "",
+                        email: usuarioLogado?.email || "",
+                        telefone: usuarioLogado?.telefone || "",
+                        cpf: usuarioLogado?.cpf || "",
+                        dataNascimento: usuarioLogado?.dataNascimento || "",
+                        perfil: usuarioLogado?.perfis || [],
+                        endereco: usuarioLogado?.endereco || {} as EnderecoDTO
+                    });
+                }
             };
-            try {
-                const response = await requestBackEnd(config);
-                setHistoricoPedidos(response.data);
-            } catch (error) {
-                console.error('Erro ao obter histórico de pedidos', error);
+
+            const obterHistoricoPedido = async () => {
+                const config: AxiosRequestConfig = {
+                    method: "GET",
+                    url: HISTORICO_PEDIDO_USER,
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    withCredentials: true,
+                };
+                try {
+                    const response = await requestBackEnd(config);
+                    setHistoricoPedidos(response.data);
+                } catch (error) {
+                    console.error('Erro ao obter histórico de pedidos', error);
+                }
+            };
+
+            obterUsuario();
+            obterHistoricoPedido();
+        }, [navigate]);
+
+        useEffect(() => {
+            const obterFotoPerfil = async () => {
+                if (!usuario.id) return;
+                try {
+                    const response = await requestBackEnd({
+                        method: 'GET',
+                        url: `/api/usuarios/${usuario.id}/foto`,
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        withCredentials: true,
+                    });
+                    setFotoPerfil(response.data.fotoPerfil);
+                } catch (error) {
+                    console.error('Erro ao buscar foto de perfil', error);
+                }
+            };
+
+            if (usuario.id) {
+                obterFotoPerfil();
+            }
+        }, [usuario.id]);
+
+        const handleFotoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+            if (event.target.files && event.target.files[0]) {
+                const file = event.target.files[0];
+                if (file.type.startsWith('image/')) {
+                    setFotoSelecionada(file);
+                    setErroUpload(null);
+                } else {
+                    setErroUpload("O arquivo selecionado não é uma imagem válida.");
+                    setFotoSelecionada(null);
+                }
             }
         };
 
-        obterUsuario();
-        obterHistoricoPedido();
-    }, []);
 
-    useEffect(() => {
-        const obterFotoPerfil = async () => {
+
+        const enviarFotoPerfil = async (imageData: string) => {
+            setUploading(true);
+            const formData = new FormData();
+            const blob = dataURLtoBlob(imageData);
+            formData.append('image', blob);
+
+            try {
+                const response = await fetch(`https://api.imgbb.com/1/upload?key=${API_IMGBB}`, {
+                    method: 'POST',
+                    body: formData,
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    const urlFoto = data.data.url;
+                    const userDTO = { fotoPerfil: urlFoto };
+
+                    // Usando o axios para o envio da foto ao backend
+                    try {
+                        const updateResponse = await requestBackEnd({
+                            method: 'PUT',
+                            url: `/api/usuarios/${usuario.id}/foto`,
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            withCredentials: true,
+                            data: userDTO,
+                        });
+
+                        if (updateResponse) {
+                            setFotoPerfil(urlFoto);
+                            setFotoSelecionada(null);
+                            setUploading(false);
+                            stopCamera();
+                            setCapturedImage(null);
+                            setErroUpload(null);
+                        } else {
+                            setErroUpload('Erro ao salvar a foto no perfil.');
+                            setUploading(false);
+                        }
+                    } catch (error) {
+                        if (axios.isAxiosError(error) && error.response) {
+                            const mensagemErro =
+                                error.response.data?.message ||
+                                error.response.data?.trace ||
+                                error.response.data?.error ||
+                                "Ocorreu um erro ao tentar processar a solicitação.";
+
+                            setErroUpload(mensagemErro);
+                            setUploading(false);
+                        } else {
+                            setErroUpload("Erro ao tentar atualizar a foto de perfil. Tente novamente mais tarde.");
+                            setUploading(false);
+                        }
+                    }
+                } else {
+                    setErroUpload('Erro ao enviar a foto de perfil.');
+                    setUploading(false);
+                }
+            } catch (error) {
+                console.error('Erro ao enviar foto de perfil', error);
+                setErroUpload("Houve um erro ao enviar sua foto de perfil. Tente novamente mais tarde.");
+                setUploading(false);
+            }
+        };
+
+
+        // Função para iniciar a câmera
+        const startCamera = async () => {
+            if (stream) return;  // Verifica se a câmera já está ativa e evita iniciar de novo
+
+            try {
+                const userMedia = await navigator.mediaDevices.getUserMedia({ video: true });
+                setStream(userMedia);
+
+                if (videoRef.current) {
+                    videoRef.current.srcObject = userMedia;
+                    videoRef.current.play(); // Garante que o vídeo comece a ser reproduzido
+                }
+            } catch (err) {
+                console.error("Erro ao acessar a câmera:", err);
+                alert("Não foi possível acessar a câmera. Verifique as permissões ou tente novamente.");
+            }
+        };
+
+        const stopCamera = () => {
+            if (stream) {
+                const tracks = stream.getTracks();
+                tracks.forEach(track => track.stop());
+                setStream(null);
+            }
+        };
+
+
+
+        // Função para capturar a imagem
+        const captureImage = () => {
+            if (canvasRef.current && videoRef.current) {
+                const context = canvasRef.current.getContext("2d");
+                if (context) {
+                    context.drawImage(videoRef.current, 0, 0, canvasRef.current.width, canvasRef.current.height);
+                    const imageData = canvasRef.current.toDataURL('image/png'); // Captura a imagem em formato base64
+                    setCapturedImage(imageData);
+                    // Envia a imagem capturada para o servidor
+                }
+            }
+        };
+
+        // Função para converter base64 em Blob para upload
+        const dataURLtoBlob = (dataURL: string) => {
+            const [meta, base64] = dataURL.split(',');
+            const byteString = atob(base64);
+            const mimeString = meta.split(';')[0].split(':')[1];
+            const ab = new ArrayBuffer(byteString.length);
+            const ia = new Uint8Array(ab);
+            for (let i = 0; i < byteString.length; i++) {
+                ia[i] = byteString.charCodeAt(i);
+            }
+            return new Blob([ab], { type: mimeString });
+        };
+
+        const handleUploadClick = () => {
+            if (uploadFotoRef.current) {
+                uploadFotoRef.current.click();
+            }
+        };
+
+        const handleRemoveFoto = async () => {
             if (!usuario.id) return;
+
             try {
                 const response = await requestBackEnd({
-                    method: 'GET',
+                    method: 'DELETE',
                     url: `/api/usuarios/${usuario.id}/foto`,
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     withCredentials: true,
                 });
-                setFotoPerfil(response.data.fotoPerfil);
+
+                if (response.status === 200) {
+                    setFotoPerfil(''); // Limpa a foto de perfil
+                    alert("Foto removida com sucesso!");
+                } else {
+                    alert("Erro ao remover a foto. Tente novamente.");
+                }
             } catch (error) {
-                console.error('Erro ao buscar foto de perfil', error);
+                console.error("Erro ao remover a foto:", error);
+                alert("Houve um erro ao remover a foto. Tente novamente mais tarde.");
             }
         };
-
-        if (usuario.id) {
-            obterFotoPerfil();
-        }
-    }, [usuario.id]);
-
-    const handleFotoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-        if (event.target.files && event.target.files[0]) {
-            const file = event.target.files[0];
-            if (file.type.startsWith('image/')) {
-                setFotoSelecionada(file);
-                setErroUpload(null);
-            } else {
-                setErroUpload("O arquivo selecionado não é uma imagem válida.");
-                setFotoSelecionada(null);
-            }
-        }
-    };
-
-
-
-    const enviarFotoPerfil = async (imageData: string) => {
-        setUploading(true);
-        const formData = new FormData();
-        const blob = dataURLtoBlob(imageData);
-        formData.append('image', blob);
-
-        try {
-            const response = await fetch(`https://api.imgbb.com/1/upload?key=${API_IMGBB}`, {
-                method: 'POST',
-                body: formData,
-            });
-            const data = await response.json();
-
-            if (data.success) {
-                const urlFoto = data.data.url;
-                const userDTO = { fotoPerfil: urlFoto };
-
-                // Usando o axios para o envio da foto ao backend
-                try {
-                    const updateResponse = await requestBackEnd({
-                        method: 'PUT',
-                        url: `/api/usuarios/${usuario.id}/foto`,
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        withCredentials: true,
-                        data: userDTO,
-                    });
-
-                    if (updateResponse) {
-                        setFotoPerfil(urlFoto);
-                        setFotoSelecionada(null);
-                        setUploading(false);
-                        stopCamera();
-                        setCapturedImage(null);
-                        setErroUpload(null);
-                    } else {
-                        setErroUpload('Erro ao salvar a foto no perfil.');
-                        setUploading(false);
-                    }
-                } catch (error) {
-                    if (axios.isAxiosError(error) && error.response) {
-                        const mensagemErro =
-                            error.response.data?.message ||
-                            error.response.data?.trace ||
-                            error.response.data?.error ||
-                            "Ocorreu um erro ao tentar processar a solicitação.";
-
-                        setErroUpload(mensagemErro);
-                        setUploading(false);
-                    } else {
-                        setErroUpload("Erro ao tentar atualizar a foto de perfil. Tente novamente mais tarde.");
-                        setUploading(false);
-                    }
-                }
-            } else {
-                setErroUpload('Erro ao enviar a foto de perfil.');
-                setUploading(false);
-            }
-        } catch (error) {
-            console.error('Erro ao enviar foto de perfil', error);
-            setErroUpload("Houve um erro ao enviar sua foto de perfil. Tente novamente mais tarde.");
-            setUploading(false);
-        }
-    };
-
-
-    // Função para iniciar a câmera
-    const startCamera = async () => {
-        if (stream) return;  // Verifica se a câmera já está ativa e evita iniciar de novo
-
-        try {
-            const userMedia = await navigator.mediaDevices.getUserMedia({ video: true });
-            setStream(userMedia);
-
-            if (videoRef.current) {
-                videoRef.current.srcObject = userMedia;
-                videoRef.current.play(); // Garante que o vídeo comece a ser reproduzido
-            }
-        } catch (err) {
-            console.error("Erro ao acessar a câmera:", err);
-            alert("Não foi possível acessar a câmera. Verifique as permissões ou tente novamente.");
-        }
-    };
-
-    const stopCamera = () => {
-        if (stream) {
-            const tracks = stream.getTracks();
-            tracks.forEach(track => track.stop());
-            setStream(null);
-        }
-    };
-
-
-
-    // Função para capturar a imagem
-    const captureImage = () => {
-        if (canvasRef.current && videoRef.current) {
-            const context = canvasRef.current.getContext("2d");
-            if (context) {
-                context.drawImage(videoRef.current, 0, 0, canvasRef.current.width, canvasRef.current.height);
-                const imageData = canvasRef.current.toDataURL('image/png'); // Captura a imagem em formato base64
-                setCapturedImage(imageData);
-                // Envia a imagem capturada para o servidor
-            }
-        }
-    };
-
-    // Função para converter base64 em Blob para upload
-    const dataURLtoBlob = (dataURL: string) => {
-        const [meta, base64] = dataURL.split(',');
-        const byteString = atob(base64);
-        const mimeString = meta.split(';')[0].split(':')[1];
-        const ab = new ArrayBuffer(byteString.length);
-        const ia = new Uint8Array(ab);
-        for (let i = 0; i < byteString.length; i++) {
-            ia[i] = byteString.charCodeAt(i);
-        }
-        return new Blob([ab], { type: mimeString });
-    };
-
-    const handleUploadClick = () => {
-        if (uploadFotoRef.current) {
-            uploadFotoRef.current.click();
-        }
-    };
-
-    const handleRemoveFoto = async () => {
-        if (!usuario.id) return;
-
-        try {
-            const response = await requestBackEnd({
-                method: 'DELETE',
-                url: `/api/usuarios/${usuario.id}/foto`,
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                withCredentials: true,
-            });
-
-            if (response.status === 200) {
-                setFotoPerfil(''); // Limpa a foto de perfil
-                alert("Foto removida com sucesso!");
-            } else {
-                alert("Erro ao remover a foto. Tente novamente.");
-            }
-        } catch (error) {
-            console.error("Erro ao remover a foto:", error);
-            alert("Houve um erro ao remover a foto. Tente novamente mais tarde.");
-        }
-    };
 
     return (
         <main className="perfil-container">
@@ -299,6 +307,9 @@ const Perfil = () => {
 
             {mudarSenha ? (
                 <MudarSenha />
+            ) : mudarEndereco ? (
+                <NovoEndereco />
+
             ) : (
                 <section className="registro-formulario">
                     <h2>Perfil do Usuário</h2>
@@ -354,18 +365,18 @@ const Perfil = () => {
                                 </button>
                             </div>
                         )}
-                      {uploading && (
-                <div className="enviando-msg">
-                    <CircularProgress />
-                    <p>Enviando...</p>
-                </div>
-            )}
-            {erroUpload && (
-                <div className="erro-upload">
-                    <Error />
-                    <p>{erroUpload}</p>
-                </div>
-            )}
+                        {uploading && (
+                            <div className="enviando-msg">
+                                <CircularProgress />
+                                <p>Enviando...</p>
+                            </div>
+                        )}
+                        {erroUpload && (
+                            <div className="erro-upload">
+                                <Error />
+                                <p>{erroUpload}</p>
+                            </div>
+                        )}
                     </div>
                     {/* Dados do Usuário */}
                     <div className="user-info">
@@ -471,9 +482,9 @@ const Perfil = () => {
                             </Link>
                         </div>
                         <div className="formulario-grupo">
-                            <a href="mudarEndereco.html">
-                                <button id="botao1">Mudar Endereço</button>
-                            </a>
+                            <Link to="/perfil/NovoEndereco">
+                                <button id="botao1" onClick={() => setMudarEndereco(true)}>Mudar Endereço</button>
+                            </Link>
                         </div>
                     </div>
 

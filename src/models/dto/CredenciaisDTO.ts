@@ -12,7 +12,7 @@ export interface AccessTokenPayloadDTO{
     iss:string
 }
 export interface Endereco {
-    id: number;
+    id?: number;
     logradouro: string;
     cep: string;
     numero: number;

@@ -10,6 +10,7 @@ import {
 } from "../models/dto/CarrinhoDTO";
 import { getCarrinho } from "../services/CarrinhoService";
 import * as authService from "../services/AuthService"
+import { Endereco } from "../models/dto/CredenciaisDTO";
 
 
 const getMe = async () => {
@@ -91,5 +92,9 @@ const alterarSenhaAutenticado=(antigaSenha:string , novaSenha:string)=>{
         
 
 }
+const mudarEnderecoUserAutenticado=(usuarioEndereco:Endereco,id:string)=>{
+const enviar = userRepository.mudarEnderecoUserAutenticado(usuarioEndereco,id)
+  return enviar
+}
 
-export { getMe, recuperarSenha, cadastrarNovoUsuario, enviarPedido,alterarSenhaAutenticado };
+export { getMe, recuperarSenha, cadastrarNovoUsuario, enviarPedido,alterarSenhaAutenticado,mudarEnderecoUserAutenticado };

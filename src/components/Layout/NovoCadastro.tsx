@@ -1,21 +1,13 @@
 import { useState } from "react";
-import axios, { AxiosResponse } from "axios";
 import Alert from "../UI/Alert";
 import { Carregando } from "../UI/Carregando";
 import { PersonAdd, LockOutlined, PersonOutline, MailOutline, Phone, CalendarToday, Description, Home, LocationCity, Public } from "@mui/icons-material";
 import { CadastroUserDTO } from "../../models/dto/CadastroUserDTO";
 import * as userServices from "../../services/UserServices"
 import { TEXTO_PADRAO_SOLICITACAO } from "../../utils/system";
-import { IPasswordVisibilityState, PasswordVisibility, formatTelefoneParaExibicao, formatTelefoneParaSalvar } from "../../utils/funcoes";
+import { IPasswordVisibilityState, PasswordVisibility, formatTelefoneParaExibicao, ViaCepService, formatTelefoneParaSalvar } from "../../utils/funcoes";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-interface ViaCepResponse {
-    erro?: boolean;
-    logradouro: string;
-    bairro: string;
-    localidade: string;
-    uf: string;
-}
 
 interface NovoCadastroProps {
     isSubmitted: boolean;
@@ -53,15 +45,13 @@ const NovoCadastro: React.FC<NovoCadastroProps> = ({ isSubmitted }) => {
 
     const buscarEnderecoPorCep = async (cep: string) => {
         if (cep.length === 8) {
-            setTextoCarregando("Aguarde, buscado seu CEP")
+            setTextoCarregando("Aguarde, buscando seu CEP");
             setLoading(true);
 
             try {
-                const response: AxiosResponse<ViaCepResponse> = await new Promise((resolve) =>
-                    setTimeout(() => resolve(axios.get(`https://viacep.com.br/ws/${cep}/json/`)), 1000)
-                );
+                const response = await ViaCepService(cep);
 
-                if (response.data.erro) {
+                if (!response || response.data.erro) {
                     setAlertData({
                         title: "Erro",
                         text: "CEP não encontrado.",
@@ -88,7 +78,7 @@ const NovoCadastro: React.FC<NovoCadastroProps> = ({ isSubmitted }) => {
                 });
             } finally {
                 setLoading(false);
-                setTextoCarregando(TEXTO_PADRAO_SOLICITACAO)
+                setTextoCarregando(TEXTO_PADRAO_SOLICITACAO);
             }
         }
     };
@@ -243,11 +233,11 @@ const NovoCadastro: React.FC<NovoCadastroProps> = ({ isSubmitted }) => {
                                 name="telefone"
                                 className={`dsc-form-control ${isSubmitted ? "dsc-input-error" : ""}`}
                                 type="text"
-                                value={formatTelefoneParaExibicao(formData.telefone)} 
+                                value={formatTelefoneParaExibicao(formData.telefone)}
                                 onChange={handleChange}
                                 placeholder="Digite seu Telefone"
                                 required
-                                maxLength={15} 
+                                maxLength={15}
                             />
 
                             {isSubmitted && <div className="dsc-form-error">Campo obrigatório</div>}

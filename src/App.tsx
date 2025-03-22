@@ -20,7 +20,8 @@ import PaginaAviso from './components/Layout/PaginaAviso';
 import CertificadoPage from './components/Layout/CertificadoPage';
 import CertificadoDetailPage from './components/Layout/CertificadoPage/CertificadoDetailPage';
 import CardPaymentComponent from './components/UI/CardPaymentComponent';
-import {MudarSenha} from "./components/Layout/MudarSenha/index"
+import { MudarSenha } from "./components/Layout/MudarSenha/index"
+import { NovoEndereco } from './components/Layout/NovoEndereco';
 const MainLayout = () => {
   const location = useLocation();
 
@@ -49,8 +50,9 @@ const App = () => {
                 <Route path="/" element={<MainLayout />}>
 
                   <Route path="/Perfil" element={<PrivateRouteClient><Perfil /></PrivateRouteClient>} >
-                    <Route path='MudarSenha' element={<PrivateRouteClient><MudarSenha/></PrivateRouteClient>}>
-
+                    <Route path='MudarSenha' element={<PrivateRouteClient><MudarSenha /></PrivateRouteClient>}>
+                    </Route>
+                    <Route path='NovoEndereco' element={<PrivateRouteClient><NovoEndereco /></PrivateRouteClient>}>
                     </Route>
                   </Route>
                   <Route path="/Carrinho" element={<Carrinho />} >
