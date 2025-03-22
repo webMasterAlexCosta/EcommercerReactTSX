@@ -34,7 +34,7 @@ axios.interceptors.response.use(
         confirmButtonText: "OK",
       });
       setTimeout(() => {
-    // window.location.reload();
+     window.location.reload();
       }, 3000);
     } else {
       Swal.fire({
