@@ -51,7 +51,7 @@ input:focus {
   box-shadow: 0 0 8px rgba(0, 123, 255, 0.2); /* Sombra leve ao focar */
 }
 
-input[readonly] {
+input[readonly]  {
   background-color: #f0f0f0;
   cursor: not-allowed;
   border-color: #dcdcdc;
@@ -115,38 +115,59 @@ button.perfil-button:hover {
 .foto-perfil-container {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  align-items: start;
   margin-bottom: 20px;
 }
 
 .foto-perfil {
-  width: 120px; /* Tamanho reduzido */
-  height: 120px;
+  width: 100px;
+  height: 100px;
   border-radius: 50%;
   object-fit: cover;
   border: 2px solid #ccc;
-  margin-bottom: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.foto-perfil-container p {
-  font-size: 0.9rem;
+/* Estilo do botão de remover */
+.remove-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f44336; /* Vermelho claro */
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.remove-button:hover {
+  background-color: #e53935; /* Vermelho mais escuro ao passar o mouse */
+}
+
+.remove-button span {
+  margin-left: 8px;
+}
+
+/* Ícone de exclusão (supondo que você está usando um ícone de biblioteca como Material-UI ou similar) */
+.DeleteIcon {
+  font-size: 18px;
+}
+
+/* Título e nome */
+h2 {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+}
+
+p {
+  font-size: 18px;
   color: #666;
-  margin-bottom: 8px;
 }
 
-.foto-perfil-container button {
-  padding: 8px 16px; /* Botões menores */
-  font-size: 0.9rem;
-  margin: 4px;
-}
-
-.foto-perfil-container .erro-upload {
-  color: red;
-  font-size: 0.9rem;
-  margin-top: 8px;
-}
 
 /* Histórico de Pedidos */
 #historico-pedidos {
@@ -209,8 +230,24 @@ button.perfil-button:hover {
   border-radius: 8px;
   background-color: #000; /* Fundo preto enquanto a câmera carrega */
 }
-
-.camera-buttons button {
+.icon-camera{
+  display: flex;
+  
+}
+.upload-container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 16px;
+}
+.upload-container-modal {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 16px;
+}
+.camera-buttons button  {
   margin: 8px;
   padding: 10px 16px;
   font-size: 0.9rem;
@@ -223,6 +260,9 @@ button.perfil-button:hover {
   background-color: #000; /* Fundo preto enquanto a câmera carrega */
 }
 .close-modal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   background-color: #dc3545;
   color: #fff;
   border: none;
@@ -231,7 +271,13 @@ button.perfil-button:hover {
   cursor: pointer;
   font-size: 0.9rem;
 }
-
+.camera-button{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-items: center;
+  
+}
 .close-modal:hover {
   background-color: #b02a37;
 }
@@ -242,22 +288,32 @@ button.perfil-button:hover {
     flex-direction: column;
   }
 
-  button {
-    width: 100%;
-    margin-bottom: 12px;
-  }
+  
 }
+.remove-button svg {
+  width: 16px; /* Tamanho do ícone da lixeira ajustado */
+  height: 16px; /* Tamanho do ícone da lixeira ajustado */
+  
+}
+
 .remove-button {
-  background-color: #dc3545;
-  color: #fff;
+  position: relative;
+  top: -20px; /* Ajuste de posição para centralizar o ícone */
+  left: 10px; /* Ajuste de posição para centralizar o ícone */
+  background-color: transparent; /* Cor vermelha para destaque */
+  color: #000000; /* Cor do texto */
   border: none;
-  padding: 8px 16px;
+  padding: 8px 12px; /* Aumentei o padding para garantir que o ícone tenha espaço */
   font-size: 0.9rem;
   font-weight: 500;
   border-radius: 8px;
   cursor: pointer;
   margin-top: 10px;
   transition: background-color 0.3s ease;
+  display: flex; /* Usar flexbox para centralizar o ícone */
+  align-items: center; /* Alinha o ícone verticalmente */
+  justify-content: center; /* Alinha o ícone horizontalmente */
+  height: 40px; /* Tamanho mais adequado para o botão */
 }
 
 .remove-button:hover {
@@ -267,4 +323,93 @@ button.perfil-button:hover {
 
 .remove-button:active {
   transform: scale(0.98);
+}
+.no-profile-msg {
+  background-color: #f3f4f6; /* Cor de fundo suave */
+  color: #333; /* Texto escuro para contraste */
+  font-family: 'Roboto', sans-serif; /* Fonte moderna e limpa */
+  font-size: 1.2rem; /* Tamanho de fonte confortável */
+  padding: 15px 25px; /* Espaçamento interno */
+  border-radius: 8px; /* Bordas arredondadas */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Sombra sutil para dar profundidade */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease-in-out; /* Animação suave para hover */
+}
+
+.no-profile-msg:hover {
+  background-color: #e4e7eb; /* Cor de fundo levemente mais escura ao passar o mouse */
+  transform: translateY(-2px); /* Elevação sutil ao passar o mouse */
+}
+
+.no-profile-msg svg {
+  margin-right: 10px; /* Espaçamento entre ícone e texto */
+  color: #6c757d; /* Cor do ícone */
+}
+
+.no-profile-msg span {
+  font-weight: 600; /* Aumenta o peso da palavra chave */
+  color: #007bff; /* Cor de destaque */
+}
+
+.no-profile-msg p {
+  margin: 0;
+  text-align: center;
+  display: flex;
+  align-items: center;
+}
+/* Estilo para a mensagem "Enviando..." */
+.enviando-msg {
+    background-color: #f0f8ff; /* Fundo leve e suave */
+    color: #007bff; /* Cor azul para dar destaque */
+    font-family: 'Roboto', sans-serif;
+    font-size: 1rem; /* Tamanho de fonte confortável */
+    padding: 12px 20px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin-top: 10px;
+    transition: all 0.3s ease-in-out; /* Suaviza transições */
+}
+
+/* Animação suave de envio */
+.enviando-msg svg {
+    margin-right: 10px;
+    animation: spin 1.5s infinite linear; /* Animação de rotação no ícone */
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Estilo para a mensagem de erro */
+.erro-upload {
+    background-color: #f8d7da; /* Fundo vermelho suave para erro */
+    color: #721c24; /* Cor de texto mais forte para erro */
+    font-family: 'Roboto', sans-serif;
+    font-size: 1rem;
+    padding: 12px 20px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin-top: 10px;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Ícone de erro com animação de piscada */
+.erro-upload svg {
+    margin-right: 10px;
+    animation: blink 1s infinite; /* Efeito de piscada */
+}
+
+@keyframes blink {
+    0% { opacity: 1; }
+    50% { opacity: 0; }
+    100% { opacity: 1; }
 }

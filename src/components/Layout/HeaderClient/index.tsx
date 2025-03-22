@@ -12,10 +12,6 @@ const HeaderClient = () => {
   const { contextIsLogin, setContextIsLogin } = useContext(ContextIsLogin);
   const { iconAdminContext, setIconAdminContext } = useContext(IconAdminContext);
 
-
-
-
-
   useEffect(() => {
     const checkLoginStatus = () => {
       const token = credencialServices.getToken();
