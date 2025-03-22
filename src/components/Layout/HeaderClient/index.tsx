@@ -1,5 +1,5 @@
 import './Styles.css';
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useContext, useEffect } from 'react';
 import ContextIsLogin from '../../../data/LoginContext';
 import * as credencialServices from "../../../services/CredenciasiService";
@@ -11,16 +11,21 @@ import { CartIcon } from '../../UI/CartIcon';
 const HeaderClient = () => {
   const { contextIsLogin, setContextIsLogin } = useContext(ContextIsLogin);
   const { iconAdminContext, setIconAdminContext } = useContext(IconAdminContext);
+  const navigate = useNavigate();
+
 
   useEffect(() => {
-    const checkLoginStatus = () => {
       const token = credencialServices.getToken();
-      setContextIsLogin(!!token); // Define se o usuário está logado baseado no token
+      setContextIsLogin(!!token); 
 
       const userProfile = authService.getUser()?.perfis;
-      console.log(userProfile);
+      const payload = authService.getAccessTokenPayload();
 
-      // Verifica os perfis do usuário e atualiza o contexto
+      if (payload && payload.exp < Date.now() / 1000) {
+        setContextIsLogin(true);
+        credencialServices.logout();
+      }
+
       if (userProfile?.includes("ADMIN")) {
         setIconAdminContext("ADMIN");
       } else if (userProfile?.includes("CLIENTE")) {
@@ -28,14 +33,15 @@ const HeaderClient = () => {
       } else {
         setIconAdminContext(null);
       }
-    };
+   
 
-    checkLoginStatus(); // Checa o login e perfil ao carregar
-
+   /** posso usar esse recurso, mas no react vou usar navigate
     window.addEventListener("storage", checkLoginStatus); // Escuta mudanças no storage
 
     return () => window.removeEventListener('storage', checkLoginStatus); // Limpa o event listener ao desmontar
-  }, [setContextIsLogin, setIconAdminContext]);
+     *  */
+
+  }, [setContextIsLogin, setIconAdminContext, navigate]);
 
   const getIsActive = ({ isActive }: { isActive: boolean }) => (isActive ? { color: "red" } : { color: "black" });
 
