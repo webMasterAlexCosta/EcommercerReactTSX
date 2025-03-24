@@ -1,9 +1,7 @@
-/* Estilos gerais para o carrinho */
 #cart-container-section {
   padding: 20px 0;
 }
 
-/* Estilos do container de total do carrinho */
 .dsc-cart-total-container {
   padding: 10px 20px;
   display: flex;
@@ -16,29 +14,28 @@
   height: 100vh;
 }
 .dsc-cart-total-container h3 {
-  font-size: 18px; /* Aumenta o tamanho da fonte para maior destaque */
+  font-size: 18px; 
   color: var(--dsc-color-font-secondary);
   margin: 0;
 }
 
-/* Estilo dos itens do carrinho */
 .dsc-cart-item-container {
   padding: 15px 20px;
   display: flex;
   flex-direction: column;
-  gap: 10px; /* Espaçamento entre os elementos */
+  gap: 10px; 
 }
 
 .dsc-cart-item-container img {
   width: 80px;
   height: 80px;
-  object-fit: cover; /* Garante que as imagens mantenham suas proporções */
-  border-radius: 8px; /* Adiciona bordas arredondadas */
+  object-fit: cover; 
+  border-radius: 8px; 
 }
 
 .dsc-cart-item-left {
   display: flex;
-  gap: 15px; /* Espaçamento entre a imagem e a descrição */
+  gap: 15px; 
 }
 
 .dsc-cart-item-quantity-container {
@@ -82,7 +79,6 @@
   margin: 0 5px;
 }
 
-/* Ajuste para a exibição do carrinho vazio */
 .empty-cart {
   text-align: center;
   margin: 50px auto;
@@ -120,14 +116,14 @@
 
 @media (min-width: 576px) {
   .empty-cart-buttons {
-    flex-direction: row; /* Botões lado a lado em telas maiores */
+    flex-direction: row; 
   }
 }
 
-/* Estilos dos botões */
+
 .dsc-btn {
-  padding: 10px 15px; /* Reduz o tamanho dos botões */
-  font-size: 14px; /* Tamanho de fonte menor */
+  padding: 10px 15px; 
+  font-size: 14px; 
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -153,7 +149,6 @@
   background-color: #f1f1f1;
 }
 
-/* Animação de carregamento */
 .loading-container {
   text-align: center;
   padding: 50px;
@@ -175,13 +170,11 @@
   margin-top: 20px;
 }
 
-/* Animação de rotação */
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
 
-/* Estilos para o carrinho responsivo */
 @media (min-width: 576px) {
   .dsc-cart-item-container {
     flex-direction: row;
@@ -212,14 +205,11 @@
   }
 
   .dsc-btn {
-    width: 100%; /* Botões ocupam toda a largura em telas pequenas */
+    width: 100%; 
     margin-bottom: 10px;
   }
 }
 
-/* Stripe*/
-
-/* Container Principal */
 .payment-container {
   display: flex;
   justify-content: center;
@@ -232,7 +222,6 @@
   margin-left: 450px;
 }
 
-/* Título */
 .title {
   font-size: 2rem;
   color: #333;
@@ -240,7 +229,6 @@
   text-align: center;
 }
 
-/* Formulário de Pagamento */
 .payment-form-wrapper {
   background-color: #fff;
   padding: 30px;
@@ -251,7 +239,6 @@
   text-align: center;
 }
 
-/* Estilo para o botão */
 .payment-form-wrapper button {
   background-color: #007bff;
   color: white;
@@ -274,7 +261,6 @@
   cursor: not-allowed;
 }
 
-/* Texto de carregamento */
 .loading-text {
   font-size: 2rem;
   color: #777;

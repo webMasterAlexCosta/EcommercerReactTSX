@@ -43,28 +43,26 @@ const App = () => {
   const [contextCartCount, setContextCartCount] = useState<number>(0);
   const [contextIsLogin, setContextIsLogin] = useState<boolean>(false);
   const [iconAdminContext, setIconAdminContext] = useState<PerfilContext>(null);
-  const [user, setUser] = useState<Usuario | null>(null); // Tipo de estado ajustado para ser nulo inicialmente
-  const [isLoading, setIsLoading] = useState<boolean>(true); // Estado de carregamento
+  const [user, setUser] = useState<Usuario | null>(null); 
+  const [isLoading, setIsLoading] = useState<boolean>(true); 
 
-  // useEffect para verificar autenticação e carregar dados do usuário
   useEffect(() => {
     const storedUser = userService.getUserService();
 
     if (storedUser === null && authService.isAuthenticated()) {
-      userService.setUserService(); // Executa a atualização do serviço
-      setUser(userService.getUserService()); // Atualiza o estado após o serviço ser executado
+      userService.setUserService();
+      setUser(userService.getUserService()); 
     } else {
-      setUser(storedUser); // Caso o usuário já esteja disponível, apenas define
+      setUser(storedUser); 
     }
 
-    setIsLoading(false); // Finaliza o carregamento
-  }, []); // A dependência vazia significa que isso acontece uma vez ao carregar o App
+    setIsLoading(false); 
+  }, []);
 
-  // Bloqueia a renderização até o carregamento ser concluído
   if (isLoading) {
     return <div>
       <Carregando title='aguarde'/>
-    </div>; // Você pode personalizar isso com um spinner ou algo mais adequado
+    </div>; 
   }
 
   return (

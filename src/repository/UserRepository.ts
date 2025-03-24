@@ -4,10 +4,11 @@ import { Endereco, Login } from "../models/dto/CredenciaisDTO";
 import requestBackEnd from "../utils/request";
 import {
   CADASTRO_NOVO_USUARIO,
-  DADOS_USER,
   RECUPERAR_SENHA,
   TOKEN_KEY,
 } from "../utils/system";
+import { isAuthenticated } from "../services/AuthService";
+import { CriptografiaAES } from "../models/domain/CriptografiaAES";
 
 const getMeRepository = async () => {
   const config: AxiosRequestConfig = {
@@ -62,14 +63,17 @@ const mudarEnderecoUserAutenticadoRepository = (
 };
 
 const logoutRepository = () => {
-  const config :AxiosRequestConfig={
-    method:"POST",
-    url:"/api/login/logout",
-    withCredentials:true
+  if (isAuthenticated()) {
+    const config: AxiosRequestConfig = {
+      method: "POST",
+      url: "/api/login/logout",
+      withCredentials: true,
+    };
+    requestBackEnd(config);
   }
-  requestBackEnd(config)
-  sessionStorage.clear()
-  return localStorage.clear()
+  sessionStorage.clear();
+  localStorage.clear();
+  return (window.location.href = "/login");
 };
 
 const saveTokenRepository = async (response: Login) => {
@@ -84,20 +88,51 @@ const getTokenRepository = () => {
 };
 
 const setUserRepository = async () => {
-  const usuario = await getMeRepository();
-  sessionStorage.setItem(DADOS_USER, JSON.stringify(usuario.data));
-  return Promise.resolve();
+  try {
+    const usuario = await getMeRepository();
+
+    const encryptedData = usuario.data.encryptedData;
+    const chaveBase64 = usuario.data.chaveBase64;
+
+    sessionStorage.setItem("encryptedUserData", encryptedData);
+    sessionStorage.setItem("chaveBase64", chaveBase64);
+
+    return Promise.resolve();
+  } catch (error) {
+    console.error("Erro ao salvar os dados do usuário:", error);
+    throw error;
+  }
 };
 
 const getUserRepository = () => {
-  const dados = sessionStorage.getItem(DADOS_USER);
-  if (dados !== null) {
-    return JSON.parse(dados);
+  const encryptedData = sessionStorage.getItem("encryptedUserData");
+  const chaveBase64 = sessionStorage.getItem("chaveBase64");
+
+  if (encryptedData && chaveBase64) {
+    try {
+      const decryptedData = CriptografiaAES.decrypt(encryptedData, chaveBase64);
+
+      console.log("Dados descriptografados:", decryptedData);
+
+      return JSON.parse(decryptedData);
+    } catch (error) {
+      console.error("Erro ao descriptografar os dados:", error);
+      return null;
+    }
   }
+
+  console.error("Dados ou chave ausentes.");
   return null;
 };
 
 export {
-  cadastrarNovoUsuarioRepository, getMeRepository, getTokenRepository, getUserRepository, logoutRepository, mudarEnderecoUserAutenticadoRepository, recuperarSenhaRepository, saveTokenRepository, setUserRepository
+  cadastrarNovoUsuarioRepository,
+  getMeRepository,
+  getTokenRepository,
+  getUserRepository,
+  logoutRepository,
+  mudarEnderecoUserAutenticadoRepository,
+  recuperarSenhaRepository,
+  saveTokenRepository,
+  setUserRepository,
 };
-

@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import * as produtoService from "../../../services/ProdutoService";
 
 const Formulario = () => {
-    const { id } = useParams();// Obtém o id da URL
+    const { id } = useParams();
     const navigate = useNavigate(); 
 
     const [produto, setProduto] = useState<ProdutoDTO | null>(null);

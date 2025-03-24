@@ -39,7 +39,7 @@ const CriarNovoProduto = () => {
                     placeholder="Nome do Produto"
                     value={produto.nome}
                     onChange={handleChange}
-                    // ou assim onChange={(e) => setProduto({ ...produto, [e.target.name]: e.target.value })}
+                    // ou posso usar  assim  pra n esquecer onChange={(e) => setProduto({ ...produto, [e.target.name]: e.target.value })}
 
                     required
                   />

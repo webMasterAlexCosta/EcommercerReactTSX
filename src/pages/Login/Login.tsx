@@ -44,7 +44,7 @@ const Login = () => {
 
       const userProfile = userService.getUserService()?.perfil.includes("ADMIN") ? "ADMIN" : "CLIENTE";
       
-      console.log(userService.getUserService());
+      
       setIconAdminContext(userProfile);
 
       if (userProfile === "ADMIN") {

@@ -13,7 +13,7 @@ const requestBackEnd = (config: AxiosRequestConfig) => {
   return axios({ ...config, baseURL: BASE_URL_LOCAL, headers });
 };
 
-
+let errorAlreadyShown = false;
 
 axios.interceptors.response.use(
   function (response) {
@@ -21,35 +21,57 @@ axios.interceptors.response.use(
   },
   function (error) {
     if (axios.isAxiosError(error) && error.response) {
-      const mensagemErro =
-        error.response.data?.message ||
-        error.response.data?.trace ||
-        error.response.data?.error ||
-        "Ocorreu um erro ao tentar processar a solicitação.";
+      const statusCode = error.response.status;
 
-      Swal.fire({
-        title: "Erro!",
-        text: mensagemErro,
-        icon: "error",
-        confirmButtonText: "OK",
-      });
-      setTimeout(() => {
-        window.location.href = "/login";
-      }, 3000);
+      if (statusCode === 401) {
+        if (!errorAlreadyShown) {
+          errorAlreadyShown = true; 
+          userService.logoutService()
+          Swal.fire({
+            title: "Erro de Autenticação!",
+            text: "Você precisa estar logado para acessar esta página. Redirecionando para o login...",
+            icon: "error",
+            confirmButtonText: "OK",
+          }).then(() => {
+            setTimeout(() => {
+              window.location.href = "/login";
+            }, 1000); 
+          });
+        }
+      } else {
+        if (!errorAlreadyShown) {
+          errorAlreadyShown = true;
+
+          const mensagemErro =
+            error.response.data?.message ||
+            error.response.data?.trace ||
+            error.response.data?.error ||
+            "Ocorreu um erro ao tentar processar a solicitação.";
+
+          Swal.fire({
+            title: "Erro!",
+            text: mensagemErro,
+            icon: "error",
+            confirmButtonText: "OK",
+          });
+        }
+      }
     } else {
-      Swal.fire({
-        title: "Erro inesperado!",
-        text: "Ocorreu um erro inesperado. Tente novamente mais tarde.",
-        icon: "error",
-        confirmButtonText: "OK",
-      });
+      if (!errorAlreadyShown) {
+        errorAlreadyShown = true;
+        Swal.fire({
+          title: "Erro inesperado!",
+          text: "Ocorreu um erro inesperado. Tente novamente mais tarde.",
+          icon: "error",
+          confirmButtonText: "OK",
+        });
+      }
     }
-    /*
-        caso eu queria propagar o erro pro catch do codigo uso
-        Promisse.resolve(error)
-        */
-    return Promise.reject(error);
+
+    return Promise.resolve(error); 
   }
 );
+
+
 
 export default requestBackEnd;

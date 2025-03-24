@@ -40,11 +40,10 @@ const HeaderClient = () => {
 
     return () => window.removeEventListener('storage', checkLoginStatus); // Limpa o event listener ao desmontar
      *  */
-
+  
   }, [setContextIsLogin, setIconAdminContext, navigate]);
 
   const getIsActive = ({ isActive }: { isActive: boolean }) => (isActive ? { color: "red" } : { color: "black" });
-
   function handleOnclick(event: React.MouseEvent<HTMLElement> | React.MouseEvent<SVGSVGElement, MouseEvent>, tipo: string): void {
     if (tipo === "logout") {
       event.preventDefault();
@@ -64,6 +63,7 @@ const HeaderClient = () => {
       setIconAdminContext(null);
     }
   }
+  
 
   return (
     <header className="dsc-header-client">
