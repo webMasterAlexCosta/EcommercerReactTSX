@@ -2,7 +2,7 @@ import './Styles.css';
 import { NavLink, useNavigate } from "react-router-dom";
 import { useContext, useEffect } from 'react';
 import ContextIsLogin from '../../../data/LoginContext';
-import * as credencialServices from "../../../services/CredenciasiService";
+import * as userService from "../../../services/UserServices";
 import * as authService from "../../../services/AuthService";
 import IconAdminContext from '../../../data/IconAdminContext';
 import { Login, Logout, Home, MenuBook, AccountCircle } from '@mui/icons-material';
@@ -15,15 +15,15 @@ const HeaderClient = () => {
 
 
   useEffect(() => {
-      const token = credencialServices.getToken();
+      const token = userService.getTokenService();
       setContextIsLogin(!!token); 
 
-      const userProfile = authService.getUser()?.perfis;
+      const userProfile = userService.getUserService()?.perfis;
       const payload = authService.getAccessTokenPayload();
 
       if (payload && payload.exp < Date.now() / 1000) {
         setContextIsLogin(true);
-        credencialServices.logout();
+        userService.logoutService();
       }
 
       if (userProfile?.includes("ADMIN")) {
@@ -48,13 +48,13 @@ const HeaderClient = () => {
   function handleOnclick(event: React.MouseEvent<HTMLElement> | React.MouseEvent<SVGSVGElement, MouseEvent>, tipo: string): void {
     if (tipo === "logout") {
       event.preventDefault();
-      credencialServices.logout();
+      userService.logoutService();
       setContextIsLogin(false);
       setIconAdminContext(null);
       return;
     }
 
-    const userProfile = authService.getUser()?.perfis
+    const userProfile = userService.getUserService()?.perfis
 
     if (userProfile?.includes("ADMIN")) {
       setIconAdminContext("ADMIN");

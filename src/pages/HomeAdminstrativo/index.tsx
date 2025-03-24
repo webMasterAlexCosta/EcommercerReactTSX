@@ -1,7 +1,7 @@
 import { Outlet } from 'react-router-dom';
 import HeaderAdmin from '../../components/Layout/HeaderAdmin';
 import { useEffect, useState } from 'react';
-import *as authServices from "../../services/AuthService"
+import *as userService from "../../services/UserServices"
 import AdminHome from './AdminLayout';
 import {  Usuario } from '../../models/dto/CredenciaisDTO';
 
@@ -10,7 +10,7 @@ const HomeAdminstrativo = () => {
 
   useEffect(() => {
   
-    const response = authServices.getUser()
+    const response = userService.getUserService()
     if (response !== undefined) {
       setUsuario(JSON.parse(response))
     }

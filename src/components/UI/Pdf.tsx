@@ -1,9 +1,8 @@
 import { jsPDF } from "jspdf";
 import * as QRCode from "qrcode";
 import * as carrinhoService from "../../services/CarrinhoService";
-import * as authService from "../../services/AuthService";
 import { Endereco } from "../../models/dto/CredenciaisDTO";
-
+import * as userService from "../../services/UserServices";
 
 
 interface ProdutoCarrinhoPDF {
@@ -13,7 +12,7 @@ interface ProdutoCarrinhoPDF {
 }
 
 const gerarPDF = async (pedido: { numeroPedido: string } | null) => {
-    const user = authService.getUser()
+    const user = userService.getUserService()
     const carrinho = carrinhoService.getCarrinho() || [];
 
     const cart: ProdutoCarrinhoPDF[] = carrinho.map(item => ({

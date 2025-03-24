@@ -3,7 +3,7 @@ import homeImg from '../../../assets/images/home.svg';
 import produtosImg from '../../../assets/images/products.svg';
 import { NavLink } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import * as credenciaisServices from "../../../services/CredenciasiService";
+import * as userService from "../../../services/UserServices";
 
 
 interface HeaderAdminProps {
@@ -18,7 +18,7 @@ const HeaderAdmin = ({ user, setViewerHeaderClient,setContextIsLogin }: HeaderAd
     isActive ? { color: "red" } : { color: "black" };
 
   const handlerClick = () => {
-    credenciaisServices.logout();
+    userService.logoutService();
     setViewerHeaderClient(false);  
     setContextIsLogin(false);
     return 

@@ -1,12 +1,13 @@
 import { useState } from 'react';
-import * as authService from '../../services/AuthService';
 import HeaderAdmin from '../Layout/HeaderAdmin';
 import HeaderClient from '../Layout/HeaderClient';
 import { useContext } from 'react';
 import ContextIsLogin from './../../data/LoginContext';
+import * as userService from '../../services/UserServices';
+
 
 const Header = ()=>{    
-    const isAdmin = authService.getUser()?.perfis.includes("ADMIN")?"ADMIN" : "CLIENTE"
+    const isAdmin = userService.getUserService()?.perfis.includes("ADMIN")?"ADMIN" : "CLIENTE"
     const [viewerHeaderClient , setViewerHeaderClient] = useState<boolean>(false)
     const { setContextIsLogin } = useContext(ContextIsLogin);
 
@@ -16,7 +17,7 @@ const Header = ()=>{
        <>
          {isAdmin === "ADMIN" && viewerHeaderClient === true 
          ? 
-         <HeaderAdmin user={authService.getUser()?.user?.nome} 
+         <HeaderAdmin user={userService.getUserService()?.user?.nome} 
          setViewerHeaderClient={setViewerHeaderClient} 
          setContextIsLogin={setContextIsLogin}
          /> 

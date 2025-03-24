@@ -1,8 +1,8 @@
 import { AxiosRequestConfig } from "axios";
 import requestBackEnd from "../utils/request";
-import { CADASTRO_NOVO_USUARIO, RECUPERAR_SENHA } from "../utils/system";
+import { CADASTRO_NOVO_USUARIO, DADOS_USER, RECUPERAR_SENHA, TOKEN_KEY } from "../utils/system";
 import { CadastroUserDTO } from "../models/dto/CadastroUserDTO";
-import { Endereco } from "../models/dto/CredenciaisDTO";
+import { Endereco, Login } from "../models/dto/CredenciaisDTO";
 
 
 const getMe = async () => {
@@ -34,9 +34,6 @@ const getMe = async () => {
       return response;
     
   };
-  
-
-
   const cadastrarNovoUsuario =async (FormData:CadastroUserDTO)=>{
     try{
       const config : AxiosRequestConfig={
@@ -60,4 +57,35 @@ const mudarEnderecoUserAutenticado =(enderecoUsuario:Endereco, id:string)=>{
   }
   return requestBackEnd(config)
 }
-  export {getMe , recuperarSenha,cadastrarNovoUsuario,mudarEnderecoUserAutenticado}
+
+const logout = () => {
+  sessionStorage.removeItem(DADOS_USER);
+  return localStorage.removeItem(TOKEN_KEY);
+};
+
+const save = async (response: Login) => {
+  localStorage.setItem(TOKEN_KEY, response.token);
+  
+   await setUser();
+};
+
+const getToken = () => {
+  return localStorage.getItem(TOKEN_KEY);
+};
+
+const setUser = async () => {
+  const usuario = await getMe();
+  sessionStorage.setItem(DADOS_USER, JSON.stringify(usuario.data));
+  return Promise.resolve();
+
+};
+
+const getUser = () => {
+  const dados = sessionStorage.getItem(DADOS_USER);
+  if (dados !== null) {
+    return JSON.parse(dados);
+  }
+  return null;
+};
+
+  export {getMe,getUser,getToken,setUser ,save,logout, recuperarSenha,cadastrarNovoUsuario,mudarEnderecoUserAutenticado}

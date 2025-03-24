@@ -4,9 +4,8 @@ import "./styles.css";
 import { CredenciaisDTO } from "../../models/dto/CredenciaisDTO";
 import { useNavigate } from "react-router-dom";
 import ContextIsLogin from "../../data/LoginContext";
-import * as authService from "../../services/AuthService";
 import Alert from "../../components/UI/Alert";
-import * as crendincialService from "../../services/CredenciasiService";
+import * as userService from "../../services/UserServices";
 import LoginForm from "../../hooks/loginForm"; 
 import IconAdminContext from "../../data/IconAdminContext";
 import { Carregando } from "../../components/UI/Carregando";
@@ -38,10 +37,10 @@ const Login = () => {
   if (formData.email && formData.senha) {
    
       const response = await loginRequest(formData);
-      await crendincialService.save(response.data);  // Chama a função save para garantir que os dados sejam salvos primeiro
+      await userService.saveService(response.data);  // Chama a função save para garantir que os dados sejam salvos primeiro
       setContextIsLogin(true);
 
-      const userProfile = authService.getUser()?.perfis.includes("ADMIN") ? "ADMIN" : "CLIENTE";
+      const userProfile = userService.getUserService()?.perfis.includes("ADMIN") ? "ADMIN" : "CLIENTE";
       setIconAdminContext(userProfile);
 
       if (userProfile === "ADMIN") {
@@ -53,7 +52,7 @@ const Login = () => {
       setLoading(false);
       setAlertData({
         title: "Login Aceito",
-        text: `Usuário ${authService.getUser()?.nome} logado com sucesso`,
+        text: `Usuário ${userService.getUserService()?.nome} logado com sucesso`,
         icon: "success"
       });
     } 

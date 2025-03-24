@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { FormularioUser } from "../UI/Formulario";
 import { Endereco } from "../../models/dto/CredenciaisDTO";
 import * as authService from "../../services/AuthService";
-import * as credenciaisServices from "../../services/CredenciasiService";
+import * as userService from "../../services/UserServices";
 import { useNavigate } from "react-router-dom";
 import { ViaCepService } from '../../utils/funcoes';
 import { TEXTO_PADRAO_SOLICITACAO } from '../../utils/system';
@@ -32,7 +32,7 @@ const NovoEndereco = () => {
     const [textoCarregando, setTextoCarregando] = useState(TEXTO_PADRAO_SOLICITACAO);
 
     useEffect(() => {
-        if (!(credenciaisServices.getToken() && authService.isAuthenticated())) {
+        if (!(userService.getTokenService() && authService.isAuthenticated())) {
             navigate("/login");
             throw new Error();
         }

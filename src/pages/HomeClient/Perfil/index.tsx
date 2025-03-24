@@ -12,7 +12,7 @@
     import { PhotoCamera, UploadFile, Delete, Send, AccountCircle, Error } from '@mui/icons-material';
     import { CircularProgress } from '@mui/material';
     import { NovoEndereco } from '../../../components/Layout/NovoEndereco';
-    import * as credenciaisServices from "../../../services/CredenciasiService"
+    import * as userService from "../../../services/UserServices"
     const Perfil = () => {
         const [usuario, setUsuario] = useState<UserDTO>({
             id: "",
@@ -41,7 +41,7 @@
 
         useEffect(() => {
 
-            if (!(credenciaisServices.getToken() && authService.isAuthenticated())) {
+            if (!(userService.getTokenService() && authService.isAuthenticated())) {
                 navigate("/login")
                 throw  Error;
               }
@@ -49,7 +49,7 @@
             const obterUsuario = async () => {
                 const idUserToken = authService.getAccessTokenPayload()?.sub;
                 if (authService.isAuthenticated()) {
-                    const usuarioLogado = authService.getUser();
+                    const usuarioLogado = userService.getUserService();
                     setUsuario({
                         id: idUserToken || "",
                         nome: usuarioLogado?.nome || "",

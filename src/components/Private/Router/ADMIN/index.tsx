@@ -1,5 +1,6 @@
 import React from 'react';
 import * as authService from "../../../../services/AuthService"
+import * as userService from "../../../../services/UserServices"
 import { Navigate } from 'react-router-dom';
 
 interface props {
@@ -8,7 +9,7 @@ interface props {
 
 const PrivateRouteAdmin: React.FC<props> = ({ children }: props) => {
 
-    if (authService.isAuthenticated() && authService.getUser()?.perfis?.includes("ADMIN")) {
+    if (authService.isAuthenticated() && userService.getUserService()?.perfis?.includes("ADMIN")) {
 
         return children;
     }
