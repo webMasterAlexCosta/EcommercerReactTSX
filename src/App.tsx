@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route, Outlet, Link, useLocation } from 'react-router-dom';
 import './App.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ContextCartCount from './data/CartCountContext';
 import Carrinho from './pages/HomeClient/Carrinho';
 import Catalogo from './pages/HomeClient/Catalogo';
@@ -20,14 +20,19 @@ import PaginaAviso from './components/Layout/PaginaAviso';
 import CertificadoPage from './components/Layout/CertificadoPage';
 import CertificadoDetailPage from './components/Layout/CertificadoPage/CertificadoDetailPage';
 import CardPaymentComponent from './components/UI/CardPaymentComponent';
-import { MudarSenha } from "./components/Layout/MudarSenha/index"
+import { MudarSenha } from './components/Layout/MudarSenha/index';
 import { NovoEndereco } from './components/Layout/NovoEndereco';
-const MainLayout = () => {
-  const location = useLocation();
+import * as userService from './services/UserServices';
+import * as authService from './services/AuthService';
+import { Usuario } from './models/dto/CredenciaisDTO';
+import { Carregando } from './components/UI/Carregando';
 
+const MainLayout = ({ user }: { user: Usuario | null }) => {
+  const location = useLocation();
+  
   return (
     <>
-      <Header />
+      <Header user={user} />
       {location.pathname === '/' && <PaginaAviso />}
       <Outlet />
     </>
@@ -38,6 +43,29 @@ const App = () => {
   const [contextCartCount, setContextCartCount] = useState<number>(0);
   const [contextIsLogin, setContextIsLogin] = useState<boolean>(false);
   const [iconAdminContext, setIconAdminContext] = useState<PerfilContext>(null);
+  const [user, setUser] = useState<Usuario | null>(null); // Tipo de estado ajustado para ser nulo inicialmente
+  const [isLoading, setIsLoading] = useState<boolean>(true); // Estado de carregamento
+
+  // useEffect para verificar autenticação e carregar dados do usuário
+  useEffect(() => {
+    const storedUser = userService.getUserService();
+
+    if (storedUser === null && authService.isAuthenticated()) {
+      userService.setUserService(); // Executa a atualização do serviço
+      setUser(userService.getUserService()); // Atualiza o estado após o serviço ser executado
+    } else {
+      setUser(storedUser); // Caso o usuário já esteja disponível, apenas define
+    }
+
+    setIsLoading(false); // Finaliza o carregamento
+  }, []); // A dependência vazia significa que isso acontece uma vez ao carregar o App
+
+  // Bloqueia a renderização até o carregamento ser concluído
+  if (isLoading) {
+    return <div>
+      <Carregando title='aguarde'/>
+    </div>; // Você pode personalizar isso com um spinner ou algo mais adequado
+  }
 
   return (
     <IconAdminContext.Provider value={{ iconAdminContext, setIconAdminContext }}>
@@ -46,14 +74,10 @@ const App = () => {
           <BrowserRouter>
             <div className="app-container">
               <Routes>
-
-                <Route path="/" element={<MainLayout />}>
-
+                <Route path="/" element={<MainLayout user={user} />}>
                   <Route path="/Perfil" element={<PrivateRouteClient><Perfil /></PrivateRouteClient>} >
-                    <Route path='MudarSenha' element={<PrivateRouteClient><MudarSenha /></PrivateRouteClient>}>
-                    </Route>
-                    <Route path='NovoEndereco' element={<PrivateRouteClient><NovoEndereco /></PrivateRouteClient>}>
-                    </Route>
+                    <Route path="MudarSenha" element={<PrivateRouteClient><MudarSenha /></PrivateRouteClient>} />
+                    <Route path="NovoEndereco" element={<PrivateRouteClient><NovoEndereco /></PrivateRouteClient>} />
                   </Route>
                   <Route path="/Carrinho" element={<Carrinho />} >
                     <Route path="Pagamento" element={<CardPaymentComponent />} />
@@ -64,16 +88,8 @@ const App = () => {
                   <Route path="/certificados" element={<CertificadoPage />} />
                   <Route path="/certificado/:id" element={<CertificadoDetailPage />} />
                   <Route path="/Login" element={<Login />} />
-                  <Route
-                    path="*"
-                    element={
-                      <Link to="/">
-                        <h1 style={{ color: "red" }}>404 - Página não encontrada</h1>
-                      </Link>
-                    }
-                  />
+                  <Route path="*" element={<Link to="/"><h1 style={{ color: "red" }}>404 - Página não encontrada</h1></Link>} />
                 </Route>
-
 
                 <Route path="/Administrativo" element={<PrivateRouteAdmin><Administrativo /></PrivateRouteAdmin>}>
                   <Route path="Listagem" element={<PrivateRouteAdmin><Listagem /></PrivateRouteAdmin>} />

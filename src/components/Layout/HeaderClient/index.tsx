@@ -18,10 +18,10 @@ const HeaderClient = () => {
       const token = userService.getTokenService();
       setContextIsLogin(!!token); 
 
-      const userProfile = userService.getUserService()?.perfis;
+      const userProfile = userService.getUserService()?.perfil;
       const payload = authService.getAccessTokenPayload();
 
-      if (payload && payload.exp < Date.now() / 1000) {
+      if (payload && !authService.isAuthenticated()) {
         setContextIsLogin(true);
         userService.logoutService();
       }
@@ -54,7 +54,7 @@ const HeaderClient = () => {
       return;
     }
 
-    const userProfile = userService.getUserService()?.perfis
+    const userProfile = userService.getUserService()?.perfil
 
     if (userProfile?.includes("ADMIN")) {
       setIconAdminContext("ADMIN");

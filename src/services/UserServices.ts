@@ -1,30 +1,30 @@
 import { AxiosRequestConfig, AxiosResponse } from "axios";
 import { CadastroUserDTO } from "../models/dto/CadastroUserDTO";
-import * as userRepository from "../repository/UserRepository";
-import { ALTERAR_SENHA_AUTENTICADO, ENVIAR_PEDIDO } from "../utils/system";
-import requestBackEnd from "../utils/request";
 import {
   CarrinhoItem,
   PedidoData,
   PedidoItem,
 } from "../models/dto/CarrinhoDTO";
-import { getCarrinho } from "../services/CarrinhoService";
-import * as authService from "../services/AuthService";
 import { Endereco, Login } from "../models/dto/CredenciaisDTO";
+import * as userRepository from "../repository/UserRepository";
+import * as authService from "../services/AuthService";
+import { getCarrinho } from "../services/CarrinhoService";
+import requestBackEnd from "../utils/request";
+import { ALTERAR_SENHA_AUTENTICADO, ENVIAR_PEDIDO } from "../utils/system";
 
 const getMeService = async () => {
-  return userRepository.getMe();
+  return userRepository.getMeRepository();
 };
 
 const recuperarSenha = (email: string, cpf: string) => {
-  return userRepository.recuperarSenha(
+  return userRepository.recuperarSenhaRepository(
     email.toString().toLowerCase(),
     cpf.toString()
   );
 };
 
 const cadastrarNovoUsuario = (formData: CadastroUserDTO) => {
-  return userRepository.cadastrarNovoUsuario(formData);
+  return userRepository.cadastrarNovoUsuarioRepository(formData);
 };
 const enviarPedido = async (): Promise<AxiosResponse<unknown>> => {
   const carrinhoAtual: CarrinhoItem[] = getCarrinho();
@@ -92,7 +92,7 @@ const mudarEnderecoUserAutenticado = (
   usuarioEndereco: Endereco,
   id: string
 ) => {
-  const enviar = userRepository.mudarEnderecoUserAutenticado(
+  const enviar = userRepository.mudarEnderecoUserAutenticadoRepository(
     usuarioEndereco,
     id
   );
@@ -100,34 +100,34 @@ const mudarEnderecoUserAutenticado = (
 };
 
 const logoutService = () => {
-  return userRepository.logout();
+  return userRepository.logoutRepository();
 };
 
-const saveService = (response: Login) => {
-  return userRepository.save(response);
+const saveTokenService = (response: Login) => {
+  return userRepository.saveTokenRepository(response);
 };
 
 const getTokenService = () => {
-  return userRepository.getToken();
+  return userRepository.getTokenRepository();
 };
 
 const getUserService = () => {
-  return userRepository.getUser();
+  return userRepository.getUserRepository();
 };
 const setUserService = () => {
-  userRepository.setUser();
+  userRepository.setUserRepository();
 };
 
 export {
-  getMeService,
-  setUserService,
-  logoutService,
-  saveService,
-  getTokenService,
-  recuperarSenha,
-  getUserService,
+  alterarSenhaAutenticado,
   cadastrarNovoUsuario,
   enviarPedido,
-  alterarSenhaAutenticado,
+  getMeService,
+  getTokenService,
+  getUserService,
+  logoutService,
   mudarEnderecoUserAutenticado,
+  recuperarSenha,
+  saveTokenService,
+  setUserService,
 };

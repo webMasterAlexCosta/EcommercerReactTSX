@@ -10,7 +10,7 @@ interface props {
 
 const PrivateRouteClient: React.FC<props> = ({ children }: props) => {
 
-    if (authService.isAuthenticated() && userService.getUserService()?.perfis.includes("CLIENTE")) {
+    if (authService.isAuthenticated() && userService.getUserService()?.perfil.includes("CLIENTE")) {
 
         return children;
     }

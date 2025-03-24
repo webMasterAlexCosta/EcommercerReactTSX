@@ -11,6 +11,7 @@ import IconAdminContext from "../../data/IconAdminContext";
 import { Carregando } from "../../components/UI/Carregando";
 
 const Login = () => {
+  console.log(userService.getUserService());
   const navigate = useNavigate();
   const [formData, setFormData] = useState<CredenciaisDTO>({
     email: "",
@@ -37,10 +38,13 @@ const Login = () => {
   if (formData.email && formData.senha) {
    
       const response = await loginRequest(formData);
-      await userService.saveService(response.data);  // Chama a função save para garantir que os dados sejam salvos primeiro
+       await userService.saveTokenService(response.data);
+      
       setContextIsLogin(true);
 
-      const userProfile = userService.getUserService()?.perfis.includes("ADMIN") ? "ADMIN" : "CLIENTE";
+      const userProfile = userService.getUserService()?.perfil.includes("ADMIN") ? "ADMIN" : "CLIENTE";
+      
+      console.log(userService.getUserService());
       setIconAdminContext(userProfile);
 
       if (userProfile === "ADMIN") {

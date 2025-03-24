@@ -57,7 +57,7 @@
                         telefone: usuarioLogado?.telefone || "",
                         cpf: usuarioLogado?.cpf || "",
                         dataNascimento: usuarioLogado?.dataNascimento || "",
-                        perfil: usuarioLogado?.perfis || [],
+                        perfil: usuarioLogado?.perfil || [],
                         endereco: usuarioLogado?.endereco || {} as EnderecoDTO
                     });
                 }

@@ -1,4 +1,4 @@
-import { perfis } from "./CredenciaisDTO";
+import { perfil } from "./CredenciaisDTO";
 
 export interface EnderecoDTO {
   id?: number;
@@ -18,6 +18,6 @@ export interface UserDTO {
   cpf?: string;
   telefone: string;
   dataNascimento: string;
-  perfil: perfis[];
+  perfil: perfil[];
   endereco?: EnderecoDTO;
 }

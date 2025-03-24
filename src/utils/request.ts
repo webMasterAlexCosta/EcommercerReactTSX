@@ -1,10 +1,10 @@
 import axios, { AxiosRequestConfig } from "axios";
 import Swal from "sweetalert2"; 
 import { BASE_URL_LOCAL } from "./system";
-import * as credentialRespository from "../repository/CredenciaisRepository";
+import * as userService from "../services/UserServices";
 
 const requestBackEnd = (config: AxiosRequestConfig) => {
-  const token = credentialRespository.getToken();
+  const token = userService.getTokenService();
   const headers = {
     ...config.headers,
     Authorization: token ? `Bearer ${token}` : undefined,
@@ -34,7 +34,7 @@ axios.interceptors.response.use(
         confirmButtonText: "OK",
       });
       setTimeout(() => {
-     window.location.reload();
+        window.location.href = "/login";
       }, 3000);
     } else {
       Swal.fire({
