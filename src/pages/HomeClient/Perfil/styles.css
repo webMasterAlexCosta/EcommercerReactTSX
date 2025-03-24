@@ -42,6 +42,48 @@ input[type="date"] {
   background-color: #f9f9f9;
   transition: border-color 0.3s ease, background-color 0.3s ease;
 }
+/* Modal overlay */
+.camera-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+/* Modal content */
+.camera-modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 600px;
+  width: 100%;
+  text-align: center;
+  position: relative;
+}
+
+/* Botão de Fechar */
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 5px;
+  background-color: red;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.close-button:hover {
+  background-color: darkred;
+}
 
 input:focus {
   border-color: #007bff; /* Destaca o campo ativo */
@@ -223,7 +265,7 @@ p {
 }
 
 .camera-video {
-  width: 50%;
+  width: 70%;
   height: auto;
   margin-bottom: 16px;
   border-radius: 8px;
@@ -252,7 +294,7 @@ p {
   font-size: 0.9rem;
 }
 .captured-image{
-  width: 50%;
+  width: 70%;
   height: auto;
   margin-bottom: 16px;
   border-radius: 8px;
