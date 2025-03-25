@@ -50,7 +50,7 @@ const Perfil = () => {
         const obterUsuario = async () => {
             const idUserToken = authService.getAccessTokenPayload()?.sub;
             if (authService.isAuthenticated()) {
-                const usuarioLogado = userService.getUserService();
+                const usuarioLogado =await  userService.getUserService();
                 setUsuario({
                     id: idUserToken || "",
                     nome: usuarioLogado?.nome || "",

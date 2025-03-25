@@ -43,28 +43,39 @@ const App = () => {
   const [contextCartCount, setContextCartCount] = useState<number>(0);
   const [contextIsLogin, setContextIsLogin] = useState<boolean>(false);
   const [iconAdminContext, setIconAdminContext] = useState<PerfilContext>(null);
-  const [user, setUser] = useState<Usuario | null>(null); 
-  const [isLoading, setIsLoading] = useState<boolean>(true); 
+  const [user, setUser] = useState<Usuario | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    const storedUser = userService.getUserService();
+    const loadUser = async () => {
+      setIsLoading(true);
+      
+      try {
+        if (authService.isAuthenticated()) {
+          // Se autenticado, busca os dados do usuário
+          const userProfile = await userService.getUserService();
+          setUser(userProfile);
+          setContextIsLogin(true);
+        } else {
+          // Se não autenticado, limpa o estado
+          setUser(null);
+          setContextIsLogin(false);
+        }
+      } catch (error) {
+        console.error("Erro ao carregar usuário:", error);
+        setUser(null);
+        setContextIsLogin(false);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-    if (storedUser === null && authService.isAuthenticated()) {
-      userService.setUserService();
-      setUser(userService.getUserService()); 
-    } else {
-      setUser(storedUser); 
-    }
-
-    setIsLoading(false); 
-  }, []);
+    loadUser();
+  }, []); // Adicione dependências se necessário (ex: quando o token muda)
 
   if (isLoading) {
-    return <div>
-      <Carregando title='aguarde'/>
-    </div>; 
+    return <Carregando title='aguarde' />;
   }
-
   return (
     <IconAdminContext.Provider value={{ iconAdminContext, setIconAdminContext }}>
       <ContextIsLogin.Provider value={{ contextIsLogin, setContextIsLogin }}>

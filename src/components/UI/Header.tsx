@@ -5,7 +5,7 @@ import { useContext } from 'react';
 import ContextIsLogin from './../../data/LoginContext';
 import * as userService from '../../services/UserServices';
 import { Usuario } from '../../models/dto/CredenciaisDTO';
-import * as authService from '../../services/AuthService';
+import * as AuthService from '../../services/AuthService';
 interface Props {
   user: Usuario | null;
 }
@@ -14,32 +14,37 @@ const Header = (user: Props) => {
   const [isAdmin, setIsAdmin] = useState<string | null>(null);
   const [viewerHeaderClient, setViewerHeaderClient] = useState<boolean>(false);
   const { setContextIsLogin } = useContext(ContextIsLogin);
-  const [usuario, setUsuario] = useState<Usuario | null>();
+  const [usuario, setUsuario] = useState<Usuario | null>(user.user);
 
   useEffect(() => {
+   // userService.setUserService()
+    const buscando = async () => {
+     if(AuthService.isAuthenticated()){
+      const buscandoUsuario = await userService.getUserService();
+      setUsuario(buscandoUsuario);
     
-    
-    if (user === null && authService.isAuthenticated()) {
-      userService.setUserService();
-      const buscarNovamente = userService.getUserService();
-      setUsuario(buscarNovamente);
-    }
+     }else{
+      return;
+     }
+    };
+    buscando();
   }, [user]);
 
   useEffect(() => {
-    
+
     if (usuario?.perfil) {
-      setIsAdmin(usuario.perfil.includes("ADMIN") ? "ADMIN" : "CLIENTE");
+      setIsAdmin(usuario?.perfil.includes("ADMIN") ? "ADMIN" : "CLIENTE");
+   
     }
-  }, [usuario]); 
+  }, [usuario]);
 
   return (
     <>
       {isAdmin === "ADMIN" && viewerHeaderClient === true
-        ? <HeaderAdmin user={userService.getUserService()?.user?.nome}
-            setViewerHeaderClient={setViewerHeaderClient}
-            setContextIsLogin={setContextIsLogin}
-          />
+        ? <HeaderAdmin user={usuario?.nome}
+          setViewerHeaderClient={setViewerHeaderClient}
+          setContextIsLogin={setContextIsLogin}
+        />
         : <HeaderClient />
       }
     </>

@@ -1,17 +1,16 @@
 import { useContext, useState } from "react";
 import { loginRequest } from "../../services/CredenciasiService";
 import "./styles.css";
-import { CredenciaisDTO } from "../../models/dto/CredenciaisDTO";
+import { CredenciaisDTO, Usuario } from "../../models/dto/CredenciaisDTO";
 import { useNavigate } from "react-router-dom";
 import ContextIsLogin from "../../data/LoginContext";
 import Alert from "../../components/UI/Alert";
 import * as userService from "../../services/UserServices";
-import LoginForm from "../../hooks/loginForm"; 
+import LoginForm from "../../hooks/loginForm";
 import IconAdminContext from "../../data/IconAdminContext";
 import { Carregando } from "../../components/UI/Carregando";
 
 const Login = () => {
-  console.log(userService.getUserService());
   const navigate = useNavigate();
   const [formData, setFormData] = useState<CredenciaisDTO>({
     email: "",
@@ -19,10 +18,11 @@ const Login = () => {
   });
 
   const { setContextIsLogin } = useContext(ContextIsLogin);
-  const {iconAdminContext, setIconAdminContext } = useContext(IconAdminContext);
+  const { setIconAdminContext } = useContext(IconAdminContext);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [alertData, setAlertData] = useState<{ title: string; text: string; icon: "success" | "error" | "warning" | "info"; } | null>(null);
+  const [user, setUser] = useState<Usuario | null>(null); 
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const name = event.target.name;
@@ -31,52 +31,57 @@ const Login = () => {
   };
 
   const handleSubmitLogin = async (event: React.FormEvent<HTMLFormElement>) => {
-  event.preventDefault();
-  setIsSubmitted(true);
-  setLoading(true);
+    event.preventDefault();
+    setIsSubmitted(true);
+    setLoading(true);
 
-  if (formData.email && formData.senha) {
-   
-      const response = await loginRequest(formData);
-       await userService.saveTokenService(response.data);
-      
-      setContextIsLogin(true);
+    if (formData.email && formData.senha) {
+      try {
+        const response = await loginRequest(formData);
+        await userService.saveTokenService(response.data);
 
-      const userProfile = userService.getUserService()?.perfil.includes("ADMIN") ? "ADMIN" : "CLIENTE";
-      
-      
-      setIconAdminContext(userProfile);
+        const buscarUsuario = await userService.getUserService();
+        setUser(buscarUsuario);
+        setContextIsLogin(true);
 
-      if (userProfile === "ADMIN") {
-        navigate("/administrativo");
-      } else {
-        navigate("/catalogo");
+        const userProfile = buscarUsuario?.perfil?.includes("ADMIN") ? "ADMIN" : "CLIENTE";
+        setIconAdminContext(userProfile);
+          console.log(userProfile)
+        if (userProfile === "ADMIN") {
+          navigate("/administrativo");
+        } else {
+          navigate("/catalogo");
+        }
+
+        setAlertData({
+          title: "Login Aceito",
+          text: `Usuário ${buscarUsuario?.nome} logado com sucesso`,
+          icon: "success"
+        });
+      } catch  {
+        setAlertData({
+          title: "Erro ao fazer login",
+          text: "Ocorreu um erro ao tentar realizar o login. Tente novamente",
+          icon: "error"
+        });
+      } finally {
+        setLoading(false);
       }
-
+    } else {
       setLoading(false);
-      setAlertData({
-        title: "Login Aceito",
-        text: `Usuário ${userService.getUserService()?.nome} logado com sucesso`,
-        icon: "success"
-      });
-    } 
-   else {
-    setLoading(false);
-    
-  }
-};
-
+    }
+  };
 
   const handleAlertClose = () => {
-   
     if (alertData?.icon === "success") {
-      if(iconAdminContext === "ADMIN") {
+      if (user?.perfil.includes("ADMIN")) {
         navigate("/Administrativo");
-      } else if(iconAdminContext === "CLIENTE") {  
-      navigate("/catalogo");
-    } else {
-      setAlertData(null);
-    }}
+      } else if (user?.perfil.includes("CLIENTE")) {
+        navigate("/catalogo");
+      } else {
+        setAlertData(null);
+      }
+    }
   };
 
   return (

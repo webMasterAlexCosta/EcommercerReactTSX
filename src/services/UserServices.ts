@@ -72,9 +72,10 @@ const enviarPedido = async (): Promise<AxiosResponse<unknown>> => {
   }
 };
 
-const alterarSenhaAutenticado = (antigaSenha: string, novaSenha: string) => {
+const alterarSenhaAutenticado = async (antigaSenha: string, novaSenha: string) => {
   if (authService.isAuthenticated()) {
-    const email = getUserService()?.email;
+    const user = await getUserService();
+    const email = user?.email;
 
     const config: AxiosRequestConfig = {
       method: "POST",

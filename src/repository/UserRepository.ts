@@ -4,6 +4,8 @@ import { Endereco, Login } from "../models/dto/CredenciaisDTO";
 import requestBackEnd from "../utils/request";
 import {
   CADASTRO_NOVO_USUARIO,
+  CHAVECIFRADO,
+  DADOCIFRAFADO,
   RECUPERAR_SENHA,
   TOKEN_KEY,
 } from "../utils/system";
@@ -88,42 +90,47 @@ const getTokenRepository = () => {
 };
 
 const setUserRepository = async () => {
-  try {
+  const encryptedData = sessionStorage.getItem(DADOCIFRAFADO);
+  const chaveBase64 = sessionStorage.getItem(CHAVECIFRADO);
+    if(encryptedData ===null && chaveBase64 ===null){
     const usuario = await getMeRepository();
-
-    const encryptedData = usuario.data.encryptedData;
-    const chaveBase64 = usuario.data.chaveBase64;
-
-    sessionStorage.setItem("encryptedUserData", encryptedData);
-    sessionStorage.setItem("chaveBase64", chaveBase64);
-
-    return Promise.resolve();
-  } catch (error) {
-    console.error("Erro ao salvar os dados do usuário:", error);
-    throw error;
-  }
-};
-
-const getUserRepository = () => {
-  const encryptedData = sessionStorage.getItem("encryptedUserData");
-  const chaveBase64 = sessionStorage.getItem("chaveBase64");
-
-  if (encryptedData && chaveBase64) {
-    try {
-      const decryptedData = CriptografiaAES.decrypt(encryptedData, chaveBase64);
-
-      console.log("Dados descriptografados:", decryptedData);
-
-      return JSON.parse(decryptedData);
-    } catch (error) {
-      console.error("Erro ao descriptografar os dados:", error);
-      return null;
+    sessionStorage.setItem(DADOCIFRAFADO, usuario.data.encryptedData);
+    sessionStorage.setItem(CHAVECIFRADO, usuario?.data?.chaveBase64);
+    if (!usuario?.data?.encryptedData || !usuario?.data?.chaveBase64) {
+     // throw new Error("Dados criptografados ou chave não foram retornados corretamente.");
     }
   }
+   
 
-  console.error("Dados ou chave ausentes.");
-  return null;
+   // console.log("🔐 Dados criptografados armazenados com sucesso!");
+
+    return Promise.resolve();
+  
 };
+
+
+const getUserRepository = async () => {
+  const encryptedData = sessionStorage.getItem(DADOCIFRAFADO);
+  const chaveBase64 = sessionStorage.getItem(CHAVECIFRADO);
+
+  if (!encryptedData || !chaveBase64) {
+    //console.error("⚠️ Dados ou chave ausentes.");
+    return Promise.resolve({ perfil: [] }); // Retorna uma Promise resolvida com objeto válido
+  }
+
+  try {
+    const decryptedData = await CriptografiaAES.decrypt(encryptedData, chaveBase64);
+
+    // console.log("🔓 Dados descriptografados:", decryptedData);
+
+    const user = JSON.parse(decryptedData);
+    return Promise.resolve({ ...user, perfil: user.perfil || [] }); // Retorna uma Promise resolvida com os dados
+  } catch  {
+    // console.error("Erro ao descriptografar os dados:", error);
+    return Promise.resolve({ perfil: [] }); // Retorna uma Promise resolvida com objeto válido em caso de erro
+  }
+};
+
 
 export {
   cadastrarNovoUsuarioRepository,

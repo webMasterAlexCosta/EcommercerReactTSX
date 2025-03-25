@@ -1,47 +1,61 @@
 import './Styles.css';
 import { NavLink, useNavigate } from "react-router-dom";
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import ContextIsLogin from '../../../data/LoginContext';
 import * as userService from "../../../services/UserServices";
 import * as authService from "../../../services/AuthService";
 import IconAdminContext from '../../../data/IconAdminContext';
 import { Login, Logout, Home, MenuBook, AccountCircle } from '@mui/icons-material';
 import { CartIcon } from '../../UI/CartIcon';
+import { Usuario } from './../../../models/dto/CredenciaisDTO';
 
 const HeaderClient = () => {
   const { contextIsLogin, setContextIsLogin } = useContext(ContextIsLogin);
   const { iconAdminContext, setIconAdminContext } = useContext(IconAdminContext);
   const navigate = useNavigate();
-
+  const [user, setUser] = useState<Usuario | null>()
 
   useEffect(() => {
+    const payload = authService.getAccessTokenPayload();
+
+
+    if(authService.getAccessTokenPayload()){
+
+    const buscar = async () => {
+
+
       const token = userService.getTokenService();
-      setContextIsLogin(!!token); 
+      setContextIsLogin(!!token);
 
-      const userProfile = userService.getUserService()?.perfil;
-      const payload = authService.getAccessTokenPayload();
-
-      if (payload && !authService.isAuthenticated()) {
-        setContextIsLogin(true);
-        userService.logoutService();
+      const userProfile = await userService.getUserService()
+      setUser(userProfile)
+      if (userProfile) {
+        userService.setUserService()
       }
+    }
+    buscar()
 
-      if (userProfile?.includes("ADMIN")) {
-        setIconAdminContext("ADMIN");
-      } else if (userProfile?.includes("CLIENTE")) {
-        setIconAdminContext("CLIENTE");
-      } else {
-        setIconAdminContext(null);
-      }
-   
+    if (payload && !authService.isAuthenticated()) {
+      setContextIsLogin(true);
+      userService.logoutService();
+    }
 
-   /** posso usar esse recurso, mas no react vou usar navigate
-    window.addEventListener("storage", checkLoginStatus); // Escuta mudanças no storage
+    if (user?.perfil?.includes("ADMIN")) {
+      setIconAdminContext("ADMIN");
+    } else if (user?.perfil?.includes("CLIENTE")) {
+      setIconAdminContext("CLIENTE");
+    } else {
+      setIconAdminContext(null);
+    }
 
-    return () => window.removeEventListener('storage', checkLoginStatus); // Limpa o event listener ao desmontar
-     *  */
-  
-  }, [setContextIsLogin, setIconAdminContext, navigate]);
+
+    /** posso usar esse recurso, mas no react vou usar navigate
+     window.addEventListener("storage", checkLoginStatus); // Escuta mudanças no storage
+ 
+     return () => window.removeEventListener('storage', checkLoginStatus); // Limpa o event listener ao desmontar
+      *  */
+    }
+  }, [setContextIsLogin, setIconAdminContext, navigate,user]);
 
   const getIsActive = ({ isActive }: { isActive: boolean }) => (isActive ? { color: "red" } : { color: "black" });
   function handleOnclick(event: React.MouseEvent<HTMLElement> | React.MouseEvent<SVGSVGElement, MouseEvent>, tipo: string): void {
@@ -53,17 +67,17 @@ const HeaderClient = () => {
       return;
     }
 
-    const userProfile = userService.getUserService()?.perfil
 
-    if (userProfile?.includes("ADMIN")) {
+
+    if (user?.perfil.includes("ADMIN")) {
       setIconAdminContext("ADMIN");
-    } else if (userProfile?.includes("CLIENTE")) {
+    } else if (user?.perfil.includes("CLIENTE")) {
       setIconAdminContext("CLIENTE");
     } else {
       setIconAdminContext(null);
     }
   }
-  
+
 
   return (
     <header className="dsc-header-client">
