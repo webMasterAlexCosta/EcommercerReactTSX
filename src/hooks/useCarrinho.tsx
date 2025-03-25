@@ -39,6 +39,7 @@ const useCarrinho = () => {
       setProdutos(updatedProdutos);
       const carrinhoItems = updatedProdutos.map((produto) => ({
         ...produto,
+        id: produto.id ?? 0, 
         categorias: produto.categorias.map((categoria) => categoria.nome)
       }));
       carrinhoService.setCarrinho(carrinhoItems);

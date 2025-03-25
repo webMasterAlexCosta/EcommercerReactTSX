@@ -37,16 +37,16 @@ const RedefinirSenha: React.FC<RedefinirSenhaProps> = ({ isSubmitted, isToken })
     if (isToken) {
       setLoading(true);
       const { senhaAntiga, novaSenha } = alterarSenhaAutenticado;
-      const response = userServices.alterarSenhaAutenticado(senhaAntiga, novaSenha);
-      if (response) {
+      const response = await userServices.alterarSenhaAutenticado(senhaAntiga, novaSenha);
+      if (response && response.data) {
         setAlertData({
           title: "Recuperação Bem Sucedida",
-          text: ` ${(await response).data}`,
+          text: ` ${response.data}`,
           icon: "success"
         });
         setTimeout(() => {
           window.location.reload();
-        }, 5000);
+        }, 3000);
       }
       setLoading(false);
     }
