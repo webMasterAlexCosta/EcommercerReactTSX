@@ -119,6 +119,17 @@ const setUserService = () => {
   userRepository.setUserRepository();
 };
 
+const saveFoto=(foto:string)=>{
+  userRepository.saveFoto(foto);
+  return;
+}
+const getFoto=()=>{ 
+  return userRepository.getFoto();
+}
+const deleteFoto=()=>{  
+  userRepository.deleteFoto();
+  return;
+}
 export {
   alterarSenhaAutenticado,
   cadastrarNovoUsuario,
@@ -131,4 +142,7 @@ export {
   recuperarSenha,
   saveTokenService,
   setUserService,
+  saveFoto,
+  getFoto,
+  deleteFoto
 };

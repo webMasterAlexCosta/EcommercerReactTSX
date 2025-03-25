@@ -26,9 +26,7 @@ const Formulario = () => {
                     navigate("/Administrativo/AdminHome/Listagem");
                     return;
                 }
-
                 setProduto(produtoEncontrado);
-
                 setCategoria(produtoEncontrado.categorias[0]?.id || 0);
                 setNomeProduto(produtoEncontrado.nome);
                 setPrecoProduto(produtoEncontrado.preco);

@@ -7,13 +7,13 @@ import * as authService from "../../../services/AuthService";
 import IconAdminContext from '../../../data/IconAdminContext';
 import { Login, Logout, Home, MenuBook, AccountCircle } from '@mui/icons-material';
 import { CartIcon } from '../../UI/CartIcon';
-import UsuarioContext from '../../../data/UserContext';
+import UsuarioContext from '../../../data/UsuarioContext';
 
 const HeaderClient = () => {
   const { contextIsLogin, setContextIsLogin } = useContext(ContextIsLogin);
   const { iconAdminContext, setIconAdminContext } = useContext(IconAdminContext);
   const {usuario , setUsuario} = useContext(UsuarioContext)
-  console.log("oi")
+  
   useEffect(() => {
     const payload = userService.getTokenService() ? authService.getAccessTokenPayload() : null;
 

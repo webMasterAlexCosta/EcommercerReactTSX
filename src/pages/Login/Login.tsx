@@ -36,7 +36,7 @@ const Login = () => {
     setLoading(true);
 
     if (formData.email && formData.senha) {
-      try {
+      
         const response = await loginRequest(formData);
         await userService.saveTokenService(response.data);
 
@@ -47,28 +47,20 @@ const Login = () => {
         const userProfile = buscarUsuario?.perfil?.includes("ADMIN") ? "ADMIN" : "CLIENTE";
         setIconAdminContext(userProfile);
           console.log(userProfile)
-        if (userProfile === "ADMIN") {
-          navigate("/administrativo");
-        } else {
-          navigate("/catalogo");
-        }
+        // if (userProfile === "ADMIN") {
+        //   navigate("/administrativo");
+        // } else {
+        //   navigate("/catalogo");
+        // }
 
         setAlertData({
           title: "Login Aceito",
           text: `Usuário ${buscarUsuario?.nome} logado com sucesso`,
           icon: "success"
         });
-      } catch  {
-        setAlertData({
-          title: "Erro ao fazer login",
-          text: "Ocorreu um erro ao tentar realizar o login. Tente novamente",
-          icon: "error"
-        });
-      } finally {
+      
         setLoading(false);
-      }
-    } else {
-      setLoading(false);
+      
     }
   };
 

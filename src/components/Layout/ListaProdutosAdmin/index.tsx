@@ -9,9 +9,6 @@ import { Link } from "react-router-dom";
 
 const ListaProdutos = () => {
     const [produto, setProduto] = useState<ProdutoDTO[]>([])
-    
-
-
     useEffect(()=>{
         const buscarProduto=async()=>{
           const prod=await  produtoService.findAll();

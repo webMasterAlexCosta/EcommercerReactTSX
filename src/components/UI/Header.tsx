@@ -3,7 +3,7 @@ import HeaderAdmin from '../Layout/HeaderAdmin';
 import HeaderClient from '../Layout/HeaderClient';
 import { useContext } from 'react';
 import ContextIsLogin from './../../data/LoginContext';
-import UserContext from './../../data/UserContext';
+import UserContext from '../../data/UsuarioContext';
 import { Carregando } from './Carregando'; 
 import { isAuthenticated } from '../../services/AuthService';
 import { getUserService } from '../../services/UserServices';

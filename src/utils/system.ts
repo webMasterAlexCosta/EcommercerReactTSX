@@ -1,5 +1,5 @@
-export const BASE_URL_LOCAL2="http://localhost:8080"
-export const BASE_URL_LOCAL="https://alexc5142.c44.integrator.host/"
+export const BASE_URL_LOCAL="http://localhost:8080"
+export const BASE_URL_LOCAL2="https://alexc5142.c44.integrator.host/"
 
 export const TOKEN_KEY = "br.com.alexcosta/token"
 export const DADOS_USER = "br.com.alexcosta/user"
@@ -19,3 +19,4 @@ export const PUBLIC_STRIPE = "pk_test_51KQ4TFI8FQmw3JIIKhoW9sTJCrnDyx8z2rVjPD6tS
 export const PRIVATE_STRIPE = "sk_test_51KQ4TFI8FQmw3JIIlZTawdkOW6IR5qWJEO6HwCTwmcb0Msj2fGcpGeUNcmPt9Lw3XLARQPY6Ux6Mo7M8QbFQZsmF00pFQ7birw"
 export const DADOCIFRAFADO="encryptedData"
 export const CHAVECIFRADO="chaveBase64"
+export const FOTO_PERFIL="br.com.alexcosta/foto"

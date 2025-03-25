@@ -6,6 +6,7 @@ import {
   CADASTRO_NOVO_USUARIO,
   CHAVECIFRADO,
   DADOCIFRAFADO,
+  FOTO_PERFIL,
   RECUPERAR_SENHA,
   TOKEN_KEY,
 } from "../utils/system";
@@ -128,8 +129,17 @@ const getUserRepository = async () => {
     return Promise.resolve({ perfil: [] }); // 
   }
 };
-
-
+const saveFoto=(foto:string)=>{
+  localStorage.setItem(FOTO_PERFIL, foto);
+  return;
+}
+const getFoto=()=>{ 
+  return localStorage.getItem(FOTO_PERFIL);
+}
+const deleteFoto=()=>{  
+  localStorage.removeItem(FOTO_PERFIL);
+  return;
+}
 export {
   cadastrarNovoUsuarioRepository,
   getMeRepository,
@@ -140,4 +150,6 @@ export {
   recuperarSenhaRepository,
   saveTokenRepository,
   setUserRepository,
+  saveFoto,
+  getFoto,deleteFoto
 };
