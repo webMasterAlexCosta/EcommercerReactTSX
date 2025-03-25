@@ -22,26 +22,26 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, onChange, formData, isS
   const [isPasswordVisible, setIsPasswordVisible] = useState<IPasswordVisibilityState>({ senha: false })
 
   return (
-    <div className="dsc-login-form-container">
+    <div className="alex-login-form-container">
       {!resetSenha && !cadastro
         ?
         (
-          <form className="dsc-card dsc-form" onSubmit={onSubmit}>
+          <form className="alex-card alex-form" onSubmit={onSubmit}>
             <LoginSharp sx={{ fontSize: "24px", color: "#007bff" }} />
 
             <h2>Login</h2>
-            <div className="dsc-form-controls-container">
+            <div className="alex-form-controls-container">
               <div>
                 <input
                   name="email"
                   value={formData.email}
                   onChange={onChange}
-                  className={`dsc-form-control ${isSubmitted && !formData.email ? "dsc-input-error" : ""}`}
+                  className={`alex-form-control ${isSubmitted && !formData.email ? "alex-input-error" : ""}`}
                   type="text"
                   placeholder="Email"
                 />
                 {isSubmitted && !formData.email && (
-                  <div className="dsc-form-error">Campo obrigatório</div>
+                  <div className="alex-form-error">Campo obrigatório</div>
                 )}
               </div>
               <div className="input-container">
@@ -49,7 +49,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, onChange, formData, isS
                   name="senha"
                   value={formData.senha}
                   onChange={onChange}
-                  className={`dsc-form-control ${isSubmitted && !formData.senha ? "dsc-input-error" : ""}`}
+                  className={`alex-form-control ${isSubmitted && !formData.senha ? "alex-input-error" : ""}`}
                   type={isPasswordVisible.senha ? "text" : "password"}
                   placeholder="Senha"
                 />
@@ -57,13 +57,13 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, onChange, formData, isS
                   {isPasswordVisible.senha ? <VisibilityOffIcon /> : <VisibilityIcon />}
                 </span>
                 {isSubmitted && !formData.senha && (
-                  <div className="dsc-form-error">Campo obrigatório</div>
+                  <div className="alex-form-error">Campo obrigatório</div>
                 )}
               </div>
             </div>
 
-            <div className="dsc-login-form-buttons dsc-mt20">
-              <button type="submit" className="dsc-btn dsc-btn-blue" disabled={loading}>
+            <div className="alex-login-form-buttons alex-mt20">
+              <button type="submit" className="alex-btn alex-btn-blue" disabled={loading}>
                 Entrar
               </button>
             </div>

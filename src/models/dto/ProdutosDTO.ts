@@ -6,7 +6,7 @@ export interface CategoriasDTO {
 
 
 export interface ProdutoDTO {
-    id: number;
+    id?: number;
     nome: string;
     preco: number;
     descricao: string;

@@ -2,6 +2,7 @@ import axios, { AxiosRequestConfig } from "axios";
 import Swal from "sweetalert2"; 
 import { BASE_URL_LOCAL } from "./system";
 import { getTokenService } from "../services/UserServices";
+import { isAuthenticated } from "../services/AuthService";
 
 const requestBackEnd = (config: AxiosRequestConfig) => {
   const token = getTokenService();
@@ -20,6 +21,11 @@ axios.interceptors.response.use(
     return response;
   },
   function (error) {
+    if(isAuthenticated()){
+      window.location.href="/login"
+      localStorage.clear()
+      sessionStorage.clear()
+    }
     if (axios.isAxiosError(error) && error.response) {
       const mensagemErro =
         error.response.data?.message ||

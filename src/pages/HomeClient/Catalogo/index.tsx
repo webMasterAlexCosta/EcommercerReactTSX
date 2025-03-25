@@ -49,7 +49,7 @@ const Catalogo = () => {
   }
 
   return (
-    <section id="catalog-section" className="dsc-container">
+    <section id="catalog-section" className="alex-container">
       <BarraBuscar onSearch={(item) => {
         setSearchName(item);
         setPage(0); 
@@ -60,7 +60,7 @@ const Catalogo = () => {
       <CardProduto produtos={produtos} loading={loading} />
 
       {!searchName && ( 
-        <div className="dsc-btn-next-page" onClick={() => { setPage((prevPage) => prevPage + 1); setCarregarMais("Aguarde"); }}>
+        <div className="alex-btn-next-page" onClick={() => { setPage((prevPage) => prevPage + 1); setCarregarMais("Aguarde"); }}>
           {carregarMais}
         </div>
       )}

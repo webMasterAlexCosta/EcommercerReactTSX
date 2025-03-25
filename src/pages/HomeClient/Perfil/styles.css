@@ -1,22 +1,21 @@
-/* Estilo Geral */
 .registro-formulario {
   background-color: #fff;
   width: 100%;
   max-width: 800px;
-  padding: 32px; /* Espaçamento interno ajustado */
-  border-radius: 16px; /* Bordas arredondadas */
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1); /* Sombra suave */
+  padding: 32px; 
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
  
-  margin: 40px auto; /* Centraliza e adiciona margem */
+  margin: 40px auto; 
 }
 
 .registro-formulario:hover {
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25); /* Sombra mais intensa */
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25); 
 }
 
 /* Formulário */
 .formulario-grupo {
-  margin-bottom: 20px; /* Espaçamento consistente entre os campos */
+  margin-bottom: 20px; 
 }
 .img-pedido{
   width: 20%;
@@ -27,22 +26,21 @@ label {
   font-size: 0.9rem;
   font-weight: 500;
   color: #333;
-  margin-bottom: 8px; /* Espaçamento entre label e input */
+  margin-bottom: 8px; 
 }
 
 input[type="text"],
 input[type="email"],
 input[type="date"] {
   width: 100%;
-  padding: 12px; /* Menor espaço interno */
+  padding: 12px;
   font-size: 0.9rem;
   color: #333;
-  border: 1px solid #ddd; /* Borda mais sutil */
+  border: 1px solid #ddd; 
   border-radius: 8px;
   background-color: #f9f9f9;
   transition: border-color 0.3s ease, background-color 0.3s ease;
 }
-/* Modal overlay */
 .camera-modal-overlay {
   position: fixed;
   top: 0;
@@ -86,10 +84,10 @@ input[type="date"] {
 }
 
 input:focus {
-  border-color: #007bff; /* Destaca o campo ativo */
+  border-color: #007bff; 
   background-color: #ffffff;
   outline: none;
-  box-shadow: 0 0 8px rgba(0, 123, 255, 0.2); /* Sombra leve ao focar */
+  box-shadow: 0 0 8px rgba(0, 123, 255, 0.2); 
 }
 
 input[readonly]  {
@@ -104,11 +102,11 @@ input[readonly]  {
   gap: 12px;
   width: 100%;
   margin-top: 24px;
-  flex-wrap: wrap; /* Permite que os botões se ajustem em telas menores */
+  flex-wrap: wrap; 
 }
 
 button {
-  padding: 10px 16px; /* Botões menores */
+  padding: 10px 16px; 
   font-size: 0.9rem;
   font-weight: 500;
   color: #fff;
@@ -117,20 +115,20 @@ button {
   border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
-  flex: 1; /* Botões ocupam espaço igualmente */
+  flex: 1; 
 }
 
 button:hover {
   background-color: #0056b3;
-  transform: scale(1.03); /* Efeito de crescimento ao passar o mouse */
+  transform: scale(1.03); 
 }
 
 button:active {
-  transform: scale(0.98); /* Efeito de clique */
+  transform: scale(0.98); 
 }
 
 button#botao {
-  background-color: #dc3545; /* Cor diferente para o botão "Sair" */
+  background-color: #dc3545; 
 }
 
 button#botao:hover {
@@ -139,7 +137,7 @@ button#botao:hover {
 
 /* Botão de Perfil */
 button.perfil-button {
-  background-color: #28a745; /* Verde para destaque */
+  background-color: #28a745; 
   padding: 12px 20px;
   font-size: 1rem;
   font-weight: 600;
@@ -174,7 +172,7 @@ button.perfil-button:hover {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #f44336; /* Vermelho claro */
+  background-color: #f44336; 
   color: white;
   border: none;
   border-radius: 8px;
@@ -185,14 +183,13 @@ button.perfil-button:hover {
 }
 
 .remove-button:hover {
-  background-color: #e53935; /* Vermelho mais escuro ao passar o mouse */
+  background-color: #e53935; 
 }
 
 .remove-button span {
   margin-left: 8px;
 }
 
-/* Ícone de exclusão (supondo que você está usando um ícone de biblioteca como Material-UI ou similar) */
 .DeleteIcon {
   font-size: 18px;
 }
@@ -269,7 +266,7 @@ p {
   height: auto;
   margin-bottom: 16px;
   border-radius: 8px;
-  background-color: #000; /* Fundo preto enquanto a câmera carrega */
+  background-color: #000;
 }
 .icon-camera{
   display: flex;
@@ -298,7 +295,7 @@ p {
   height: auto;
   margin-bottom: 16px;
   border-radius: 8px;
-  background-color: #000; /* Fundo preto enquanto a câmera carrega */
+  background-color: #000; 
 }
 .close-modal {
   display: flex;
@@ -332,29 +329,29 @@ p {
   
 }
 .remove-button svg {
-  width: 16px; /* Tamanho do ícone da lixeira ajustado */
-  height: 16px; /* Tamanho do ícone da lixeira ajustado */
+  width: 16px;
+  height: 16px; 
   
 }
 
 .remove-button {
   position: relative;
-  top: -20px; /* Ajuste de posição para centralizar o ícone */
-  left: 10px; /* Ajuste de posição para centralizar o ícone */
-  background-color: transparent; /* Cor vermelha para destaque */
-  color: #000000; /* Cor do texto */
+  top: -20px; 
+  left: 10px;
+  background-color: transparent;
+  color: #000000; 
   border: none;
-  padding: 8px 12px; /* Aumentei o padding para garantir que o ícone tenha espaço */
+  padding: 8px 12px; 
   font-size: 0.9rem;
   font-weight: 500;
   border-radius: 8px;
   cursor: pointer;
   margin-top: 10px;
   transition: background-color 0.3s ease;
-  display: flex; /* Usar flexbox para centralizar o ícone */
-  align-items: center; /* Alinha o ícone verticalmente */
-  justify-content: center; /* Alinha o ícone horizontalmente */
-  height: 40px; /* Tamanho mais adequado para o botão */
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  height: 40px;
 }
 
 .remove-button:hover {
@@ -366,32 +363,32 @@ p {
   transform: scale(0.98);
 }
 .no-profile-msg {
-  background-color: #f3f4f6; /* Cor de fundo suave */
-  color: #333; /* Texto escuro para contraste */
-  font-family: 'Roboto', sans-serif; /* Fonte moderna e limpa */
-  font-size: 1.2rem; /* Tamanho de fonte confortável */
-  padding: 15px 25px; /* Espaçamento interno */
-  border-radius: 8px; /* Bordas arredondadas */
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Sombra sutil para dar profundidade */
+  background-color: #f3f4f6; 
+  color: #333; 
+  font-family: 'Roboto', sans-serif;
+  font-size: 1.2rem;
+  padding: 15px 25px; 
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.3s ease-in-out; /* Animação suave para hover */
+  transition: all 0.3s ease-in-out; 
 }
 
 .no-profile-msg:hover {
-  background-color: #e4e7eb; /* Cor de fundo levemente mais escura ao passar o mouse */
-  transform: translateY(-2px); /* Elevação sutil ao passar o mouse */
+  background-color: #e4e7eb; 
+  transform: translateY(-2px); 
 }
 
 .no-profile-msg svg {
-  margin-right: 10px; /* Espaçamento entre ícone e texto */
-  color: #6c757d; /* Cor do ícone */
+  margin-right: 10px; 
+  color: #6c757d;
 }
 
 .no-profile-msg span {
-  font-weight: 600; /* Aumenta o peso da palavra chave */
-  color: #007bff; /* Cor de destaque */
+  font-weight: 600; 
+  color: #007bff; 
 }
 
 .no-profile-msg p {
@@ -400,12 +397,11 @@ p {
   display: flex;
   align-items: center;
 }
-/* Estilo para a mensagem "Enviando..." */
 .enviando-msg {
-    background-color: #f0f8ff; /* Fundo leve e suave */
-    color: #007bff; /* Cor azul para dar destaque */
+    background-color: #f0f8ff; 
+    color: #007bff; 
     font-family: 'Roboto', sans-serif;
-    font-size: 1rem; /* Tamanho de fonte confortável */
+    font-size: 1rem; 
     padding: 12px 20px;
     border-radius: 5px;
     display: flex;
@@ -413,13 +409,12 @@ p {
     justify-content: center;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     margin-top: 10px;
-    transition: all 0.3s ease-in-out; /* Suaviza transições */
+    transition: all 0.3s ease-in-out; 
 }
 
-/* Animação suave de envio */
 .enviando-msg svg {
     margin-right: 10px;
-    animation: spin 1.5s infinite linear; /* Animação de rotação no ícone */
+    animation: spin 1.5s infinite linear; 
 }
 
 @keyframes spin {
@@ -427,10 +422,9 @@ p {
     100% { transform: rotate(360deg); }
 }
 
-/* Estilo para a mensagem de erro */
 .erro-upload {
-    background-color: #f8d7da; /* Fundo vermelho suave para erro */
-    color: #721c24; /* Cor de texto mais forte para erro */
+    background-color: #f8d7da;
+    color: #721c24; 
     font-family: 'Roboto', sans-serif;
     font-size: 1rem;
     padding: 12px 20px;
@@ -443,10 +437,9 @@ p {
     transition: all 0.3s ease-in-out;
 }
 
-/* Ícone de erro com animação de piscada */
 .erro-upload svg {
     margin-right: 10px;
-    animation: blink 1s infinite; /* Efeito de piscada */
+    animation: blink 1s infinite;
 }
 
 @keyframes blink {

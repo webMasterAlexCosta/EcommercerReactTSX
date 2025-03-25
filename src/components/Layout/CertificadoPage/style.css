@@ -5,27 +5,27 @@
   align-items: center;
   justify-content: flex-start; /* Certificando-se de que o conteúdo começa do topo */
   min-height: calc(100vh - 70px);
-  background-color: var(--dsc-color-bg-primary);
+  background-color: var(--alex-color-bg-primary);
   text-align: center;
   padding: 40px 20px 20px; /* Adicionando mais espaçamento no topo */
 }
 
 .certificate-header h1 {
   font-size: 2.5rem;
-  color: var(--dsc-color-font-primary);
+  color: var(--alex-color-font-primary);
   margin-bottom: 20px; /* Mais espaço abaixo do título */
 }
 .certificate-title {
  display: flex;
  justify-content: center;
   font-size: 1.7rem;
-  color: var(--dsc-color-font-secondary);
+  color: var(--alex-color-font-secondary);
   margin-bottom: 20px;
   margin-top: 30px;
 }
 .certificate-header p {
   font-size: 1.2rem;
-  color: var(--dsc-color-font-secondary);
+  color: var(--alex-color-font-secondary);
   margin-bottom: 40px;
 }
 
@@ -41,9 +41,9 @@
 }
 
 .certificate-card {
-  border: 1px solid var(--dsc-color-card-border);
+  border: 1px solid var(--alex-color-card-border);
   border-radius: 8px;
-  background-color: var(--dsc-color-card-bg);
+  background-color: var(--alex-color-card-bg);
   padding: 20px;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -64,13 +64,13 @@
 
 .certificate-card h3 {
   font-size: 1.4rem;
-  color: var(--dsc-color-font-primary);
+  color: var(--alex-color-font-primary);
   margin-bottom: 10px;
 }
 
 .certificate-card p {
   font-size: 1rem;
-  color: var(--dsc-color-font-primary);
+  color: var(--alex-color-font-primary);
   margin-bottom: 15px;
   line-height: 1.6;
   text-align: justify;
@@ -80,8 +80,8 @@
   display: inline-block;
   padding: 10px 20px;
   font-size: 1rem;
-  color: var(--dsc-color-btn-inverse);
-  background-color: var(--dsc-color-btn-primary);
+  color: var(--alex-color-btn-inverse);
+  background-color: var(--alex-color-btn-primary);
   border: none;
   border-radius: 6px;
   cursor: pointer;
@@ -95,7 +95,7 @@
 }
 
 .certificate-view:hover {
-  background-color: var(--dsc-color-font-secondary);
+  background-color: var(--alex-color-font-secondary);
   transform: scale(1.05);
 }
 
@@ -103,8 +103,8 @@
 
 
 .certificate-content {
-  background-color: var(--dsc-color-card-bg);
-  border: 1px solid var(--dsc-color-card-border);
+  background-color: var(--alex-color-card-bg);
+  border: 1px solid var(--alex-color-card-border);
   border-radius: 8px;
   padding: 30px;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
@@ -115,7 +115,7 @@
 
 .certificate-content p {
   font-size: 1.1rem;
-  color: var(--dsc-color-font-primary);
+  color: var(--alex-color-font-primary);
   margin-bottom: 20px;
   line-height: 1.6;
   text-align: justify;

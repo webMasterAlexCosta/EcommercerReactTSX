@@ -111,14 +111,14 @@ const RedefinirSenha: React.FC<RedefinirSenhaProps> = ({ isSubmitted, isToken })
   };
 
   return (
-    <div className="dsc-login-form-container">
+    <div className="alex-login-form-container">
       {loading ? (
         <Carregando title="Aguarde, Atualizando sua Senha..." />
       ) : (
-        <form className="dsc-card dsc-form" onSubmit={onSubmitReset}>
+        <form className="alex-card alex-form" onSubmit={onSubmitReset}>
           <LockOutlined sx={{ fontSize: "24px", color: "#007bff" }} />
           <h2>Redefinir Senha</h2>
-          <div className="dsc-form-controls-container">
+          <div className="alex-form-controls-container">
             {isToken ? (
               <>
                 <div className="input-container">
@@ -126,7 +126,7 @@ const RedefinirSenha: React.FC<RedefinirSenhaProps> = ({ isSubmitted, isToken })
                     name="senhaAntiga"
                     value={alterarSenhaAutenticado.senhaAntiga}
                     onChange={handleOnChangeAutenticado}
-                    className={`dsc-form-control ${isSubmitted && !alterarSenhaAutenticado.senhaAntiga ? "dsc-input-error" : ""}`}
+                    className={`alex-form-control ${isSubmitted && !alterarSenhaAutenticado.senhaAntiga ? "alex-input-error" : ""}`}
                     type={isPasswordVisible.senhaAntiga ? "text" : "password"}
                     placeholder="Digite Senha Antiga"
                     required
@@ -135,7 +135,7 @@ const RedefinirSenha: React.FC<RedefinirSenhaProps> = ({ isSubmitted, isToken })
                     {isPasswordVisible.senhaAntiga ? <VisibilityOffIcon /> : <VisibilityIcon />}
                   </span>
                   {isSubmitted && !alterarSenhaAutenticado.senhaAntiga && (
-                    <div className="dsc-form-error">Campo obrigatório</div>
+                    <div className="alex-form-error">Campo obrigatório</div>
                   )}
                 </div>
 
@@ -144,7 +144,7 @@ const RedefinirSenha: React.FC<RedefinirSenhaProps> = ({ isSubmitted, isToken })
                     name="novaSenha"
                     value={alterarSenhaAutenticado.novaSenha}
                     onChange={handleOnChangeAutenticado}
-                    className={`dsc-form-control ${isSubmitted && !alterarSenhaAutenticado.novaSenha ? "dsc-input-error" : ""}`}
+                    className={`alex-form-control ${isSubmitted && !alterarSenhaAutenticado.novaSenha ? "alex-input-error" : ""}`}
                     type={isPasswordVisible.novaSenha ? "text" : "password"}
                     placeholder="Digite Nova Senha"
                     required
@@ -153,7 +153,7 @@ const RedefinirSenha: React.FC<RedefinirSenhaProps> = ({ isSubmitted, isToken })
                     {isPasswordVisible.novaSenha ? <VisibilityOffIcon /> : <VisibilityIcon />}
                   </span>
                   {isSubmitted && !alterarSenhaAutenticado.novaSenha && (
-                    <div className="dsc-form-error">Campo obrigatório</div>
+                    <div className="alex-form-error">Campo obrigatório</div>
                   )}
                 </div>
               </>
@@ -164,13 +164,13 @@ const RedefinirSenha: React.FC<RedefinirSenhaProps> = ({ isSubmitted, isToken })
                     name="email"
                     value={redefinicaoSenha.email}
                     onChange={handleOnChange}
-                    className={`dsc-form-control ${isSubmitted && !redefinicaoSenha.email ? "dsc-input-error" : ""}`}
+                    className={`alex-form-control ${isSubmitted && !redefinicaoSenha.email ? "alex-input-error" : ""}`}
                     type="email"
                     placeholder="Digite seu Email"
                     required
                   />
                   {isSubmitted && !redefinicaoSenha.email && (
-                    <div className="dsc-form-error">Campo obrigatório</div>
+                    <div className="alex-form-error">Campo obrigatório</div>
                   )}
                 </div>
                 <div className="input-container">
@@ -178,7 +178,7 @@ const RedefinirSenha: React.FC<RedefinirSenhaProps> = ({ isSubmitted, isToken })
                     name="cpf"
                     value={redefinicaoSenha.cpf}
                     onChange={handleOnChange}
-                    className={`dsc-form-control ${isSubmitted && !redefinicaoSenha.cpf ? "dsc-input-error" : ""}`}
+                    className={`alex-form-control ${isSubmitted && !redefinicaoSenha.cpf ? "alex-input-error" : ""}`}
                     type={isCpfVisible ? "text" : "password"}
                     placeholder="Digite seu CPF"
                     required
@@ -187,22 +187,22 @@ const RedefinirSenha: React.FC<RedefinirSenhaProps> = ({ isSubmitted, isToken })
                     {isCpfVisible ? <VisibilityOffIcon /> : <VisibilityIcon />}
                   </span>
                   {isSubmitted && !redefinicaoSenha.cpf && (
-                    <div className="dsc-form-error">Campo obrigatório</div>
+                    <div className="alex-form-error">Campo obrigatório</div>
                   )}
                 </div>
               </>
             )}
           </div>
 
-          <div className="dsc-login-form-buttons dsc-mt20">
+          <div className="alex-login-form-buttons alex-mt20">
             {!voltar ? (
-              <button type="submit" className="dsc-btn dsc-btn-blue" disabled={loading}>
+              <button type="submit" className="alex-btn alex-btn-blue" disabled={loading}>
                 Enviar
               </button>
             ) : (
               <button
                 type="button"
-                className="dsc-btn dsc-btn-blue"
+                className="alex-btn alex-btn-blue"
                 disabled={loading}
                 onClick={() => navigate(0)}
               >

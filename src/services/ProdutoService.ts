@@ -76,6 +76,11 @@ const findAllCategories=async()=>{
   const response = await produtoRepository.findAllCategories()
   return response.data
 }
+
+const deleteProduto=async(id : number | undefined)=>{
+  const respose=  produtoRepository.deleteProduto(id)
+  return respose
+}
 export {
   findAll,
   findById,
@@ -84,5 +89,6 @@ export {
   findPageRequest,
   updateProduto,
   novoProduto,
-  findAllCategories
+  findAllCategories,
+  deleteProduto,
 };

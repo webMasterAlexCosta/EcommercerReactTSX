@@ -14,7 +14,7 @@ const AdicionarProdutos = () => {
         <p>Adicione alguns produtos para começar a comprar!</p>
         <div className="empty-cart-buttons">
           <ContinuarComprando
-            className="dsc-btn dsc-btn-blue"
+            className="alex-btn alex-btn-blue"
             link="/catalogo"
             title="Continuar Comprando"
           />

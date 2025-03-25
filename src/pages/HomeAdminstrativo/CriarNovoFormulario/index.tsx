@@ -7,13 +7,12 @@ import { Alert } from '@mui/material';
 const CriarNovoProduto = () => {
   const navigate = useNavigate();
   const [produto, setProduto] = useState<ProdutoDTO>({
-    id: 0,
     nome: '',
     preco: 0,
     imgUrl: '',
     descricao: '',
     categorias: [],
-    quantidade: 0
+    quantidade: 1
   });
   const [categorias, setCategorias] = useState<CategoriasDTO[]>([]);
   const [alertData, setAlertData] = useState<{
@@ -31,10 +30,11 @@ const CriarNovoProduto = () => {
   }, []);
 
   const handleSubmit = async (produto: ProdutoDTO) => {
+    console.log("produto a ser enviado " + produto)
     try {
       const response = await produtoService.novoProduto(produto);
-
-      if (response?.status === 200) {
+      console.log(response)
+      if (response?.status === 201) {
         // Alerta de sucesso
         setAlertData({
           title: "Produto Criado",
@@ -83,25 +83,25 @@ const CriarNovoProduto = () => {
     if (alertData?.icon === "success") {
       navigate('/Administrativo/Listagem');
     }
-    setAlertData(null); 
+    setAlertData(null);
   };
 
   return (
     <main>
-      <section id="product-form-section" className="dsc-container">
-        <div className="dsc-product-form-container">
+      <section id="product-form-section" className="alex-container">
+        <div className="alex-product-form-container">
           <form
-            className="dsc-card dsc-form"
+            className="alex-card alex-form"
             onSubmit={(e) => {
               e.preventDefault();
               handleSubmit(produto);
             }}
           >
             <h2>Criar Novo Produto</h2>
-            <div className="dsc-form-controls-container">
+            <div className="alex-form-controls-container">
               <div>
                 <input
-                  className="dsc-form-control"
+                  className="alex-form-control"
                   type="text"
                   name="nome"
                   placeholder="Nome do Produto"
@@ -112,7 +112,7 @@ const CriarNovoProduto = () => {
               </div>
               <div>
                 <input
-                  className="dsc-form-control"
+                  className="alex-form-control"
                   type="number"
                   name="preco"
                   placeholder="Preço"
@@ -123,7 +123,7 @@ const CriarNovoProduto = () => {
               </div>
               <div>
                 <input
-                  className="dsc-form-control"
+                  className="alex-form-control"
                   type="text"
                   name="imgUrl"
                   placeholder="Imagem (URL)"
@@ -134,7 +134,7 @@ const CriarNovoProduto = () => {
               </div>
               <div>
                 <select
-                  className="dsc-form-control dsc-select"
+                  className="alex-form-control alex-select"
                   name="categorias"
                   value={produto.categorias.length > 0 ? produto.categorias[0].id.toString() : ''}
                   onChange={handleChange}
@@ -152,7 +152,7 @@ const CriarNovoProduto = () => {
               </div>
               <div>
                 <textarea
-                  className="dsc-form-control dsc-textarea"
+                  className="alex-form-control alex-textarea"
                   name="descricao"
                   placeholder="Descrição do Produto"
                   value={produto.descricao}
@@ -162,11 +162,15 @@ const CriarNovoProduto = () => {
               </div>
             </div>
 
-            <div className="dsc-product-form-buttons">
-              <button type="reset" className="dsc-btn dsc-btn-white">
+            <div className="alex-product-form-buttons">
+              <button
+                type="button"
+                className="alex-btn alex-btn-white"
+                onClick={() => navigate(-1)}
+              >
                 Cancelar
               </button>
-              <button type="submit" className="dsc-btn dsc-btn-blue">
+              <button type="submit" className="alex-btn alex-btn-blue">
                 Salvar
               </button>
             </div>
@@ -177,7 +181,7 @@ const CriarNovoProduto = () => {
       {alertData && (
         <Alert
           severity={alertData.icon}
-          onClose={handleAlertClose} 
+          onClose={handleAlertClose}
         >
           {alertData.text}
         </Alert>

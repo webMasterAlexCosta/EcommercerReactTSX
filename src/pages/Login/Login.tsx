@@ -77,7 +77,7 @@ const Login = () => {
   };
 
   return (
-    <section id="login-section" className="dsc-container">
+    <section id="login-section" className="alex-container">
       {loading ? (
         <Carregando title="Realizando Login" />
       ) : (

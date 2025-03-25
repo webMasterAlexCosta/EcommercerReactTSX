@@ -13,7 +13,7 @@ const BarraBuscar = ({ onSearch }: SearchProps) => {
   };
   
   return (
-    <form className="dsc-search-bar" onSubmit={handleSubmit}>
+    <form className="alex-search-bar" onSubmit={handleSubmit}>
       <button className="pesquisa-submit"  type="submit">🔎︎</button>
       <input
         type="text"

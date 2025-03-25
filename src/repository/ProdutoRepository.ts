@@ -42,8 +42,10 @@ const findByRequest = async (item: string) => {
 };
 
 const novoProduto=async(dto:ProdutoDTO)=>{
-  const user = await getUserService();
-  if (isAuthenticated() && user.perfil.includes("ADMIN")) {
+  console.log(dto)
+  alert(dto)
+ const user = await getUserService();
+   if (isAuthenticated() && user.perfil.includes("ADMIN")) {
   const config : AxiosRequestConfig={
     method:"POST",
     url:CADASTRO_PRODUTO,
@@ -51,7 +53,7 @@ const novoProduto=async(dto:ProdutoDTO)=>{
     withCredentials:true
   }
   return await requestBackEnd(config)
-}
+   }
 }
 
 const updatedProduto = async (produto: ProdutoDTO) => {
@@ -83,6 +85,14 @@ const findAllCategories=async()=>{
     return await requestBackEnd(config)
 }
 
+const deleteProduto=(id: number | undefined)=>{
+    const config :AxiosRequestConfig={
+      method:"DELETE",
+      url:`/api/produtos/${id}/deletar`,
+      withCredentials:true
+    }
+    return requestBackEnd(config)
+}
 export {
   findAll,
   findById,
@@ -92,5 +102,6 @@ export {
   removeLocalStorage,
   updatedProduto,
   novoProduto,
-  findAllCategories
+  findAllCategories,
+  deleteProduto
 };

@@ -2,13 +2,13 @@
   padding: 20px 0;
 }
 
-.dsc-login-form-container {
+.alex-login-form-container {
   width: 100%;
   max-width: 410px;
   margin: 0 auto;
 }
 
-.dsc-login-form-buttons {
+.alex-login-form-buttons {
   width: 100%;
 }
 
@@ -71,7 +71,7 @@ input[type="number"] {
   position: relative;
 }
 
-.dsc-form-control {
+.alex-form-control {
   width: 100%;
   padding: 10px;
   padding-right: 40px; /* Espaço para o ícone */
@@ -93,7 +93,7 @@ input[type="number"] {
 }
 
 /* Adicionando um efeito visual no campo de senha */
-.dsc-input-error {
+.alex-input-error {
   color: red;
   font-size: 12px;
   margin-top: 5px;

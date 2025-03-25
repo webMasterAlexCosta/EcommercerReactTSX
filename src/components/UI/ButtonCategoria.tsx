@@ -5,7 +5,7 @@ interface ButtonCategoriaProps {
 const ButtonCategoria = ({nomeCategoria = "Categoria nao passada"}:ButtonCategoriaProps) => {
     return (
         <>
-            <div className="dsc-category">
+            <div className="alex-category">
                     {nomeCategoria}
             </div>
 

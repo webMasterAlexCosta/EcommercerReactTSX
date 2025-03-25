@@ -13,8 +13,8 @@ const CardProduto = ({ produtos, loading }: ICard) => {
 
     const renderProdutos = () => {
         return produtos.map(itemProduto => (
-            <div key={itemProduto.id} className="dsc-card">
-                <div className="dsc-catalog-card-top dsc-line-bottom">
+            <div key={itemProduto.id} className="alex-card">
+                <div className="alex-catalog-card-top alex-line-bottom">
                     <img
                         src={itemProduto.imgUrl}
                         alt={`Imagem do produto ${itemProduto.nome}`}
@@ -22,10 +22,10 @@ const CardProduto = ({ produtos, loading }: ICard) => {
                 </div>
                 <div>
                     <Link to={`/Catalogo/Detalhes/${itemProduto.id}`}>
-                        <ButtonActions nome="Detalhes" className="dsc-btn dsc-btn-blue" />
+                        <ButtonActions nome="Detalhes" className="alex-btn alex-btn-blue" />
                     </Link>
                 </div>
-                <div className="dsc-catalog-card-bottom">
+                <div className="alex-catalog-card-bottom">
                     <h3>R$ {itemProduto.preco}</h3>
                     <h4>{itemProduto.nome}</h4>
                 </div>
@@ -40,7 +40,7 @@ const CardProduto = ({ produtos, loading }: ICard) => {
             ) : produtos.length === 0 ? (
                 <Carregando className="nenhum-produto" title="nenhum produto encontrado"/>
             ) : (
-                <div className="dsc-catalog-cards dsc-mb20 dsc-mt20">
+                <div className="alex-catalog-cards alex-mb20 alex-mt20">
                     {renderProdutos()}
                 </div>
             )}

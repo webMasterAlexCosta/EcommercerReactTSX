@@ -7,7 +7,7 @@ interface IFinalizarPedido{
 const FinalizarPedido = ({title  , clickpedido} : IFinalizarPedido) => {
     return (
         <>
-            <div className="dsc-btn dsc-btn-blue" onClick={() => {  clickpedido(); }}>{title}</div>
+            <div className="alex-btn alex-btn-blue" onClick={() => {  clickpedido(); }}>{title}</div>
         </>
     )
 }

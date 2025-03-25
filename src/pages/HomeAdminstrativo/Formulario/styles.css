@@ -2,13 +2,13 @@
   padding: 20px 0;
 }
 
-.dsc-product-form-container {
+.alex-product-form-container {
   width: 100%;
   max-width: 500px;
   margin: 0 auto;
 }
 
-.dsc-product-form-buttons {
+.alex-product-form-buttons {
   width: 100%;
   display: grid;
   grid-gap: 20px;
@@ -22,12 +22,12 @@
 }
 
 
-.dsc-table-wrapper {
+.alex-table-wrapper {
   overflow-x: auto; 
   
 }
 
-.dsc-table {
+.alex-table {
   width: 100%;
   table-layout: fixed;
   border-collapse: collapse;
@@ -37,7 +37,7 @@
 
 
 
-.dsc-product-listing-btn {
+.alex-product-listing-btn {
   width: 20px;
   height: 20px;
   cursor: pointer;
@@ -45,12 +45,12 @@
 
 
 @media (max-width: 576px) {
-  .dsc-product-form-buttons {
+  .alex-product-form-buttons {
     grid-template-columns: 1fr; 
     
   }
 
-  .dsc-table {
+  .alex-table {
     display: block; 
     
     width: 100%;
@@ -60,11 +60,11 @@
 
  
 
-  .dsc-txt-left {
+  .alex-txt-left {
     text-align: left;
   }
 
-  .dsc-product-listing-btn {
+  .alex-product-listing-btn {
     width: 18px;
     height: 18px;
   }
@@ -72,12 +72,12 @@
 
 
 @media (max-width: 768px) {
-  /* .dsc-tb576 {
+  /* .alex-tb576 {
     display: none; /* Esconde a coluna de ID em telas menores */
   } */
 
  
-  .dsc-product-listing-btn {
+  .alex-product-listing-btn {
     width: 24px;
     height: 24px;
   }

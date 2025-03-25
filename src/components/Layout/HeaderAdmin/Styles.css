@@ -1,7 +1,7 @@
 
-  .dsc-header-admin {
-  background-color: var(--dsc-color-bg-quaternary);
-  color: var(--dsc-color-font-tertiary);
+  .alex-header-admin {
+  background-color: var(--alex-color-bg-quaternary);
+  color: var(--alex-color-font-tertiary);
 }
 
 nav {
@@ -19,15 +19,15 @@ nav h1 {
 nav a {
   font-size: 14px;
   margin-right: 15px; /* Espaçamento entre os links */
-  color: var(--dsc-color-font-primary);
+  color: var(--alex-color-font-primary);
   font-weight: 500;
 }
 
 nav a:hover {
-  color: var(--dsc-color-btn-primary); /* Cor ao passar o mouse */
+  color: var(--alex-color-btn-primary); /* Cor ao passar o mouse */
 }
 
-.dsc-navbar-right {
+.alex-navbar-right {
   display: flex;
   align-items: center;
   gap: 15px; /* Espaçamento entre os elementos */

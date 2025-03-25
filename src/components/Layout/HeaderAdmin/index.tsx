@@ -25,30 +25,30 @@ const HeaderAdmin = ({ user, setViewerHeaderClient,setContextIsLogin }: HeaderAd
   };
 
   return (
-    <header className="dsc-header-admin">
-      <nav className="dsc-container">
+    <header className="alex-header-admin">
+      <nav className="alex-container">
         <NavLink style={getIsActive} to="/Administrativo">
           <h1>{user}</h1>
         </NavLink>
 
-        <div className="dsc-navbar-right">
-          <div className="dsc-menu-items-container">
-            <div className="dsc-menu-item">
+        <div className="alex-navbar-right">
+          <div className="alex-menu-items-container">
+            <div className="alex-menu-item">
               <img src={homeImg} alt="Início" />
               <NavLink style={getIsActive} to="/">
                 <p>Início</p>
               </NavLink>
             </div>
-            <div className="dsc-menu-item">
+            <div className="alex-menu-item">
               <img src={produtosImg} alt="Cadastro de produtos" />
-              <p className="dsc-menu-item-active">
+              <p className="alex-menu-item-active">
                 <NavLink style={getIsActive} to="/Administrativo/Listagem">
                   Produtos
                 </NavLink>
               </p>
             </div>
           </div>
-          <div className="dsc-logged-user">
+          <div className="alex-logged-user">
             <p>{user}</p>
             <Link to="/catalogo" onClick={handlerClick}>
               Sair

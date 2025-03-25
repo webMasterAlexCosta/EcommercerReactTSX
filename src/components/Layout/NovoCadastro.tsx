@@ -177,14 +177,14 @@ const NovoCadastro: React.FC<NovoCadastroProps> = ({ isSubmitted }) => {
     };
 
     return (
-        <div className="dsc-login-form-container">
+        <div className="alex-login-form-container">
             {loading ? (
                 <Carregando title={textoCarregando} />
             ) : (
-                <form className="dsc-card dsc-form" onSubmit={handleCadastroSubmit}>
+                <form className="alex-card alex-form" onSubmit={handleCadastroSubmit}>
                     <PersonAdd sx={{ fontSize: "24px", color: "#007bff" }} />
                     <h2>Cadastro</h2>
-                    <div className="dsc-form-controls-container">
+                    <div className="alex-form-controls-container">
                         {/* Dados Pessoais */}
                         <div>
                             <label htmlFor="nome">
@@ -193,7 +193,7 @@ const NovoCadastro: React.FC<NovoCadastroProps> = ({ isSubmitted }) => {
                             </label>
                             <input
                                 name="nome"
-                                className={`dsc-form-control ${isSubmitted ? "dsc-input-error" : ""}`}
+                                className={`alex-form-control ${isSubmitted ? "alex-input-error" : ""}`}
                                 type="text"
                                 value={formData.nome}
                                 onChange={handleChange}
@@ -201,7 +201,7 @@ const NovoCadastro: React.FC<NovoCadastroProps> = ({ isSubmitted }) => {
                                 required
                             />
                             {isSubmitted && (
-                                <div className="dsc-form-error">Campo obrigatório</div>
+                                <div className="alex-form-error">Campo obrigatório</div>
                             )}
                         </div>
 
@@ -212,7 +212,7 @@ const NovoCadastro: React.FC<NovoCadastroProps> = ({ isSubmitted }) => {
                             </label>
                             <input
                                 name="email"
-                                className={`dsc-form-control ${isSubmitted ? "dsc-input-error" : ""}`}
+                                className={`alex-form-control ${isSubmitted ? "alex-input-error" : ""}`}
                                 type="email"
                                 value={formData.email}
                                 onChange={handleChange}
@@ -220,7 +220,7 @@ const NovoCadastro: React.FC<NovoCadastroProps> = ({ isSubmitted }) => {
                                 required
                             />
                             {isSubmitted && (
-                                <div className="dsc-form-error">Campo obrigatório</div>
+                                <div className="alex-form-error">Campo obrigatório</div>
                             )}
                         </div>
 
@@ -231,7 +231,7 @@ const NovoCadastro: React.FC<NovoCadastroProps> = ({ isSubmitted }) => {
                             </label>
                             <input
                                 name="telefone"
-                                className={`dsc-form-control ${isSubmitted ? "dsc-input-error" : ""}`}
+                                className={`alex-form-control ${isSubmitted ? "alex-input-error" : ""}`}
                                 type="text"
                                 value={formatTelefoneParaExibicao(formData.telefone)}
                                 onChange={handleChange}
@@ -240,7 +240,7 @@ const NovoCadastro: React.FC<NovoCadastroProps> = ({ isSubmitted }) => {
                                 maxLength={15}
                             />
 
-                            {isSubmitted && <div className="dsc-form-error">Campo obrigatório</div>}
+                            {isSubmitted && <div className="alex-form-error">Campo obrigatório</div>}
                         </div>
 
                         <div>
@@ -250,14 +250,14 @@ const NovoCadastro: React.FC<NovoCadastroProps> = ({ isSubmitted }) => {
                             </label>
                             <input
                                 name="dataNascimento"
-                                className={`dsc-form-control ${isSubmitted ? "dsc-input-error" : ""}`}
+                                className={`alex-form-control ${isSubmitted ? "alex-input-error" : ""}`}
                                 type="date"
                                 value={formData.dataNascimento}
                                 onChange={handleChange}
                                 required
                             />
                             {isSubmitted && (
-                                <div className="dsc-form-error">Campo obrigatório</div>
+                                <div className="alex-form-error">Campo obrigatório</div>
                             )}
                         </div>
 
@@ -269,7 +269,7 @@ const NovoCadastro: React.FC<NovoCadastroProps> = ({ isSubmitted }) => {
                             <div className="input-container">
                                 <input
                                     name="senha"
-                                    className={`dsc-form-control ${isSubmitted ? "dsc-input-error" : ""}`}
+                                    className={`alex-form-control ${isSubmitted ? "alex-input-error" : ""}`}
                                     type={isPasswordVisible.senha ? "text" : "password"}
                                     value={formData.senha}
                                     onChange={handleChange}
@@ -280,7 +280,7 @@ const NovoCadastro: React.FC<NovoCadastroProps> = ({ isSubmitted }) => {
                                     {isPasswordVisible.senhaAntiga ? <VisibilityOffIcon /> : <VisibilityIcon />}
                                 </span>
                                 {isSubmitted && (
-                                    <div className="dsc-form-error">Campo obrigatório</div>
+                                    <div className="alex-form-error">Campo obrigatório</div>
                                 )}
                             </div>
                         </div>
@@ -292,7 +292,7 @@ const NovoCadastro: React.FC<NovoCadastroProps> = ({ isSubmitted }) => {
                             </label>
                             <input
                                 name="cpf"
-                                className={`dsc-form-control ${isSubmitted ? "dsc-input-error" : ""}`}
+                                className={`alex-form-control ${isSubmitted ? "alex-input-error" : ""}`}
                                 type="text"
                                 value={formData.cpf}
                                 onChange={handleChange}
@@ -300,7 +300,7 @@ const NovoCadastro: React.FC<NovoCadastroProps> = ({ isSubmitted }) => {
                                 required
                             />
                             {isSubmitted && (
-                                <div className="dsc-form-error">Campo obrigatório</div>
+                                <div className="alex-form-error">Campo obrigatório</div>
                             )}
                         </div>
 
@@ -312,7 +312,7 @@ const NovoCadastro: React.FC<NovoCadastroProps> = ({ isSubmitted }) => {
                             </label>
                             <input
                                 name="cep"
-                                className={`dsc-form-control ${isSubmitted ? "dsc-input-error" : ""}`}
+                                className={`alex-form-control ${isSubmitted ? "alex-input-error" : ""}`}
                                 type="text"
                                 value={formData.endereco.cep}
                                 onChange={handleChange}
@@ -327,7 +327,7 @@ const NovoCadastro: React.FC<NovoCadastroProps> = ({ isSubmitted }) => {
                             </label>
                             <input
                                 name="numero"
-                                className={`dsc-form-control ${isSubmitted ? "dsc-input-error" : ""}`}
+                                className={`alex-form-control ${isSubmitted ? "alex-input-error" : ""}`}
                                 type="number"
                                 value={formData.endereco.numero}
                                 onChange={(e) => handleEnderecoChange(e, "numero")}
@@ -345,7 +345,7 @@ const NovoCadastro: React.FC<NovoCadastroProps> = ({ isSubmitted }) => {
                             </label>
                             <input
                                 name="logradouro"
-                                className={`dsc-form-control ${isSubmitted ? "dsc-input-error" : ""}`}
+                                className={`alex-form-control ${isSubmitted ? "alex-input-error" : ""}`}
                                 type="text"
                                 value={formData.endereco.logradouro}
                                 onChange={(e) => handleEnderecoChange(e, "logradouro")}
@@ -361,7 +361,7 @@ const NovoCadastro: React.FC<NovoCadastroProps> = ({ isSubmitted }) => {
                             </label>
                             <input
                                 name="bairro"
-                                className={`dsc-form-control ${isSubmitted ? "dsc-input-error" : ""}`}
+                                className={`alex-form-control ${isSubmitted ? "alex-input-error" : ""}`}
                                 type="text"
                                 value={formData.endereco.bairro}
                                 onChange={(e) => handleEnderecoChange(e, "bairro")}
@@ -377,7 +377,7 @@ const NovoCadastro: React.FC<NovoCadastroProps> = ({ isSubmitted }) => {
                             </label>
                             <input
                                 name="cidade"
-                                className={`dsc-form-control ${isSubmitted ? "dsc-input-error" : ""}`}
+                                className={`alex-form-control ${isSubmitted ? "alex-input-error" : ""}`}
                                 type="text"
                                 value={formData.endereco.cidade}
                                 onChange={(e) => handleEnderecoChange(e, "cidade")}
@@ -393,7 +393,7 @@ const NovoCadastro: React.FC<NovoCadastroProps> = ({ isSubmitted }) => {
                             </label>
                             <input
                                 name="uf"
-                                className={`dsc-form-control ${isSubmitted ? "dsc-input-error" : ""}`}
+                                className={`alex-form-control ${isSubmitted ? "alex-input-error" : ""}`}
                                 type="text"
                                 value={formData.endereco.uf}
                                 onChange={(e) => handleEnderecoChange(e, "uf")}
@@ -409,7 +409,7 @@ const NovoCadastro: React.FC<NovoCadastroProps> = ({ isSubmitted }) => {
                             </label>
                             <input
                                 name="complemento"
-                                className={`dsc-form-control ${isSubmitted ? "dsc-input-error" : ""}`}
+                                className={`alex-form-control ${isSubmitted ? "alex-input-error" : ""}`}
                                 type="text"
                                 value={formData.endereco.complemento}
                                 onChange={(e) => handleEnderecoChange(e, "complemento")}
@@ -417,7 +417,7 @@ const NovoCadastro: React.FC<NovoCadastroProps> = ({ isSubmitted }) => {
                             />
                         </div>
                     </div>
-                    <button type="submit" className="dsc-btn dsc-btn-blue" disabled={loading}>
+                    <button type="submit" className="alex-btn alex-btn-blue" disabled={loading}>
                         Enviar
                     </button>
                 </form>

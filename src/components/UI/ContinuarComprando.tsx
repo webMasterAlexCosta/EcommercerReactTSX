@@ -5,7 +5,7 @@ interface IContinuarComprando{
     title:string
     className?: string;
 }
-const ContinuarComprando=({link,title,className="dsc-btn dsc-btn-white"}:IContinuarComprando)=>{
+const ContinuarComprando=({link,title,className="alex-btn alex-btn-white"}:IContinuarComprando)=>{
     return(
         <>
         <Link to={link}>

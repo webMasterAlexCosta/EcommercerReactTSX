@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { ProdutoDTO } from "../../../models/dto/ProdutosDTO"; 
+import { ProdutoDTO } from "../../../models/dto/ProdutosDTO";
 import "./styles.css";
 import { useEffect, useState } from "react";
 import * as produtoService from "../../../services/ProdutoService";
@@ -7,7 +7,7 @@ import { Alert } from "@mui/material";
 
 const Formulario = () => {
     const { id } = useParams();
-    const navigate = useNavigate(); 
+    const navigate = useNavigate();
 
     const [produto, setProduto] = useState<ProdutoDTO | null>(null);
     const [categoria, setCategoria] = useState<number>(0);
@@ -57,7 +57,7 @@ const Formulario = () => {
         if (!produto) return;
 
         const updatedProduto: ProdutoDTO = {
-            ...produto, 
+            ...produto,
             nome: nomeProduto,
             preco: precoProduto,
             imgUrl: imagemProduto,
@@ -93,21 +93,21 @@ const Formulario = () => {
 
     const handleAlertClose = () => {
         if (alertData?.icon === "success") {
-            navigate("/Administrativo/Listagem"); 
+            navigate("/Administrativo/Listagem");
         }
-        setAlertData(null); 
+        setAlertData(null);
     };
 
     return (
         <main>
-            <section id="product-form-section" className="dsc-container">
-                <div className="dsc-product-form-container">
-                    <form className="dsc-card dsc-form" onSubmit={handleSubmit}>
+            <section id="product-form-section" className="alex-container">
+                <div className="alex-product-form-container">
+                    <form className="alex-card alex-form" onSubmit={handleSubmit}>
                         <h2>Dados do produto</h2>
-                        <div className="dsc-form-controls-container">
+                        <div className="alex-form-controls-container">
                             <div>
                                 <input
-                                    className="dsc-form-control"
+                                    className="alex-form-control"
                                     type="text"
                                     placeholder="Nome"
                                     value={nomeProduto}
@@ -116,7 +116,7 @@ const Formulario = () => {
                             </div>
                             <div>
                                 <input
-                                    className="dsc-form-control"
+                                    className="alex-form-control"
                                     type="number"
                                     placeholder="Preço"
                                     value={precoProduto}
@@ -125,7 +125,7 @@ const Formulario = () => {
                             </div>
                             <div>
                                 <input
-                                    className="dsc-form-control"
+                                    className="alex-form-control"
                                     type="text"
                                     placeholder="Imagem"
                                     value={imagemProduto}
@@ -134,7 +134,7 @@ const Formulario = () => {
                             </div>
                             <div>
                                 <select
-                                    className="dsc-form-control dsc-select"
+                                    className="alex-form-control alex-select"
                                     value={categoria}
                                     required
                                     onChange={(e) => setCategoria(Number(e.target.value))}
@@ -151,7 +151,7 @@ const Formulario = () => {
                             </div>
                             <div>
                                 <textarea
-                                    className="dsc-form-control dsc-textarea"
+                                    className="alex-form-control alex-textarea"
                                     placeholder="Descrição"
                                     value={descricaoProduto}
                                     onChange={(e) => setDescricaoProduto(e.target.value)}
@@ -159,11 +159,15 @@ const Formulario = () => {
                             </div>
                         </div>
 
-                        <div className="dsc-product-form-buttons">
-                            <button type="reset" className="dsc-btn dsc-btn-white">
+                        <div className="alex-product-form-buttons">
+                            <button
+                                type="button"
+                                className="alex-btn alex-btn-white"
+                                onClick={() => navigate(-1)}
+                            >
                                 Cancelar
                             </button>
-                            <button type="submit" className="dsc-btn dsc-btn-blue">
+                            <button type="submit" className="alex-btn alex-btn-blue">
                                 Salvar
                             </button>
                         </div>
@@ -174,7 +178,7 @@ const Formulario = () => {
             {alertData && (
                 <Alert
                     severity={alertData.icon}
-                    onClose={handleAlertClose} 
+                    onClose={handleAlertClose}
                 >
                     {alertData.text}
                 </Alert>

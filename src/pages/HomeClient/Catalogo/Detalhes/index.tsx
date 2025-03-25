@@ -84,7 +84,7 @@ const Detalhes = () => {
     loading ? (
       <Carregando title="Carregando o Produto" />
     ) : (
-      <section id="product-details-section" className="dsc-container">
+      <section id="product-details-section" className="alex-container">
         {alertData && <Alert {...alertData} onClose={() => setAlertData(null)} />}
 
         {produtoAtual ? (
@@ -93,20 +93,20 @@ const Detalhes = () => {
           <p>Produto não encontrado!</p> 
         )}
 
-        <div className="dsc-btn-page-container">
-          <ButtonActions nome="Comprar" onNewValue={salvaProduto} className="dsc-btn dsc-btn-blue" />
+        <div className="alex-btn-page-container">
+          <ButtonActions nome="Comprar" onNewValue={salvaProduto} className="alex-btn alex-btn-blue" />
           <Link to="/Catalogo">
-            <ButtonActions nome="Voltar ao Catálogo" className="dsc-btn dsc-btn-white" />
+            <ButtonActions nome="Voltar ao Catálogo" className="alex-btn alex-btn-white" />
           </Link>
           <div style={{ display: "flex", justifyContent: "space-between", gap: "10px" }}>
             {lastProduto && (
               <Link to={`/Catalogo/Detalhes/${lastProduto.id}`}>
-                <ButtonActions nome="Produto Anterior" className="dsc-btn dsc-btn-white" />
+                <ButtonActions nome="Produto Anterior" className="alex-btn alex-btn-white" />
               </Link>
             )}
             {nextProduto && (
               <Link to={`/Catalogo/Detalhes/${nextProduto.id}`}>
-                <ButtonActions nome="Próximo Produto" className="dsc-btn dsc-btn-blue" />
+                <ButtonActions nome="Próximo Produto" className="alex-btn alex-btn-blue" />
               </Link>
             )}
           </div>

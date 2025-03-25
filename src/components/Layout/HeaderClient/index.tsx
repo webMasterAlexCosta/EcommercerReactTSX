@@ -73,8 +73,8 @@ const HeaderClient = () => {
 
 
   return (
-    <header className="dsc-header-client">
-      <nav className="dsc-container">
+    <header className="alex-header-client">
+      <nav className="alex-container">
         <NavLink to="/" style={getIsActive}>
           <Home style={{ fontSize: 40, color: 'black' }} />
           <h3>Inicio</h3>
@@ -85,7 +85,7 @@ const HeaderClient = () => {
           <h3>Catalogo</h3>
         </NavLink>
 
-        <div className="dsc-navbar-right">
+        <div className="alex-navbar-right">
           {iconAdminContext === "CLIENTE" && (
             <NavLink to="/perfil" style={getIsActive}>
               <AccountCircle style={{ fontSize: 40, color: 'black' }} />
@@ -94,7 +94,7 @@ const HeaderClient = () => {
           )}
 
           <NavLink to="/carrinho" style={getIsActive}>
-            <div className="dsc-menu-item">
+            <div className="alex-menu-item">
               <CartIcon />
             </div>
             <h3>Carrinho</h3>
