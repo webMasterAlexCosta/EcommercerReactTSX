@@ -66,11 +66,16 @@ const Detalhes = () => {
     if (produtoExistente) {
       setAlertData({ title: "Erro ao adicionar", text: "Produto já está no carrinho!", icon: "error" });
     } else {
-      const carrinhoItem = {
-        ...produtoAtual,
-        categorias: produtoAtual.categorias.map(categoria => categoria.nome)
-      };
-      carrinhoExistente.push(carrinhoItem);
+      if (produtoAtual.id !== undefined) {
+        const carrinhoItem = {
+          ...produtoAtual,
+          id: produtoAtual.id,
+          categorias: produtoAtual.categorias.map(categoria => categoria.nome)
+        };
+        carrinhoExistente.push(carrinhoItem);
+      } else {
+        setAlertData({ title: "Erro", text: "Produto inválido.", icon: "error" });
+      }
       carinhoService.setCarrinho(carrinhoExistente);
 
       setAlertData({ title: "Sucesso", text: "Produto adicionado ao carrinho!", icon: "success" });
