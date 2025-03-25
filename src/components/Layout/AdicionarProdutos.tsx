@@ -3,6 +3,7 @@ import { ShoppingCartOutlined } from "@mui/icons-material";
 import { ContinuarComprando } from "../UI/ContinuarComprando";
 
 const AdicionarProdutos = () => {
+  
   return (
     <>
       <section className="empty-cart">

@@ -6,6 +6,7 @@ interface DetalheProp{
 }
 
 const DetalheProduto=({produtoAtual}:DetalheProp)=>{
+  
     return (
         <>
          <div className="dsc-card dsc-mb20">

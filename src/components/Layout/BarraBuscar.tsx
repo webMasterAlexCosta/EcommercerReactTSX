@@ -11,7 +11,7 @@ const BarraBuscar = ({ onSearch }: SearchProps) => {
     event.preventDefault();
     onSearch(textInput);
   };
-
+  
   return (
     <form className="dsc-search-bar" onSubmit={handleSubmit}>
       <button className="pesquisa-submit"  type="submit">🔎︎</button>

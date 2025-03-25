@@ -17,7 +17,7 @@ let errorAlreadyShown = false;
 
 axios.interceptors.response.use(
   function (response) {
-    console.log(response)
+  //  console.log(response)
     return response;
   },
   function (error) {
@@ -27,7 +27,7 @@ axios.interceptors.response.use(
       if (statusCode === 401) {
         if (!errorAlreadyShown) {
           errorAlreadyShown = true; 
-          userService.logoutService()
+         userService.logoutService()
           Swal.fire({
             title: "Erro de Autenticação!",
             text: "Você precisa estar logado para acessar esta página. Redirecionando para o login...",
@@ -36,7 +36,7 @@ axios.interceptors.response.use(
           }).then(() => {
             setTimeout(() => {
               window.location.href = "/login";
-            }, 1000); 
+            }, 2000); 
           });
         }
       } else {

@@ -18,11 +18,11 @@ const PrivateRouteClient: React.FC<Props> = ({ children }: Props) => {
             try {
                 if (authService.isAuthenticated()) {
                     const userProfile = await userService.getUserService();
-                    console.log("Dados do usuário:", userProfile);
+                   // console.log("Dados do usuário:", userProfile);
                     setUser(userProfile);
                 }
-            } catch (error) {
-                console.error("Erro ao carregar usuário:", error);
+            } catch {
+             //   console.error("Erro ao carregar usuário:", error);
                 setUser(null);
             } finally {
                 setIsLoading(false);

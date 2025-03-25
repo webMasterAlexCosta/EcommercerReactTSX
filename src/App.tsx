@@ -1,6 +1,9 @@
 import { BrowserRouter, Routes, Route, Outlet, Link, useLocation } from 'react-router-dom';
 import './App.css';
-import { useEffect, useState } from 'react';
+import {  useState } from 'react';
+import UserContext from "./data/UserContext"
+import ContextIsLogin from './data/LoginContext';
+import IconAdminContext, { PerfilContext } from './data/IconAdminContext';
 import ContextCartCount from './data/CartCountContext';
 import Carrinho from './pages/HomeClient/Carrinho';
 import Catalogo from './pages/HomeClient/Catalogo';
@@ -10,8 +13,7 @@ import Listagem from './pages/HomeAdminstrativo/Listagem';
 import Detalhes from './pages/HomeClient/Catalogo/Detalhes';
 import CriarNovoProduto from './pages/HomeAdminstrativo/CriarNovoFormulario/index';
 import Formulario from './pages/HomeAdminstrativo/Formulario';
-import ContextIsLogin from './data/LoginContext';
-import IconAdminContext, { PerfilContext } from './data/IconAdminContext';
+
 import { PrivateRouteAdmin } from './components/Private/Router/ADMIN/index';
 import { PrivateRouteClient } from './components/Private/Router/CLIENTE/index';
 import { Perfil } from './pages/HomeClient/Perfil';
@@ -22,68 +24,40 @@ import CertificadoDetailPage from './components/Layout/CertificadoPage/Certifica
 import CardPaymentComponent from './components/UI/CardPaymentComponent';
 import { MudarSenha } from './components/Layout/MudarSenha/index';
 import { NovoEndereco } from './components/Layout/NovoEndereco';
-import * as userService from './services/UserServices';
-import * as authService from './services/AuthService';
 import { Usuario } from './models/dto/CredenciaisDTO';
-import { Carregando } from './components/UI/Carregando';
 
-const MainLayout = ({ user }: { user: Usuario | null }) => {
+const MainLayout = () => {
   const location = useLocation();
+  
+  const isHomePage = location.pathname === '/';
   
   return (
     <>
-      <Header user={user} />
-      {location.pathname === '/' && <PaginaAviso />}
-      <Outlet />
+      <Header />
+      {isHomePage && <PaginaAviso />} 
+      <Outlet />  
     </>
   );
 };
 
+
 const App = () => {
   const [contextCartCount, setContextCartCount] = useState<number>(0);
+  const [usuario, setUsuario] = useState<Usuario | null>(null);
   const [contextIsLogin, setContextIsLogin] = useState<boolean>(false);
   const [iconAdminContext, setIconAdminContext] = useState<PerfilContext>(null);
-  const [user, setUser] = useState<Usuario | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  useEffect(() => {
-    const loadUser = async () => {
-      setIsLoading(true);
-      
-      try {
-        if (authService.isAuthenticated()) {
-          // Se autenticado, busca os dados do usuário
-          const userProfile = await userService.getUserService();
-          setUser(userProfile);
-          setContextIsLogin(true);
-        } else {
-          // Se não autenticado, limpa o estado
-          setUser(null);
-          setContextIsLogin(false);
-        }
-      } catch (error) {
-        console.error("Erro ao carregar usuário:", error);
-        setUser(null);
-        setContextIsLogin(false);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    loadUser();
-  }, []); // Adicione dependências se necessário (ex: quando o token muda)
-
-  if (isLoading) {
-    return <Carregando title='aguarde' />;
-  }
+ 
+ 
   return (
+    <UserContext.Provider value={{usuario,setUsuario}}>
     <IconAdminContext.Provider value={{ iconAdminContext, setIconAdminContext }}>
       <ContextIsLogin.Provider value={{ contextIsLogin, setContextIsLogin }}>
         <ContextCartCount.Provider value={{ contextCartCount, setContextCartCount }}>
           <BrowserRouter>
             <div className="app-container">
               <Routes>
-                <Route path="/" element={<MainLayout user={user} />}>
+                <Route path="/" element={<MainLayout/>}>
                   <Route path="/Perfil" element={<PrivateRouteClient><Perfil /></PrivateRouteClient>} >
                     <Route path="MudarSenha" element={<PrivateRouteClient><MudarSenha /></PrivateRouteClient>} />
                     <Route path="NovoEndereco" element={<PrivateRouteClient><NovoEndereco /></PrivateRouteClient>} />
@@ -111,6 +85,7 @@ const App = () => {
         </ContextCartCount.Provider>
       </ContextIsLogin.Provider>
     </IconAdminContext.Provider>
+    </UserContext.Provider>
   );
 };
 

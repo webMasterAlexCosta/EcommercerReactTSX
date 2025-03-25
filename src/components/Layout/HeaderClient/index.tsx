@@ -1,62 +1,55 @@
 import './Styles.css';
-import { NavLink, useNavigate } from "react-router-dom";
-import { useContext, useEffect, useState } from 'react';
+import { NavLink } from "react-router-dom";
+import { useContext, useEffect } from 'react';
 import ContextIsLogin from '../../../data/LoginContext';
 import * as userService from "../../../services/UserServices";
 import * as authService from "../../../services/AuthService";
 import IconAdminContext from '../../../data/IconAdminContext';
 import { Login, Logout, Home, MenuBook, AccountCircle } from '@mui/icons-material';
 import { CartIcon } from '../../UI/CartIcon';
-import { Usuario } from './../../../models/dto/CredenciaisDTO';
+import UsuarioContext from '../../../data/UserContext';
 
 const HeaderClient = () => {
   const { contextIsLogin, setContextIsLogin } = useContext(ContextIsLogin);
   const { iconAdminContext, setIconAdminContext } = useContext(IconAdminContext);
-  const navigate = useNavigate();
-  const [user, setUser] = useState<Usuario | null>()
-
+  const {usuario , setUsuario} = useContext(UsuarioContext)
+  console.log("oi")
   useEffect(() => {
-    const payload = authService.getAccessTokenPayload();
+    const payload = userService.getTokenService() ? authService.getAccessTokenPayload() : null;
 
-
-    if(authService.getAccessTokenPayload()){
-
-    const buscar = async () => {
-
-
-      const token = userService.getTokenService();
-      setContextIsLogin(!!token);
-
-      const userProfile = await userService.getUserService()
-      setUser(userProfile)
-      if (userProfile) {
-        userService.setUserService()
+    if (payload) {
+      const buscar = async () => {
+        const token = userService.getTokenService();
+        setContextIsLogin(!!token);
+     
+        const userProfile = await userService.getUserService()
+        setUsuario(userProfile)
+       
       }
+      buscar()
+
+      if (payload && !authService.isAuthenticated()) {
+        setContextIsLogin(true);
+        userService.logoutService();
+      }
+
+      if (usuario?.perfil?.includes("ADMIN")) {
+        setIconAdminContext("ADMIN");
+      } else if (usuario?.perfil?.includes("CLIENTE")) {
+        setIconAdminContext("CLIENTE");
+      } else {
+        setIconAdminContext(null);
+      }
+
+
     }
-    buscar()
+  }, [setContextIsLogin, setIconAdminContext, setUsuario]);
 
-    if (payload && !authService.isAuthenticated()) {
-      setContextIsLogin(true);
-      userService.logoutService();
-    }
-
-    if (user?.perfil?.includes("ADMIN")) {
-      setIconAdminContext("ADMIN");
-    } else if (user?.perfil?.includes("CLIENTE")) {
-      setIconAdminContext("CLIENTE");
-    } else {
-      setIconAdminContext(null);
-    }
-
-
-    /** posso usar esse recurso, mas no react vou usar navigate
-     window.addEventListener("storage", checkLoginStatus); // Escuta mudanças no storage
- 
-     return () => window.removeEventListener('storage', checkLoginStatus); // Limpa o event listener ao desmontar
-      *  */
-    }
-  }, [setContextIsLogin, setIconAdminContext, navigate,user]);
-
+      /** posso usar esse recurso, mas no react vou usar navigate
+       window.addEventListener("storage", checkLoginStatus); // Escuta mudanças no storage
+   
+       return () => window.removeEventListener('storage', checkLoginStatus); // Limpa o event listener ao desmontar
+        *  */
   const getIsActive = ({ isActive }: { isActive: boolean }) => (isActive ? { color: "red" } : { color: "black" });
   function handleOnclick(event: React.MouseEvent<HTMLElement> | React.MouseEvent<SVGSVGElement, MouseEvent>, tipo: string): void {
     if (tipo === "logout") {
@@ -69,9 +62,9 @@ const HeaderClient = () => {
 
 
 
-    if (user?.perfil.includes("ADMIN")) {
+    if (usuario?.perfil.includes("ADMIN")) {
       setIconAdminContext("ADMIN");
-    } else if (user?.perfil.includes("CLIENTE")) {
+    } else if (usuario?.perfil.includes("CLIENTE")) {
       setIconAdminContext("CLIENTE");
     } else {
       setIconAdminContext(null);

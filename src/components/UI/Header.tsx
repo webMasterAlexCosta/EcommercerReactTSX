@@ -3,50 +3,57 @@ import HeaderAdmin from '../Layout/HeaderAdmin';
 import HeaderClient from '../Layout/HeaderClient';
 import { useContext } from 'react';
 import ContextIsLogin from './../../data/LoginContext';
-import * as userService from '../../services/UserServices';
-import { Usuario } from '../../models/dto/CredenciaisDTO';
-import * as AuthService from '../../services/AuthService';
-interface Props {
-  user: Usuario | null;
-}
+import UserContext from './../../data/UserContext';
+import { Carregando } from './Carregando'; 
+import { isAuthenticated } from '../../services/AuthService';
+import { getUserService } from '../../services/UserServices';
+import { TEXTO_PADRAO_SOLICITACAO } from '../../utils/system';
 
-const Header = (user: Props) => {
+const Header = () => {
   const [isAdmin, setIsAdmin] = useState<string | null>(null);
   const [viewerHeaderClient, setViewerHeaderClient] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);  
+
   const { setContextIsLogin } = useContext(ContextIsLogin);
-  const [usuario, setUsuario] = useState<Usuario | null>(user.user);
-
+  const { usuario, setUsuario } = useContext(UserContext);
+ 
   useEffect(() => {
-   // userService.setUserService()
-    const buscando = async () => {
-     if(AuthService.isAuthenticated()){
-      const buscandoUsuario = await userService.getUserService();
-      setUsuario(buscandoUsuario);
-    
-     }else{
+    if (!isAuthenticated()) {
+      setUsuario(null);
+      setLoading(false);  
       return;
-     }
+    }
+
+    const fetchUserData = async () => {
+      const userData = await getUserService();
+      setUsuario(userData);
+      setLoading(false);  
     };
-    buscando();
-  }, [user]);
+
+    fetchUserData();
+  }, [setUsuario]);
 
   useEffect(() => {
-
     if (usuario?.perfil) {
-      setIsAdmin(usuario?.perfil.includes("ADMIN") ? "ADMIN" : "CLIENTE");
-   
+      setIsAdmin(usuario.perfil.includes('ADMIN') ? 'ADMIN' : 'CLIENTE');
     }
   }, [usuario]);
 
+  if (loading) {
+    return <Carregando title={TEXTO_PADRAO_SOLICITACAO} />; 
+  }
+
   return (
     <>
-      {isAdmin === "ADMIN" && viewerHeaderClient === true
-        ? <HeaderAdmin user={usuario?.nome}
+      {isAdmin === 'ADMIN' && viewerHeaderClient === true ? (
+        <HeaderAdmin
+          user={usuario?.nome}
           setViewerHeaderClient={setViewerHeaderClient}
           setContextIsLogin={setContextIsLogin}
         />
-        : <HeaderClient />
-      }
+      ) : (
+        <HeaderClient />
+      )}
     </>
   );
 };

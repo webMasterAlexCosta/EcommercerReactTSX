@@ -13,6 +13,7 @@ import { isAuthenticated } from "../services/AuthService";
 import { CriptografiaAES } from "../models/domain/CriptografiaAES";
 
 const getMeRepository = async () => {
+  if(isAuthenticated()){
   const config: AxiosRequestConfig = {
     url: "/api/users/me",
     withCredentials: true,
@@ -25,7 +26,7 @@ const getMeRepository = async () => {
     console.error(error);
     throw error;
   }
-};
+}};
 const recuperarSenhaRepository = async (email: string, cpf: string) => {
   const config: AxiosRequestConfig = {
     method: "POST",
@@ -90,32 +91,29 @@ const getTokenRepository = () => {
 };
 
 const setUserRepository = async () => {
+  if(isAuthenticated()){
   const encryptedData = sessionStorage.getItem(DADOCIFRAFADO);
   const chaveBase64 = sessionStorage.getItem(CHAVECIFRADO);
     if(encryptedData ===null && chaveBase64 ===null){
     const usuario = await getMeRepository();
-    sessionStorage.setItem(DADOCIFRAFADO, usuario.data.encryptedData);
+    sessionStorage.setItem(DADOCIFRAFADO, usuario?.data.encryptedData);
     sessionStorage.setItem(CHAVECIFRADO, usuario?.data?.chaveBase64);
     if (!usuario?.data?.encryptedData || !usuario?.data?.chaveBase64) {
-     // throw new Error("Dados criptografados ou chave não foram retornados corretamente.");
+      throw new Error("Dados criptografados ou chave não foram retornados corretamente.");
     }
   }
-   
-
    // console.log("🔐 Dados criptografados armazenados com sucesso!");
-
     return Promise.resolve();
-  
+}
 };
-
-
 const getUserRepository = async () => {
+  await setUserRepository()
   const encryptedData = sessionStorage.getItem(DADOCIFRAFADO);
   const chaveBase64 = sessionStorage.getItem(CHAVECIFRADO);
 
   if (!encryptedData || !chaveBase64) {
     //console.error("⚠️ Dados ou chave ausentes.");
-    return Promise.resolve({ perfil: [] }); // Retorna uma Promise resolvida com objeto válido
+    return Promise.resolve({ perfil: [] }); 
   }
 
   try {
@@ -127,7 +125,7 @@ const getUserRepository = async () => {
     return Promise.resolve({ ...user, perfil: user.perfil || [] }); // Retorna uma Promise resolvida com os dados
   } catch  {
     // console.error("Erro ao descriptografar os dados:", error);
-    return Promise.resolve({ perfil: [] }); // Retorna uma Promise resolvida com objeto válido em caso de erro
+    return Promise.resolve({ perfil: [] }); // 
   }
 };
 
