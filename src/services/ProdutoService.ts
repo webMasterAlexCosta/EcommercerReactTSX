@@ -68,6 +68,14 @@ async function updateProduto(produto: ProdutoDTO) {
   return produtoRepository.updatedProduto(produto);
 }
 
+const novoProduto=async(dto:ProdutoDTO)=>{
+  const response = await produtoRepository.novoProduto(dto)
+  return response
+}
+const findAllCategories=async()=>{
+  const response = await produtoRepository.findAllCategories()
+  return response.data
+}
 export {
   findAll,
   findById,
@@ -75,4 +83,6 @@ export {
   subTotal,
   findPageRequest,
   updateProduto,
+  novoProduto,
+  findAllCategories
 };

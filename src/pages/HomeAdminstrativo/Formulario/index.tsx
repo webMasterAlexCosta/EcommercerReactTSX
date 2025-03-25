@@ -3,18 +3,25 @@ import { ProdutoDTO } from "../../../models/dto/ProdutosDTO";
 import "./styles.css";
 import { useEffect, useState } from "react";
 import * as produtoService from "../../../services/ProdutoService";
+import { Alert } from "@mui/material";
 
 const Formulario = () => {
     const { id } = useParams();
     const navigate = useNavigate(); 
 
     const [produto, setProduto] = useState<ProdutoDTO | null>(null);
-
     const [categoria, setCategoria] = useState<number>(0);
     const [nomeProduto, setNomeProduto] = useState<string>("");
     const [precoProduto, setPrecoProduto] = useState<number>(0);
     const [imagemProduto, setImagemProduto] = useState<string>("");
     const [descricaoProduto, setDescricaoProduto] = useState<string>("");
+
+    // Estado para o alerta
+    const [alertData, setAlertData] = useState<{
+        title: string;
+        text: string;
+        icon: "success" | "error" | "warning" | "info";
+    } | null>(null);
 
     useEffect(() => {
         const buscarProduto = async () => {
@@ -43,7 +50,7 @@ const Formulario = () => {
         }
     }, [id, navigate]);
 
-   
+    // Função de envio do formulário
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
@@ -59,11 +66,36 @@ const Formulario = () => {
         };
 
         try {
-             produtoService.updateProduto(updatedProduto);
-            navigate("/Administrativo/AdminHome/Listagem");
+            const response = await produtoService.updateProduto(updatedProduto);
+
+            if (response?.status === 200) {
+                setAlertData({
+                    title: "Produto Atualizado",
+                    text: "O produto foi atualizado com sucesso!",
+                    icon: "success"
+                });
+            } else {
+                setAlertData({
+                    title: "Erro",
+                    text: "Houve um erro ao atualizar o produto.",
+                    icon: "error"
+                });
+            }
         } catch (error) {
             console.error("Erro ao atualizar produto:", error);
+            setAlertData({
+                title: "Erro",
+                text: "Ocorreu um erro ao tentar atualizar o produto. Tente novamente.",
+                icon: "error"
+            });
         }
+    };
+
+    const handleAlertClose = () => {
+        if (alertData?.icon === "success") {
+            navigate("/Administrativo/Listagem"); 
+        }
+        setAlertData(null); 
     };
 
     return (
@@ -138,6 +170,15 @@ const Formulario = () => {
                     </form>
                 </div>
             </section>
+
+            {alertData && (
+                <Alert
+                    severity={alertData.icon}
+                    onClose={handleAlertClose} 
+                >
+                    {alertData.text}
+                </Alert>
+            )}
         </main>
     );
 };
