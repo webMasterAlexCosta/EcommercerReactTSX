@@ -81,6 +81,14 @@ const deleteProduto=async(id : number | undefined)=>{
   const respose=  produtoRepository.deleteProduto(id)
   return respose
 }
+
+const savarProdutoLocal = (prod: ProdutoDTO): ReturnType<typeof produtoRepository.savarProdutoLocal> => {
+  return produtoRepository.savarProdutoLocal(prod)
+}
+const getProdutoLocal = () => {
+ 
+  return produtoRepository.getProdutoLocal();
+}
 export {
   findAll,
   findById,
@@ -91,4 +99,6 @@ export {
   novoProduto,
   findAllCategories,
   deleteProduto,
+  savarProdutoLocal,
+  getProdutoLocal
 };

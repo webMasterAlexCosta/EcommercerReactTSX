@@ -21,9 +21,9 @@ const PaginaAviso: React.FC = () => {
     );
   };
   return (
-    <div className="welcome-container">
+    <div className="container">
       {/* Header */}
-      <header className="welcome-header">
+      <header className="header">
        
        <h1> <p className="sub-title">Este projeto é fictício. Nada é Real, sinta se a vontade pra explorar</p></h1>
       </header>
@@ -36,7 +36,7 @@ const PaginaAviso: React.FC = () => {
             Aqui você encontrará soluções inovadoras, designs modernos e uma experiência única.
           </p>
           <Link to="/Catalogo" >
-          <button className="cta-button">Começar Agora</button>
+          <button className="cta-button">Projeto 1</button>
           </Link>
          
         </div>

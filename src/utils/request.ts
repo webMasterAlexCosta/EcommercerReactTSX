@@ -49,6 +49,9 @@ axios.interceptors.response.use(
         icon: "error",
         confirmButtonText: "OK",
       });
+      setTimeout(() => {
+        window.location.reload();
+         }, 3000);
     }
     /*
         caso eu queria propagar o erro pro catch do codigo uso

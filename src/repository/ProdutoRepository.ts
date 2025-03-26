@@ -1,7 +1,7 @@
 import { AxiosRequestConfig } from "axios";
 import { ProdutoDTO } from "../models/dto/ProdutosDTO";
 import requestBackEnd from "../utils/request";
-import { BUSCAR_LISTA_CATEGORIAS,  CADASTRO_PRODUTO } from "../utils/system";
+import { BUSCAR_LISTA_CATEGORIAS,  CADASTRO_PRODUTO, PRODUTO_KEY } from "../utils/system";
 import { isAuthenticated } from "../services/AuthService";
 import { getUserService } from "../services/UserServices";
 
@@ -93,6 +93,13 @@ const deleteProduto=(id: number | undefined)=>{
     }
     return requestBackEnd(config)
 }
+const savarProdutoLocal = (prod: ProdutoDTO): void => {
+  return localStorage.setItem(PRODUTO_KEY, JSON.stringify(prod))
+}
+const getProdutoLocal = () => {
+  const produto = localStorage.getItem(PRODUTO_KEY);
+  return produto ? JSON.parse(produto) : null;
+}
 export {
   findAll,
   findById,
@@ -103,5 +110,7 @@ export {
   updatedProduto,
   novoProduto,
   findAllCategories,
-  deleteProduto
+  deleteProduto,
+  savarProdutoLocal,
+  getProdutoLocal
 };
