@@ -1,10 +1,5 @@
 import { BrowserRouter, Routes, Route, Outlet, Link, useLocation } from 'react-router-dom';
 import './App.css';
-import { useState } from 'react';
-import UserContext from "./data/UsuarioContext"
-import ContextIsLogin from './data/LoginContext';
-import IconAdminContext, { PerfilContext } from './data/IconAdminContext';
-import ContextCartCount from './data/CartCountContext';
 import Carrinho from './pages/HomeClient/Carrinho';
 import Catalogo from './pages/HomeClient/Catalogo';
 import Login from './pages/Login/Login';
@@ -23,8 +18,7 @@ import CertificadoDetailPage from './components/Layout/CertificadoPage/Certifica
 import CardPaymentComponent from './components/UI/CardPaymentComponent';
 import { MudarSenha } from './components/Layout/MudarSenha/index';
 import { NovoEndereco } from './components/Layout/NovoEndereco';
-import { Usuario } from './models/dto/CredenciaisDTO';
-import { HorarioBuscaPedidoContext } from './data/HorarioBuscaPedidoContext';
+import ContextProviders from './data/Contextos';
 
 const MainLayout = () => {
   const location = useLocation();
@@ -40,19 +34,9 @@ const MainLayout = () => {
 };
 
 const App = () => {
-  const [contextCartCount, setContextCartCount] = useState<number>(0);
-  const [usuario, setUsuario] = useState<Usuario | null>(null);
-  const [contextIsLogin, setContextIsLogin] = useState<boolean>(false);
-  const [iconAdminContext, setIconAdminContext] = useState<PerfilContext>(null);
-  const [horarioBusca, setHorarioBusca] = useState<Date>(new Date());
-  const [ultimaBusca, setUltimaBusca] = useState<Date>(new Date());
-
+  
   return (
-    <HorarioBuscaPedidoContext.Provider value={{ horarioBusca, setHorarioBusca, ultimaBusca, setUltimaBusca }}>
-      <UserContext.Provider value={{ usuario, setUsuario }}>
-        <IconAdminContext.Provider value={{ iconAdminContext, setIconAdminContext }}>
-          <ContextIsLogin.Provider value={{ contextIsLogin, setContextIsLogin }}>
-            <ContextCartCount.Provider value={{ contextCartCount, setContextCartCount }}>
+    <ContextProviders>
               <BrowserRouter>
                 <div className="app-container">
                   <Routes>
@@ -80,11 +64,7 @@ const App = () => {
                   </Routes>
                 </div>
               </BrowserRouter>
-            </ContextCartCount.Provider>
-          </ContextIsLogin.Provider>
-        </IconAdminContext.Provider>
-      </UserContext.Provider>
-    </HorarioBuscaPedidoContext.Provider>
+              </ContextProviders>
   );
 };
 export default App;
