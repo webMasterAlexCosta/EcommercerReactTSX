@@ -22,3 +22,4 @@ export const CHAVECIFRADO="chaveBase64"
 export const FOTO_PERFIL="br.com.alexcosta/foto"
 export const CADASTRO_PRODUTO="/api/produtos/cadastro"
 export const BUSCAR_LISTA_CATEGORIAS = "/api/produtos/categorias"
+export const TEMPO_DE_BUSCA_PRODUTOS = 3000000

@@ -7,6 +7,7 @@ import { BarraBuscar } from "../../../components/Layout/BarraBuscar";
 import useCarrinho from "../../../hooks/useCarrinho";
 import { HorarioBuscaPedidoContext } from "../../../data/HorarioBuscaPedidoContext";
 import { ProdutoDTO } from "../../../models/dto/ProdutosDTO";
+import { TEMPO_DE_BUSCA_PRODUTOS } from "../../../utils/system";
 
 const Catalogo = () => {
   const [produtos, setProdutos] = useState<ProdutoDTO[]>([]);
@@ -14,7 +15,7 @@ const Catalogo = () => {
   const [searchName, setSearchName] = useState('');
   const location = useLocation();
   const { loading, setLoading } = useCarrinho();
-  const { setUltimaBusca } = useContext(HorarioBuscaPedidoContext);
+  const { setUltimaBusca, ultimaBusca } = useContext(HorarioBuscaPedidoContext);
   const [carregarMais, setCarregarMais] = useState("Carregar Mais");
 
   const isDetailsPage = location.pathname.includes("/Catalogo/Detalhes");
@@ -72,19 +73,30 @@ const Catalogo = () => {
 
   useEffect(() => {
     buscarProdutos(); 
-  }, [page, searchName]); 
+  }, [page, searchName]);
 
   const carregarMaisProdutos = async () => {
     setCarregarMais("Aguarde");
-    setPage((prevPage) => prevPage + 1);
+    setPage((prevPage) => prevPage + 1); 
     const response = await produtoService.findAll(page + 1); 
     const produtosRecebidos = response.data.content ?? response.data;
     const produtosLocal = produtoService.getProdutoLocal();
     const localProdutos = produtosLocal && produtosLocal.content ? produtosLocal.content : [];
     const novosProdutos = [...localProdutos, ...produtosRecebidos];
-    salvarProdutosNoLocalStorage(novosProdutos); 
-    setProdutos((prevProdutos) => [...prevProdutos, ...produtosRecebidos]);
+    salvarProdutosNoLocalStorage(novosProdutos);
+    setProdutos((prevProdutos) => [...prevProdutos, ...produtosRecebidos]); 
   };
+
+  useEffect(() => {
+    const currentTime = Date.now(); 
+    const tempoDesdeUltimaBusca = currentTime - ultimaBusca.getTime(); 
+
+    if (tempoDesdeUltimaBusca >= TEMPO_DE_BUSCA_PRODUTOS) {
+      produtoService.limparProdutoLocal()
+      buscarProdutos();
+      setUltimaBusca(new Date()); 
+    }
+  }, [ultimaBusca]);
 
   if (isDetailsPage) {
     return <Outlet />;

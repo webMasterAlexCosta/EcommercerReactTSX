@@ -1,7 +1,7 @@
 import { AxiosRequestConfig } from "axios";
 import { ProdutoDTO } from "../models/dto/ProdutosDTO";
 import requestBackEnd from "../utils/request";
-import { BUSCAR_LISTA_CATEGORIAS,  CADASTRO_PRODUTO, PRODUTO_KEY } from "../utils/system";
+import { BUSCAR_LISTA_CATEGORIAS, CADASTRO_PRODUTO, PRODUTO_KEY } from "../utils/system";
 import { isAuthenticated } from "../services/AuthService";
 import { getUserService } from "../services/UserServices";
 
@@ -22,7 +22,7 @@ const findAll = async (page?: number) => {
 const findById = async (id: number) => {
   try {
     const prod = await requestBackEnd({ url: `/api/produtos/${id}` });
-   
+
     return prod;
   } catch (error) {
     console.error(error);
@@ -41,19 +41,19 @@ const findByRequest = async (item: string) => {
   }
 };
 
-const novoProduto=async(dto:ProdutoDTO)=>{
+const novoProduto = async (dto: ProdutoDTO) => {
   console.log(dto)
   alert(dto)
- const user = await getUserService();
-   if (isAuthenticated() && user.perfil.includes("ADMIN")) {
-  const config : AxiosRequestConfig={
-    method:"POST",
-    url:CADASTRO_PRODUTO,
-    data:dto,
-    withCredentials:true
+  const user = await getUserService();
+  if (isAuthenticated() && user.perfil.includes("ADMIN")) {
+    const config: AxiosRequestConfig = {
+      method: "POST",
+      url: CADASTRO_PRODUTO,
+      data: dto,
+      withCredentials: true
+    }
+    return await requestBackEnd(config)
   }
-  return await requestBackEnd(config)
-   }
 }
 
 const updatedProduto = async (produto: ProdutoDTO) => {
@@ -77,21 +77,21 @@ const setLocalStorage = async (key: string, value: string) => {
 const removeLocalStorage = async (key: string) => {
   return localStorage.removeItem(key);
 };
-const findAllCategories=async()=>{
-    const config:AxiosRequestConfig={
-      url:BUSCAR_LISTA_CATEGORIAS,
-      withCredentials:true
-    }
-    return await requestBackEnd(config)
+const findAllCategories = async () => {
+  const config: AxiosRequestConfig = {
+    url: BUSCAR_LISTA_CATEGORIAS,
+    withCredentials: true
+  }
+  return await requestBackEnd(config)
 }
 
-const deleteProduto=(id: number | undefined)=>{
-    const config :AxiosRequestConfig={
-      method:"DELETE",
-      url:`/api/produtos/${id}/deletar`,
-      withCredentials:true
-    }
-    return requestBackEnd(config)
+const deleteProduto = (id: number | undefined) => {
+  const config: AxiosRequestConfig = {
+    method: "DELETE",
+    url: `/api/produtos/${id}/deletar`,
+    withCredentials: true
+  }
+  return requestBackEnd(config)
 }
 const savarProdutoLocal = (prod: ProdutoDTO): void => {
   return localStorage.setItem(PRODUTO_KEY, JSON.stringify(prod))
@@ -99,6 +99,9 @@ const savarProdutoLocal = (prod: ProdutoDTO): void => {
 const getProdutoLocal = () => {
   const produto = localStorage.getItem(PRODUTO_KEY);
   return produto ? JSON.parse(produto) : null;
+}
+const limparProdutoLocal = () => {
+  localStorage.removeItem(PRODUTO_KEY)
 }
 export {
   findAll,
@@ -112,5 +115,6 @@ export {
   findAllCategories,
   deleteProduto,
   savarProdutoLocal,
-  getProdutoLocal
+  getProdutoLocal,
+  limparProdutoLocal
 };

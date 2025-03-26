@@ -14,20 +14,21 @@ import { isAuthenticated } from "../services/AuthService";
 import { CriptografiaAES } from "../models/domain/CriptografiaAES";
 
 const getMeRepository = async () => {
-  if(isAuthenticated()){
-  const config: AxiosRequestConfig = {
-    url: "/api/users/me",
-    withCredentials: true,
-  };
+  if (isAuthenticated()) {
+    const config: AxiosRequestConfig = {
+      url: "/api/users/me",
+      withCredentials: true,
+    };
 
-  try {
-    const response = await requestBackEnd(config);
-    return response;
-  } catch (error) {
-    console.error(error);
-    throw error;
+    try {
+      const response = await requestBackEnd(config);
+      return response;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
   }
-}};
+};
 const recuperarSenhaRepository = async (email: string, cpf: string) => {
   const config: AxiosRequestConfig = {
     method: "POST",
@@ -92,20 +93,20 @@ const getTokenRepository = () => {
 };
 
 const setUserRepository = async () => {
-  if(isAuthenticated()){
-  const encryptedData = sessionStorage.getItem(DADOCIFRAFADO);
-  const chaveBase64 = sessionStorage.getItem(CHAVECIFRADO);
-    if(encryptedData ===null && chaveBase64 ===null){
-    const usuario = await getMeRepository();
-    sessionStorage.setItem(DADOCIFRAFADO, usuario?.data.encryptedData);
-    sessionStorage.setItem(CHAVECIFRADO, usuario?.data?.chaveBase64);
-    if (!usuario?.data?.encryptedData || !usuario?.data?.chaveBase64) {
-      throw new Error("Dados criptografados ou chave não foram retornados corretamente.");
+  if (isAuthenticated()) {
+    const encryptedData = sessionStorage.getItem(DADOCIFRAFADO);
+    const chaveBase64 = sessionStorage.getItem(CHAVECIFRADO);
+    if (encryptedData === null && chaveBase64 === null) {
+      const usuario = await getMeRepository();
+      sessionStorage.setItem(DADOCIFRAFADO, usuario?.data.encryptedData);
+      sessionStorage.setItem(CHAVECIFRADO, usuario?.data?.chaveBase64);
+      if (!usuario?.data?.encryptedData || !usuario?.data?.chaveBase64) {
+        throw new Error("Dados criptografados ou chave não foram retornados corretamente.");
+      }
     }
-  }
-   // console.log("🔐 Dados criptografados armazenados com sucesso!");
+    // console.log("🔐 Dados criptografados armazenados com sucesso!");
     return Promise.resolve();
-}
+  }
 };
 const getUserRepository = async () => {
   await setUserRepository()
@@ -114,7 +115,7 @@ const getUserRepository = async () => {
 
   if (!encryptedData || !chaveBase64) {
     //console.error("⚠️ Dados ou chave ausentes.");
-    return Promise.resolve({ perfil: [] }); 
+    return Promise.resolve({ perfil: [] });
   }
 
   try {
@@ -124,19 +125,19 @@ const getUserRepository = async () => {
 
     const user = JSON.parse(decryptedData);
     return Promise.resolve({ ...user, perfil: user.perfil || [] }); // Retorna uma Promise resolvida com os dados
-  } catch  {
+  } catch {
     // console.error("Erro ao descriptografar os dados:", error);
     return Promise.resolve({ perfil: [] }); // 
   }
 };
-const saveFoto=(foto:string)=>{
+const saveFoto = (foto: string) => {
   localStorage.setItem(FOTO_PERFIL, foto);
   return;
 }
-const getFoto=()=>{ 
+const getFoto = () => {
   return localStorage.getItem(FOTO_PERFIL);
 }
-const deleteFoto=()=>{  
+const deleteFoto = () => {
   localStorage.removeItem(FOTO_PERFIL);
   return;
 }
@@ -151,5 +152,5 @@ export {
   saveTokenRepository,
   setUserRepository,
   saveFoto,
-  getFoto,deleteFoto
+  getFoto, deleteFoto
 };

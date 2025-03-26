@@ -89,6 +89,9 @@ const getProdutoLocal = () => {
  
   return produtoRepository.getProdutoLocal();
 }
+const limparProdutoLocal = ()=>{
+  produtoRepository.limparProdutoLocal();
+}
 export {
   findAll,
   findById,
@@ -100,5 +103,6 @@ export {
   findAllCategories,
   deleteProduto,
   savarProdutoLocal,
-  getProdutoLocal
+  getProdutoLocal,
+  limparProdutoLocal
 };
