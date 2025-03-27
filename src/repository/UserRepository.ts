@@ -13,10 +13,27 @@ import {
 import { isAuthenticated } from "../services/AuthService";
 import { CriptografiaAES } from "../models/domain/CriptografiaAES";
 
-const SECRET_KEY_BASE64_1 = CriptografiaAES.generateRandomKeyBase64();
-const SECRET_KEY_BASE64_2 = CriptografiaAES.generateRandomKeyBase64(); 
+// Função para gerar e derivar as chaves
+const gerarChaves = async () => {
+  const SECRET_KEY_BASE64_1 = CriptografiaAES.generateRandomKeyBase64();
 
+  const SECRET_KEY_BASE64_2 = await CriptografiaAES.deriveSecondKeyFromFirst(
+    SECRET_KEY_BASE64_1
+  );
 
+  return { SECRET_KEY_BASE64_1, SECRET_KEY_BASE64_2 };
+};
+
+const chaves = async () => {
+  const { SECRET_KEY_BASE64_1, SECRET_KEY_BASE64_2 } = await gerarChaves();
+  return { SECRET_KEY_BASE64_1, SECRET_KEY_BASE64_2 };
+};
+
+let SECRET_KEY_BASE64_1: string, SECRET_KEY_BASE64_2: string;
+chaves().then(keys => {
+  SECRET_KEY_BASE64_1 = keys.SECRET_KEY_BASE64_1;
+  SECRET_KEY_BASE64_2 = keys.SECRET_KEY_BASE64_2;
+});
 
 const getMeRepository = async () => {
   if (isAuthenticated()) {
@@ -27,13 +44,15 @@ const getMeRepository = async () => {
 
     try {
       const response = await requestBackEnd(config);
+      console.log(response.data);
       return response;
     } catch (error) {
-      console.error(error);
+      console.error("Erro ao buscar usuário", error);
       throw error;
     }
   }
 };
+
 const recuperarSenhaRepository = async (email: string, cpf: string) => {
   const config: AxiosRequestConfig = {
     method: "POST",
@@ -41,10 +60,15 @@ const recuperarSenhaRepository = async (email: string, cpf: string) => {
     data: { email, cpf },
   };
 
-  const response = await requestBackEnd(config);
-
-  return response;
+  try {
+    const response = await requestBackEnd(config);
+    return response;
+  } catch (error) {
+    console.error("Erro ao recuperar senha", error);
+    throw error;
+  }
 };
+
 const cadastrarNovoUsuarioRepository = async (FormData: CadastroUserDTO) => {
   try {
     const config: AxiosRequestConfig = {
@@ -55,10 +79,11 @@ const cadastrarNovoUsuarioRepository = async (FormData: CadastroUserDTO) => {
     const response = await requestBackEnd(config);
     return response;
   } catch (error) {
-    console.error("Ocorreu um erro ao realistar cadastro", error);
+    console.error("Erro ao cadastrar novo usuário", error);
     throw new Error("Erro ao realizar cadastro");
   }
 };
+
 const mudarEnderecoUserAutenticadoRepository = (
   enderecoUsuario: Endereco,
   id: string
@@ -88,7 +113,6 @@ const logoutRepository = () => {
 
 const saveTokenRepository = async (response: Login) => {
   localStorage.setItem(TOKEN_KEY, response.token);
-
   await setUserRepository();
   return Promise.resolve();
 };
@@ -97,28 +121,29 @@ const getTokenRepository = () => {
   return localStorage.getItem(TOKEN_KEY);
 };
 
-  const setUserRepository = async () => {
-    if (isAuthenticated()) {
-      
-      const encryptedData = sessionStorage.getItem(DADOCIFRAFADO);
-      const chaveBase64 = sessionStorage.getItem(CHAVECIFRADO);
-      if (encryptedData === null && chaveBase64 === null) {
-        const usuario = await getMeRepository();
-        const ofuscado1 = await CriptografiaAES.obfuscateKey(chaveBase64 || "", SECRET_KEY_BASE64_1);
-        const ofuscado2 = await CriptografiaAES.obfuscateKey(chaveBase64 || "", SECRET_KEY_BASE64_2);
-        console.log("tamanho chave recebida = " + usuario?.data.chaveBase64.length)
-        const misturar =ofuscado1+ usuario?.data.chaveBase64 + ofuscado2
-        sessionStorage.setItem(DADOCIFRAFADO, usuario?.data.encryptedData);
-        sessionStorage.setItem(CHAVECIFRADO, misturar);
-        return Promise.resolve(usuario);
-      
-        
-      }
-      return Promise.resolve();
+const setUserRepository = async () => {
+  if (isAuthenticated()) {
+    const encryptedData = sessionStorage.getItem(DADOCIFRAFADO);
+    const chaveBase64 = sessionStorage.getItem(CHAVECIFRADO);
+
+    if (encryptedData === null || chaveBase64 === null) {
+      const usuario = await getMeRepository();
+
+      const misturar =
+        SECRET_KEY_BASE64_1 + usuario?.data.chaveBase64 + SECRET_KEY_BASE64_2;
+
+      sessionStorage.setItem(DADOCIFRAFADO, usuario?.data.encryptedData);
+      sessionStorage.setItem(CHAVECIFRADO, misturar);
+
+      return Promise.resolve(usuario);
     }
-  };
- const getUserRepository = async () => {
+    return Promise.resolve();
+  }
+};
+
+const getUserRepository = async () => {
   await setUserRepository();
+
   const encryptedData = sessionStorage.getItem(DADOCIFRAFADO);
   const chaveBase64 = sessionStorage.getItem(CHAVECIFRADO);
 
@@ -126,20 +151,21 @@ const getTokenRepository = () => {
     throw new Error("Chave não encontrada no sessionStorage.");
   }
 
-
-
-  const chaveBase64Recuperada = chaveBase64.slice(SECRET_KEY_BASE64_1.length, chaveBase64.length - SECRET_KEY_BASE64_2.length);
-  
+  const chaveBase64Recuperada =  chaveBase64.slice(
+    SECRET_KEY_BASE64_1.length,
+    chaveBase64.length - SECRET_KEY_BASE64_2.length
+  );
 
   if (!encryptedData || !chaveBase64Recuperada) {
     return Promise.resolve({ perfil: [] });
   }
 
   try {
-    const decryptedData = await CriptografiaAES.decrypt(encryptedData, chaveBase64Recuperada);
-
+    const decryptedData = await CriptografiaAES.decrypt(
+      encryptedData,
+      chaveBase64Recuperada
+    );
     const user = JSON.parse(decryptedData);
-
     return Promise.resolve({ ...user, perfil: user.perfil || [] });
   } catch (error) {
     console.error("Erro ao descriptografar os dados:", error);
@@ -147,18 +173,18 @@ const getTokenRepository = () => {
   }
 };
 
-
 const saveFoto = (foto: string) => {
   localStorage.setItem(FOTO_PERFIL, foto);
-  return;
-}
+};
+
 const getFoto = () => {
   return localStorage.getItem(FOTO_PERFIL);
-}
+};
+
 const deleteFoto = () => {
   localStorage.removeItem(FOTO_PERFIL);
-  return;
-}
+};
+
 export {
   cadastrarNovoUsuarioRepository,
   getMeRepository,
@@ -170,5 +196,6 @@ export {
   saveTokenRepository,
   setUserRepository,
   saveFoto,
-  getFoto, deleteFoto
+  getFoto,
+  deleteFoto,
 };
