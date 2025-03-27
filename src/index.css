@@ -382,14 +382,7 @@ header {
 .alex-table td:last-child {
   padding-right: 5px;
 }
-/* 
-.alex-tb576 {
-  display: none;
-} */
 
-/* .alex-tb768 {
-  display: none;
-} */
 
 @media (min-width: 576px) {
   .alex-tb576 {
