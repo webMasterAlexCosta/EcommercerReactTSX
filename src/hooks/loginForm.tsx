@@ -39,6 +39,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, onChange, formData, isS
                   className={`alex-form-control ${isSubmitted && !formData.email ? "alex-input-error" : ""}`}
                   type="text"
                   placeholder="Email"
+                  required
                 />
                 {isSubmitted && !formData.email && (
                   <div className="alex-form-error">Campo obrigatório</div>
@@ -52,6 +53,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, onChange, formData, isS
                   className={`alex-form-control ${isSubmitted && !formData.senha ? "alex-input-error" : ""}`}
                   type={isPasswordVisible.senha ? "text" : "password"}
                   placeholder="Senha"
+                  required
                 />
                 <span className="password-icon" onClick={() => PasswordVisibility('senha', setIsPasswordVisible)}>
                   {isPasswordVisible.senha ? <VisibilityOffIcon /> : <VisibilityIcon />}

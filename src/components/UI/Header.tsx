@@ -25,9 +25,14 @@ const Header = () => {
     }
 
     const fetchUserData = async () => {
+      try{
       const userData = await getUserService();
+     
       setUsuario(userData);
-      setLoading(false);  
+      setLoading(false); 
+      }catch{
+        window.location.href="/";
+      } 
     };
 
     fetchUserData();

@@ -120,7 +120,7 @@ const NovoEndereco = () => {
             cep: cepFormatado 
         }, id!);
     
-        console.log("id do user", id);
+       // console.log("id do user", id);
         setAlertData({
             title: "Cadastro realizado com sucesso!",
             text: `${enviar}`,

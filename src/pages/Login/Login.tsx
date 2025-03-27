@@ -46,7 +46,7 @@ const Login = () => {
 
         const userProfile = buscarUsuario?.perfil?.includes("ADMIN") ? "ADMIN" : "CLIENTE";
         setIconAdminContext(userProfile);
-          console.log(userProfile)
+       //   console.log(userProfile)
         // if (userProfile === "ADMIN") {
         //   navigate("/administrativo");
         // } else {

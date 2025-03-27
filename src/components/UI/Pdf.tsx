@@ -92,7 +92,7 @@ const gerarPDF = async (pedido: { numeroPedido: string } | null) => {
     doc.text("Número do Pedido:", 14, yOffset + 10);
     doc.text(numeroPed || "Não especificado", 60, yOffset + 10);
     // QR Code com número do pedido
-    console.log("Gerando QR Code com número do pedido:", numeroPed);
+ //   console.log("Gerando QR Code com número do pedido:", numeroPed);
     try {
         const qrCodeData = `Pedido número: ${numeroPed}`;
         const qrCodeImage = await gerarQRCode(qrCodeData);

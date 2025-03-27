@@ -107,7 +107,7 @@ const CardPaymentComponent2: React.FC = () => {
         console.error('Erro ao processar pagamento:', error.message);
         setAlertData({ title: "Erro ao Processar Pagamento", text: error.message || "Ocorreu um erro no pagamento.", icon: "error" });
       } else if (paymentIntent && paymentIntent.status === 'succeeded') {
-        console.log('Pagamento realizado com sucesso:', paymentIntent);
+      //  console.log('Pagamento realizado com sucesso:', paymentIntent);
         enviarPedido();
       }
     };

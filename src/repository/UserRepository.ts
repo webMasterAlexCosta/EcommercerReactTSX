@@ -44,7 +44,7 @@ const getMeRepository = async () => {
 
     try {
       const response = await requestBackEnd(config);
-      console.log(response.data);
+      
       return response;
     } catch (error) {
       console.error("Erro ao buscar usuário", error);

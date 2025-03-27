@@ -69,8 +69,8 @@ const NovoCadastro: React.FC<NovoCadastroProps> = ({ isSubmitted }) => {
                         }
                     }));
                 }
-            } catch (error) {
-                console.log(error);
+            } catch  {
+               // console.log(error);
                 setAlertData({
                     title: "Erro",
                     text: "Não foi possível buscar o CEP.",

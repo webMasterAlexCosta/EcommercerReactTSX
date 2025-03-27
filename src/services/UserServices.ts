@@ -85,7 +85,7 @@ const alterarSenhaAutenticado = async (antigaSenha: string, novaSenha: string) =
 
       data: { antigaSenha, novaSenha, email },
     };
-    console.log(config);
+  //  console.log(config);
     return requestBackEnd(config);
   }
 };

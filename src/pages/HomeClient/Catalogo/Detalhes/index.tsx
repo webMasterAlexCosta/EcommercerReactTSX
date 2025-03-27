@@ -32,7 +32,7 @@ const Detalhes = () => {
 
         if (!responseProduto.data || !responseProduto.data.id) {
           setAlertData({ title: "Erro", text: "Produto não encontrado!", icon: "error" });
-          console.log("Produto não encontrado!");
+        //  console.log("Produto não encontrado!");
         } else {
           setProdutoAtual(responseProduto.data); 
         }

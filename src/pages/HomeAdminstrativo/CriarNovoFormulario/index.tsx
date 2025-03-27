@@ -30,7 +30,7 @@ const CriarNovoProduto = () => {
   }, []);
 
   const handleSubmit = async (produto: ProdutoDTO) => {
-    console.log("produto a ser enviado " + produto)
+  //  console.log("produto a ser enviado " + produto)
     try {
       const response = await produtoService.novoProduto(produto);
       console.log(response)

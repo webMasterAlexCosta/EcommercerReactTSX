@@ -33,7 +33,7 @@ const findById = async (id: number) => {
 const findByRequest = async (item: string) => {
   try {
     const prod = await requestBackEnd({ url: `/api/produtos/buscar?nome=${item}` });
-    console.log(prod);
+    //console.log(prod);
     return prod;
   } catch (error) {
     console.error(error);
@@ -42,7 +42,7 @@ const findByRequest = async (item: string) => {
 };
 
 const novoProduto = async (dto: ProdutoDTO) => {
-  console.log(dto)
+ // console.log(dto)
   alert(dto)
   const user = await getUserService();
   if (isAuthenticated() && user.perfil.includes("ADMIN")) {
