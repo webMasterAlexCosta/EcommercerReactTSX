@@ -1,6 +1,11 @@
 import axios, { AxiosRequestConfig } from "axios";
-import Swal from "sweetalert2"; 
-import { BASE_URL_LOCAL } from "./system";
+import Swal from "sweetalert2";
+import {
+  BASE_URL_LOCAL,
+  FOTO_PERFIL_LINK,
+  PRODUTO_KEY,
+  TOKEN_KEY,
+} from "./system";
 import { getTokenService } from "../services/UserServices";
 import { isAuthenticated } from "../services/AuthService";
 
@@ -14,17 +19,17 @@ const requestBackEnd = (config: AxiosRequestConfig) => {
   return axios({ ...config, baseURL: BASE_URL_LOCAL, headers });
 };
 
-
-
 axios.interceptors.response.use(
   function (response) {
     return response;
   },
   function (error) {
-    if(isAuthenticated()){
-      window.location.href="/login"
-      localStorage.clear()
-      sessionStorage.clear()
+    if (isAuthenticated()) {
+      window.location.href = "/login";
+      localStorage.removeItem(TOKEN_KEY);
+      localStorage.removeItem(FOTO_PERFIL_LINK);
+      localStorage.removeItem(PRODUTO_KEY);
+      sessionStorage.clear();
     }
     if (axios.isAxiosError(error) && error.response) {
       const mensagemErro =
@@ -40,7 +45,7 @@ axios.interceptors.response.use(
         confirmButtonText: "OK",
       });
       setTimeout(() => {
-     window.location.reload();
+        window.location.reload();
       }, 3000);
     } else {
       Swal.fire({
@@ -51,7 +56,7 @@ axios.interceptors.response.use(
       });
       setTimeout(() => {
         window.location.reload();
-         }, 3000);
+      }, 3000);
     }
     /*
         caso eu queria propagar o erro pro catch do codigo uso

@@ -6,15 +6,13 @@ import {
   CADASTRO_NOVO_USUARIO,
   CHAVECIFRADO,
   DADOCIFRAFADO,
-  
   FOTO_PERFIL_LINK,
-  
+  HISTORICO_PEDIDO_USER,
   PRODUTO_KEY,
-  
   RECUPERAR_SENHA,
   TOKEN_KEY,
 } from "../utils/system";
-import {  isAuthenticated } from "../services/AuthService";
+import { isAuthenticated } from "../services/AuthService";
 import { CriptografiaAES } from "../models/domain/CriptografiaAES";
 
 // Função para gerar e derivar as chaves
@@ -34,7 +32,7 @@ const chaves = async () => {
 };
 
 let SECRET_KEY_BASE64_1: string, SECRET_KEY_BASE64_2: string;
-chaves().then(keys => {
+chaves().then((keys) => {
   SECRET_KEY_BASE64_1 = keys.SECRET_KEY_BASE64_1;
   SECRET_KEY_BASE64_2 = keys.SECRET_KEY_BASE64_2;
 });
@@ -48,7 +46,7 @@ const getMeRepository = async () => {
 
     try {
       const response = await requestBackEnd(config);
-      
+
       return response;
     } catch (error) {
       console.error("Erro ao buscar usuário", error);
@@ -112,8 +110,8 @@ const logoutRepository = () => {
   }
   sessionStorage.clear();
   localStorage.removeItem(TOKEN_KEY);
-  localStorage.removeItem(FOTO_PERFIL_LINK)
-  localStorage.removeItem(PRODUTO_KEY)
+  localStorage.removeItem(FOTO_PERFIL_LINK);
+  localStorage.removeItem(PRODUTO_KEY);
   return (window.location.href = "/login");
 };
 
@@ -157,7 +155,7 @@ const getUserRepository = async () => {
     throw new Error("Chave não encontrada no sessionStorage.");
   }
 
-  const chaveBase64Recuperada =  chaveBase64.slice(
+  const chaveBase64Recuperada = chaveBase64.slice(
     SECRET_KEY_BASE64_1.length,
     chaveBase64.length - SECRET_KEY_BASE64_2.length
   );
@@ -179,7 +177,24 @@ const getUserRepository = async () => {
   }
 };
 
-
+const obterHistoricoPedidoRepository = async () => {
+  const config: AxiosRequestConfig = {
+    method: "GET",
+    url: HISTORICO_PEDIDO_USER,
+    headers: {
+      "Content-Type": "application/json",
+    },
+    withCredentials: true,
+  };
+  try {
+    const response = await requestBackEnd(config);
+    // setHistoricoPedidos(response.data);
+    return response;
+  } catch (error) {
+    console.error("Erro ao obter histórico de pedidos", error);
+    throw new Error();
+  }
+};
 
 export {
   cadastrarNovoUsuarioRepository,
@@ -191,5 +206,5 @@ export {
   recuperarSenhaRepository,
   saveTokenRepository,
   setUserRepository,
-  
+  obterHistoricoPedidoRepository,
 };

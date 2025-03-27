@@ -447,3 +447,18 @@ p {
     50% { opacity: 0; }
     100% { opacity: 1; }
 }
+.no-pedidos {
+  text-align: center;
+  margin-top: 30px;
+  color: #555;
+}
+
+.no-pedidos-msg {
+  font-size: 18px;
+  font-weight: 500;
+  margin-top: 10px;
+}
+
+.no-pedidos svg {
+  color: #888;
+}

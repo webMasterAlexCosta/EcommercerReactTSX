@@ -122,6 +122,10 @@ const setUserService = () => {
   userRepository.setUserRepository();
 };
 
+const obterHistoricoPedidoService = async () => {
+  const response = await userRepository.obterHistoricoPedidoRepository();
+  return response;
+};
 
 export {
   alterarSenhaAutenticado,
@@ -135,5 +139,5 @@ export {
   recuperarSenha,
   saveTokenService,
   setUserService,
-  
+  obterHistoricoPedidoService,
 };

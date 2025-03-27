@@ -1,5 +1,5 @@
-export const BASE_URL_LOCAL="http://localhost:8080"
-export const BASE_URL_LOCAL2="https://alexc5142.c44.integrator.host/"
+export const BASE_URL_LOCAL2="http://localhost:8080"
+export const BASE_URL_LOCAL="https://alexc5142.c44.integrator.host/"
 export const TOKEN_KEY = "br.com.alexcosta/token"
 export const DADOS_USER = "br.com.alexcosta/user"
 export const PRODUTO_KEY = "br.com.alexcosta/produtos"
@@ -23,4 +23,4 @@ export const FOTO_PERFIL_LINK="br.com.alexcosta/fotoLink"
 export const FOTO_PERFIL_LOCAL="br.com.alexcosta/fotoPerfil"
 export const CADASTRO_PRODUTO="/api/produtos/cadastro"
 export const BUSCAR_LISTA_CATEGORIAS = "/api/produtos/categorias"
-export const TEMPO_DE_BUSCA_PRODUTOS = 30000
+export const TEMPO_DE_BUSCA_PRODUTOS = 5000

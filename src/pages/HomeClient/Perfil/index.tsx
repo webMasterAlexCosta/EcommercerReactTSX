@@ -2,8 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import './styles.css';
 import * as authService from '../../../services/AuthService';
 import requestBackEnd from '../../../utils/request';
-import { AxiosRequestConfig } from 'axios';
-import {  FOTO_PERFIL_LOCAL, HISTORICO_PEDIDO_USER } from '../../../utils/system';
+import { FOTO_PERFIL_LOCAL } from '../../../utils/system';
 import { PedidoHistorico } from '../../../models/dto/CarrinhoDTO';
 import { Link, useNavigate } from 'react-router-dom';
 import { MudarSenha } from '../../../components/Layout/MudarSenha';
@@ -14,6 +13,7 @@ import { CircularProgress } from '@mui/material';
 import { NovoEndereco } from '../../../components/Layout/NovoEndereco';
 import * as userService from "../../../services/UserServices"
 import * as perfilFotoService from "../../../services/PerfilFotoService"
+import PedidoUsuario from '../../../components/UI/Pedido';
 const Perfil = () => {
     const [usuario, setUsuario] = useState<UserDTO>({
         id: "",
@@ -40,8 +40,8 @@ const Perfil = () => {
     const [capturedImage, setCapturedImage] = useState<string | null>(null);
     const [showCameraModal, setShowCameraModal] = useState<boolean>(false);
     const uploadFotoRef = useRef<HTMLInputElement | null>(null);
-    const [fotoCarregada, setFotoCarregada] = useState<boolean>(false); 
-
+    const [fotoCarregada, setFotoCarregada] = useState<boolean>(false);
+    const [mostrarPedido, setMostrarPedido] = useState<boolean>(false)
 
 
     useEffect(() => {
@@ -67,32 +67,17 @@ const Perfil = () => {
 
         };
 
-        const obterHistoricoPedido = async () => {
-            const config: AxiosRequestConfig = {
-                method: "GET",
-                url: HISTORICO_PEDIDO_USER,
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                withCredentials: true,
-            };
-            try {
-                const response = await requestBackEnd(config);
-                setHistoricoPedidos(response.data);
-            } catch (error) {
-                console.error('Erro ao obter histórico de pedidos', error);
-            }
-        };
+
 
         obterUsuario();
-        obterHistoricoPedido();
+
     }, [navigate]);
 
     useEffect(() => {
         const fotoLocalStorage = localStorage.getItem(FOTO_PERFIL_LOCAL);
         if (fotoLocalStorage) {
-            setFotoPerfil(fotoLocalStorage); 
-            setFotoCarregada(true);  
+            setFotoPerfil(fotoLocalStorage);
+            setFotoCarregada(true);
         } else {
             const obterFotoPerfil = async () => {
                 if (!usuario.id) return;
@@ -110,9 +95,9 @@ const Perfil = () => {
                         await perfilFotoService.salvarFotoNoLocalStorage(fotoUrl);
                     }
                 } catch {
-                    setFotoPerfil(""); 
+                    setFotoPerfil("");
                 } finally {
-                    setFotoCarregada(true); 
+                    setFotoCarregada(true);
                 }
             };
 
@@ -122,7 +107,7 @@ const Perfil = () => {
         }
     }, [usuario.id]);
 
-  
+
 
     const handleFotoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files[0]) {
@@ -137,373 +122,371 @@ const Perfil = () => {
         }
     };
 
+    const enviarFotoPerfil = async (foto: File | string) => {
+        setUploading(true);
+        try {
+            const updateResponse = await perfilFotoService.enviarFotoService(foto);
 
-
-const enviarFotoPerfil = async (foto: File | string) => {
-    setUploading(true);
-    try {
-        const updateResponse = await perfilFotoService.enviarFotoService(foto);
-
-        if (updateResponse !== null && updateResponse !== undefined) {
-            setFotoPerfil(perfilFotoService.getFoto() || '');
-            setFotoSelecionada(null);
+            if (updateResponse !== null && updateResponse !== undefined) {
+                setFotoPerfil(perfilFotoService.getFoto() || '');
+                setFotoSelecionada(null);
+                setUploading(false);
+                stopCamera();
+                setCapturedImage(null);
+                setErroUpload(null);
+            } else {
+                setErroUpload('Erro ao salvar a foto no perfil.');
+                setUploading(false);
+            }
+        } catch {
+            setErroUpload("Houve um erro ao enviar sua foto de perfil. Tente novamente mais tarde.");
             setUploading(false);
-            stopCamera();
-            setCapturedImage(null);
-            setErroUpload(null);
-        } else {
-            setErroUpload('Erro ao salvar a foto no perfil.');
-            setUploading(false);
         }
-    } catch {
-        setErroUpload("Houve um erro ao enviar sua foto de perfil. Tente novamente mais tarde.");
-        setUploading(false);
-    }
-};
-
-
-const stopCamera = async () => {
-    if (stream && typeof stream.getTracks === 'function') {
-        const tracks = stream.getTracks();
-        await Promise.all(tracks.map(track => new Promise<void>((resolve) => {
-            track.stop();
-            resolve();
-        })));
-        setStream(null);
-    }
-};
-
-const startCamera = async () => {
-    try {
-        const userMedia = await navigator.mediaDevices.getUserMedia({ video: true });
-        setStream(userMedia);
-        if (videoRef.current) {
-            videoRef.current.srcObject = userMedia;
-        }
-    } catch {
-        //console.error('Erro ao acessar a câmera', error);
-    }
-};
-
-
-
-const captureImage = () => {
-    if (canvasRef.current && videoRef.current) {
-        const context = canvasRef.current.getContext("2d");
-        if (context) {
-            context.drawImage(videoRef.current, 0, 0, canvasRef.current.width, canvasRef.current.height);
-            const imageData = canvasRef.current.toDataURL('image/png');
-            setCapturedImage(imageData);
-        }
-    }
-};
-
-
-
-const handleUploadClick = () => {
-    if (uploadFotoRef.current) {
-        uploadFotoRef.current.click();
-    }
-};
-
-const handleRemoveFoto = async () => {
-    if (await perfilFotoService.deleteFoto()) setFotoPerfil("");
-
-};
-
-
-
-
-const handleClickOutside = (event: MouseEvent) => {
-    if (modalRef.current && !(modalRef.current as HTMLElement).contains(event.target as Node)) {
-        setShowCameraModal(false);
-        stopCamera();
-    }
-};
-
-const handleKeyDown = (event: KeyboardEvent): void => {
-    if (event.key === 'Escape') {
-        setShowCameraModal(false);
-        stopCamera();
-    }
-};
-
-useEffect(() => {
-    if (showCameraModal) {
-        startCamera();
-
-        document.addEventListener('mousedown', handleClickOutside);
-        document.addEventListener('keydown', handleKeyDown);
-    } else {
-        stopCamera();
-    }
-
-    return () => {
-        stopCamera();
-        document.removeEventListener('mousedown', handleClickOutside);
-        document.removeEventListener('keydown', handleKeyDown);
     };
-}, [showCameraModal]);
-return (
-    <main className="perfil-container">
-        {showCameraModal && (
-            <div className="camera-modal-overlay" ref={modalRef}>
-                <div className="camera-modal-content">
-                    <h3>Pré visualização da imagem</h3>
-                    <video ref={videoRef} autoPlay width="100%" height="auto" className="camera-video" />
-                    <canvas ref={canvasRef} style={{ display: 'none' }} width="640" height="480" />
-                    <div className="upload-container-modal">
-                        <button className="camera-button" onClick={captureImage}>
-                            <PhotoCamera /> Capturar
+
+
+    const stopCamera = async () => {
+        if (stream && typeof stream.getTracks === 'function') {
+            const tracks = stream.getTracks();
+            await Promise.all(tracks.map(track => new Promise<void>((resolve) => {
+                track.stop();
+                resolve();
+            })));
+            setStream(null);
+        }
+    };
+
+    const startCamera = async () => {
+        try {
+            const userMedia = await navigator.mediaDevices.getUserMedia({ video: true });
+            setStream(userMedia);
+            if (videoRef.current) {
+                videoRef.current.srcObject = userMedia;
+            }
+        } catch {
+            //console.error('Erro ao acessar a câmera', error);
+        }
+    };
+
+    const captureImage = () => {
+        if (canvasRef.current && videoRef.current) {
+            const context = canvasRef.current.getContext("2d");
+            if (context) {
+                context.drawImage(videoRef.current, 0, 0, canvasRef.current.width, canvasRef.current.height);
+                const imageData = canvasRef.current.toDataURL('image/png');
+                setCapturedImage(imageData);
+            }
+        }
+    };
+
+    const handleUploadClick = () => {
+        if (uploadFotoRef.current) {
+            uploadFotoRef.current.click();
+        }
+    };
+
+    const handleRemoveFoto = async () => {
+        if (await perfilFotoService.deleteFoto()) setFotoPerfil("");
+
+    };
+
+    const handleClickOutside = (event: MouseEvent) => {
+        if (modalRef.current && !(modalRef.current as HTMLElement).contains(event.target as Node)) {
+            setShowCameraModal(false);
+            stopCamera();
+        }
+    };
+
+    const handleKeyDown = (event: KeyboardEvent): void => {
+        if (event.key === 'Escape') {
+            setShowCameraModal(false);
+            stopCamera();
+        }
+    };
+
+    useEffect(() => {
+        if (showCameraModal) {
+            startCamera();
+
+            document.addEventListener('mousedown', handleClickOutside);
+            document.addEventListener('keydown', handleKeyDown);
+        } else {
+            stopCamera();
+        }
+
+        return () => {
+            stopCamera();
+            document.removeEventListener('mousedown', handleClickOutside);
+            document.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [showCameraModal]);
+
+
+    const toggleMostrarPedido = () => setMostrarPedido(!mostrarPedido);
+
+
+
+    useEffect(() => {
+        if (mostrarPedido) {
+            const obterPedido = async () => {
+
+                const response = await userService.obterHistoricoPedidoService()
+                if (response) {
+                    setHistoricoPedidos(response.data);
+                }
+            }
+            obterPedido()
+        }
+    }, [mostrarPedido])
+    return (
+        <main className="perfil-container">
+            {showCameraModal && (
+                <div className="camera-modal-overlay" ref={modalRef}>
+                    <div className="camera-modal-content">
+                        <h3>Pré visualização da imagem</h3>
+                        <video ref={videoRef} autoPlay width="100%" height="auto" className="camera-video" />
+                        <canvas ref={canvasRef} style={{ display: 'none' }} width="640" height="480" />
+                        <div className="upload-container-modal">
+                            <button className="camera-button" onClick={captureImage}>
+                                <PhotoCamera /> Capturar
+                            </button>
+                        </div>
+                        {capturedImage && (
+                            <>
+                                <h3>Imagem a ser salva</h3>
+                                <div className="upload-container-modal">
+                                    <img src={capturedImage} alt="Imagem Capturada" className="captured-image" />
+                                    <button
+                                        className="close-modal"
+                                        onClick={() => {
+                                            setShowCameraModal(false);
+                                            if (capturedImage) enviarFotoPerfil(capturedImage);
+                                        }}
+                                    >
+                                        <UploadFile /> Salvar
+                                    </button>
+                                </div>
+                            </>
+                        )}
+                        <button className="close-button" onClick={() => setShowCameraModal(false)}>
+                            Fechar
                         </button>
                     </div>
-                    {capturedImage && (
-                        <>
-                            <h3>Imagem a ser salva</h3>
-                            <div className="upload-container-modal">
-                                <img src={capturedImage} alt="Imagem Capturada" className="captured-image" />
+                </div>
+            )}
+            {mudarSenha ? (
+                <MudarSenha />
+            ) : mudarEndereco ? (
+                <NovoEndereco />
+
+            ) : (
+                <section className="registro-formulario">
+                    <h2>Perfil do Usuário</h2>
+
+                    <div className="foto-perfil-container">
+                        {fotoCarregada ? (
+                            fotoPerfil ? (
+                                <>
+                                    <img src={fotoPerfil} alt="Foto de Perfil" className="foto-perfil" />
+                                    <button className="remove-button" onClick={handleRemoveFoto}>
+                                        <Delete /><h3>Remover</h3>
+                                    </button>
+                                </>
+                            ) : (
+                                <div className="no-profile-msg">
+                                    <AccountCircle fontSize="large" />
+                                    <p>Você ainda não tem uma foto de perfil. <span>Adicione uma foto clicando na câmera</span></p>
+                                </div>
+                            )
+                        ) : (
+                            <CircularProgress />
+                        )}
+
+                        {!fotoPerfil && !uploading && fotoCarregada && (
+                            <div className="upload-container">
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={handleFotoUpload}
+                                    ref={uploadFotoRef}
+                                    hidden
+                                />
+                                <button className="upload-button" onClick={handleUploadClick}>
+                                    <UploadFile /> <span className="icon-camera">Procurar</span>
+                                </button>
                                 <button
-                                    className="close-modal"
+                                    className="camera-button"
                                     onClick={() => {
-                                        setShowCameraModal(false);
-                                        if (capturedImage) enviarFotoPerfil(capturedImage);
+                                        setShowCameraModal(true);
+                                        startCamera();
                                     }}
                                 >
-                                    <UploadFile /> Salvar
+                                    <PhotoCamera /><span className="icon-camera">Iniciar</span>
                                 </button>
                             </div>
-                        </>
-                    )}
-                    <button className="close-button" onClick={() => setShowCameraModal(false)}>
-                        Fechar
-                    </button>
-                </div>
-            </div>
-        )}
-        {mudarSenha ? (
-            <MudarSenha />
-        ) : mudarEndereco ? (
-            <NovoEndereco />
-
-        ) : (
-            <section className="registro-formulario">
-                <h2>Perfil do Usuário</h2>
-
-                <div className="foto-perfil-container">
-                    {fotoCarregada ? (
-                        fotoPerfil ? (
-                            <>
-                                <img src={fotoPerfil} alt="Foto de Perfil" className="foto-perfil" />
-                                <button className="remove-button" onClick={handleRemoveFoto}>
-                                    <Delete /><h3>Remover</h3>
-                                </button>
-                            </>
-                        ) : (
-                            <div className="no-profile-msg">
-                                <AccountCircle fontSize="large" />
-                                <p>Você ainda não tem uma foto de perfil. <span>Adicione uma foto clicando na câmera</span></p>
-                            </div>
-                        )
-                    ) : (
-                        <CircularProgress />
-                    )}
-
-                    {!fotoPerfil && !uploading && fotoCarregada && (
-                        <div className="upload-container">
-                            <input
-                                type="file"
-                                accept="image/*"
-                                onChange={handleFotoUpload}
-                                ref={uploadFotoRef}
-                                hidden
-                            />
-                            <button className="upload-button" onClick={handleUploadClick}>
-                                <UploadFile /> <span className="icon-camera">Procurar</span>
-                            </button>
-                            <button
-                                className="camera-button"
-                                onClick={() => {
-                                    setShowCameraModal(true);
-                                    startCamera();
-                                }}
-                            >
-                                <PhotoCamera /><span className="icon-camera">Iniciar</span>
-                            </button>
-                        </div>
-                    )}
-                    {fotoSelecionada && !uploading && (
-                        <div>
-                            <button
-                                className="upload-button"
-                                onClick={() =>
-                                    fotoSelecionada && enviarFotoPerfil(fotoSelecionada)
-                                }
-                            >
-                                <Send /> <span className='icon-camera'>Enviar</span>
-                            </button>
-                        </div>
-                    )}
-                    {uploading && (
-                        <div className="enviando-msg">
-                            <CircularProgress />
-                            <p>Enviando...</p>
-                        </div>
-                    )}
-                    {erroUpload && (
-                        <div className="erro-upload">
-                            <Error />
-                            <p>{erroUpload}</p>
-                        </div>
-                    )}
-                </div>
-                <div className="user-info">
-                    <FormularioUser
-                        className="formulario-grupo"
-                        label="Nome"
-                        htmlFor="nome"
-                        type="text"
-                        id="nome"
-                        value={usuario.nome}
-                        readOnly
-                    />
-                    <FormularioUser
-                        className="formulario-grupo"
-                        label="Email"
-                        htmlFor="email"
-                        type="email"
-                        id="email"
-                        value={usuario.email}
-                        readOnly
-                    />
-                    <FormularioUser
-                        className="formulario-grupo"
-                        label="CEP"
-                        htmlFor="cep"
-                        type="text"
-                        id="cep"
-                        value={usuario.endereco?.cep || ''}
-                        readOnly
-                    />
-                    <FormularioUser
-                        className="formulario-grupo"
-                        label="Logradouro"
-                        htmlFor="logradouro"
-                        type="text"
-                        id="logradouro"
-                        value={usuario.endereco?.logradouro || ''}
-                        readOnly
-                    />
-                    <FormularioUser
-                        className="formulario-grupo"
-                        label="Número"
-                        htmlFor="numero"
-                        type="text"
-                        id="numero"
-                        value={usuario.endereco?.numero || ''}
-                        readOnly
-                    />
-                    <FormularioUser
-                        className="formulario-grupo"
-                        label="Complemento"
-                        htmlFor="complemento"
-                        type="text"
-                        id="complemento"
-                        value={usuario.endereco?.complemento || ''}
-                        readOnly
-                    />
-                    <FormularioUser
-                        className="formulario-grupo"
-                        label="Bairro"
-                        htmlFor="bairro"
-                        type="text"
-                        id="bairro"
-                        value={usuario.endereco?.bairro || ''}
-                        readOnly
-                    />
-                    <FormularioUser
-                        className="formulario-grupo"
-                        label="Cidade"
-                        htmlFor="cidade"
-                        type="text"
-                        id="cidade"
-                        value={usuario.endereco?.cidade || ''}
-                        readOnly
-                    />
-                    <FormularioUser
-                        className="formulario-grupo"
-                        label="Estado"
-                        htmlFor="estado"
-                        type="text"
-                        id="estado"
-                        value={usuario.endereco?.uf || ''}
-                        readOnly
-                    />
-                    <FormularioUser
-                        className="formulario-grupo"
-                        label="Data de Nascimento"
-                        htmlFor="data-nascimento"
-                        type="date"
-                        id="data-nascimento"
-                        value={usuario.dataNascimento}
-                        readOnly
-                    />
-                </div>
-
-                <div className="container-btns">
-                    <div className="formulario-grupo">
-                        <Link to="/perfil/MudarSenha">
-                            <button id="botao2" onClick={() => setMudarSenha(true)}>
-                                Mudar Senha
-                            </button>
-                        </Link>
-                    </div>
-                    <div className="formulario-grupo">
-                        <Link to="/perfil/NovoEndereco">
-                            <button id="botao1" onClick={() => setMudarEndereco(true)}>Mudar Endereço</button>
-                        </Link>
-                    </div>
-                </div>
-
-                <h3>Histórico de Pedidos</h3>
-                <div id="historico-pedidos">
-                    <ul>
-                        {historicoPedidos.length === 0 ? (
-                            <li>Você ainda não tem pedidos.</li>
-                        ) : (
-                            historicoPedidos.map((pedido, index) => (
-                                <li key={index}>
-                                    <div className="pedido">
-                                        <h4>Pedido #{pedido.numeroPedido}</h4>
-                                        <p>Status: {pedido.statusPedido}</p>
-                                        <p>Data: {pedido.momento.replace("T", " - ").replace("Z", "")}</p>
-                                        <p>Total: R$ {pedido.total.toFixed(2)}</p>
-                                        <div>
-                                            <h5>Itens do Pedido:</h5>
-                                            <ul>
-                                                {pedido.items.map((item, idx) => (
-                                                    <li key={idx}>
-                                                        <img
-                                                            className="img-pedido"
-                                                            src={item.imgUrl}
-                                                            alt={item.subTotal.toString()}
-                                                        />
-                                                        <p>Preço: R$ {item.preco.toFixed(2)}</p>
-                                                        <p>Quantidade: {item.quantidade}</p>
-                                                        <p>Subtotal: R$ {item.subTotal.toFixed(2)}</p>
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </li>
-                            ))
                         )}
-                    </ul>
-                </div>
-            </section>
-        )}
-    </main>
-);
+                        {fotoSelecionada && !uploading && (
+                            <div>
+                                <button
+                                    className="upload-button"
+                                    onClick={() =>
+                                        fotoSelecionada && enviarFotoPerfil(fotoSelecionada)
+                                    }
+                                >
+                                    <Send /> <span className='icon-camera'>Enviar</span>
+                                </button>
+                            </div>
+                        )}
+                        {uploading && (
+                            <div className="enviando-msg">
+                                <CircularProgress />
+                                <p>Enviando...</p>
+                            </div>
+                        )}
+                        {erroUpload && (
+                            <div className="erro-upload">
+                                <Error />
+                                <p>{erroUpload}</p>
+                            </div>
+                        )}
+                    </div>
+                    <div className="user-info">
+                        <FormularioUser
+                            className="formulario-grupo"
+                            label="Nome"
+                            htmlFor="nome"
+                            type="text"
+                            id="nome"
+                            value={usuario.nome}
+                            readOnly
+                        />
+                        <FormularioUser
+                            className="formulario-grupo"
+                            label="Email"
+                            htmlFor="email"
+                            type="email"
+                            id="email"
+                            value={usuario.email}
+                            readOnly
+                        />
+                        <FormularioUser
+                            className="formulario-grupo"
+                            label="CEP"
+                            htmlFor="cep"
+                            type="text"
+                            id="cep"
+                            value={usuario.endereco?.cep || ''}
+                            readOnly
+                        />
+                        <FormularioUser
+                            className="formulario-grupo"
+                            label="Logradouro"
+                            htmlFor="logradouro"
+                            type="text"
+                            id="logradouro"
+                            value={usuario.endereco?.logradouro || ''}
+                            readOnly
+                        />
+                        <FormularioUser
+                            className="formulario-grupo"
+                            label="Número"
+                            htmlFor="numero"
+                            type="text"
+                            id="numero"
+                            value={usuario.endereco?.numero || ''}
+                            readOnly
+                        />
+                        <FormularioUser
+                            className="formulario-grupo"
+                            label="Complemento"
+                            htmlFor="complemento"
+                            type="text"
+                            id="complemento"
+                            value={usuario.endereco?.complemento || ''}
+                            readOnly
+                        />
+                        <FormularioUser
+                            className="formulario-grupo"
+                            label="Bairro"
+                            htmlFor="bairro"
+                            type="text"
+                            id="bairro"
+                            value={usuario.endereco?.bairro || ''}
+                            readOnly
+                        />
+                        <FormularioUser
+                            className="formulario-grupo"
+                            label="Cidade"
+                            htmlFor="cidade"
+                            type="text"
+                            id="cidade"
+                            value={usuario.endereco?.cidade || ''}
+                            readOnly
+                        />
+                        <FormularioUser
+                            className="formulario-grupo"
+                            label="Estado"
+                            htmlFor="estado"
+                            type="text"
+                            id="estado"
+                            value={usuario.endereco?.uf || ''}
+                            readOnly
+                        />
+                        <FormularioUser
+                            className="formulario-grupo"
+                            label="Data de Nascimento"
+                            htmlFor="data-nascimento"
+                            type="date"
+                            id="data-nascimento"
+                            value={usuario.dataNascimento}
+                            readOnly
+                        />
+                    </div>
+
+                    <div className="container-btns">
+                        <div className="formulario-grupo">
+                            <Link to="/perfil/MudarSenha">
+                                <button id="botao2" onClick={() => setMudarSenha(true)}>
+                                    Mudar Senha
+                                </button>
+                            </Link>
+                        </div>
+                        <div className="formulario-grupo">
+                            <Link to="/perfil/NovoEndereco">
+                                <button id="botao1" onClick={() => setMudarEndereco(true)}>Mudar Endereço</button>
+                            </Link>
+                        </div>
+                    </div>
+
+                    <h3>Histórico de Pedidos</h3>
+                    <div id="historico-pedidos">
+                        <ul>
+
+                            <>
+                                {!mostrarPedido && (
+                                    <button onClick={toggleMostrarPedido}>
+                                        Mostrar Pedido
+                                    </button>
+                                )}
+
+                                {mostrarPedido && (
+                                    <>
+                                        <PedidoUsuario
+                                            historicoPedidos={historicoPedidos.map(pedido => ({
+                                                ...pedido,
+                                                numeroPedido: pedido.numeroPedido
+                                            }))}
+                                        />
+                                    </>
+                                )}
+                            </>
+
+                        </ul>
+                    </div>
+                </section>
+            )}
+        </main>
+    );
 };
 
 export { Perfil };
