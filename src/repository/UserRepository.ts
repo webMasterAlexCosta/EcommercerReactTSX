@@ -6,11 +6,15 @@ import {
   CADASTRO_NOVO_USUARIO,
   CHAVECIFRADO,
   DADOCIFRAFADO,
-  FOTO_PERFIL,
+  
+  FOTO_PERFIL_LINK,
+  
+  PRODUTO_KEY,
+  
   RECUPERAR_SENHA,
   TOKEN_KEY,
 } from "../utils/system";
-import { isAuthenticated } from "../services/AuthService";
+import {  isAuthenticated } from "../services/AuthService";
 import { CriptografiaAES } from "../models/domain/CriptografiaAES";
 
 // Função para gerar e derivar as chaves
@@ -107,7 +111,9 @@ const logoutRepository = () => {
     requestBackEnd(config);
   }
   sessionStorage.clear();
-  localStorage.clear();
+  localStorage.removeItem(TOKEN_KEY);
+  localStorage.removeItem(FOTO_PERFIL_LINK)
+  localStorage.removeItem(PRODUTO_KEY)
   return (window.location.href = "/login");
 };
 
@@ -173,17 +179,7 @@ const getUserRepository = async () => {
   }
 };
 
-const saveFoto = (foto: string) => {
-  localStorage.setItem(FOTO_PERFIL, foto);
-};
 
-const getFoto = () => {
-  return localStorage.getItem(FOTO_PERFIL);
-};
-
-const deleteFoto = () => {
-  localStorage.removeItem(FOTO_PERFIL);
-};
 
 export {
   cadastrarNovoUsuarioRepository,
@@ -195,7 +191,5 @@ export {
   recuperarSenhaRepository,
   saveTokenRepository,
   setUserRepository,
-  saveFoto,
-  getFoto,
-  deleteFoto,
+  
 };

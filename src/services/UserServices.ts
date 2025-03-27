@@ -72,7 +72,10 @@ const enviarPedido = async (): Promise<AxiosResponse<unknown>> => {
   }
 };
 
-const alterarSenhaAutenticado = async (antigaSenha: string, novaSenha: string) => {
+const alterarSenhaAutenticado = async (
+  antigaSenha: string,
+  novaSenha: string
+) => {
   if (authService.isAuthenticated()) {
     const user = await getUserService();
     const email = user?.email;
@@ -85,7 +88,7 @@ const alterarSenhaAutenticado = async (antigaSenha: string, novaSenha: string) =
 
       data: { antigaSenha, novaSenha, email },
     };
-  //  console.log(config);
+    //  console.log(config);
     return requestBackEnd(config);
   }
 };
@@ -119,17 +122,7 @@ const setUserService = () => {
   userRepository.setUserRepository();
 };
 
-const saveFoto=(foto:string)=>{
-  userRepository.saveFoto(foto);
-  return;
-}
-const getFoto=()=>{ 
-  return userRepository.getFoto();
-}
-const deleteFoto=()=>{  
-  userRepository.deleteFoto();
-  return;
-}
+
 export {
   alterarSenhaAutenticado,
   cadastrarNovoUsuario,
@@ -142,7 +135,5 @@ export {
   recuperarSenha,
   saveTokenService,
   setUserService,
-  saveFoto,
-  getFoto,
-  deleteFoto
+  
 };
