@@ -1,4 +1,4 @@
-export const BASE_URL_LOCAl2="http://localhost:8080"
+export const BASE_URL_LOCAL2="http://localhost:8080"
 export const BASE_URL_LOCAL="https://alexc5142.c44.integrator.host/"
 export const TOKEN_KEY = "br.com.alexcosta/token"
 export const DADOS_USER = "br.com.alexcosta/user"

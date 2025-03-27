@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import './styles.css';
 import * as authService from '../../../services/AuthService';
 import requestBackEnd from '../../../utils/request';
-import axios, { AxiosRequestConfig } from 'axios';
+import { AxiosRequestConfig } from 'axios';
 import { API_IMGBB, HISTORICO_PEDIDO_USER } from '../../../utils/system';
 import { PedidoHistorico } from '../../../models/dto/CarrinhoDTO';
 import { Link, useNavigate } from 'react-router-dom';
@@ -39,7 +39,8 @@ const Perfil = () => {
     const [capturedImage, setCapturedImage] = useState<string | null>(null);
     const [showCameraModal, setShowCameraModal] = useState<boolean>(false);
     const uploadFotoRef = useRef<HTMLInputElement | null>(null);
-   
+    const [fotoCarregada, setFotoCarregada] = useState<boolean>(false); // Novo estado para indicar se a foto foi carregada
+
     
 
     useEffect(() => {
@@ -100,8 +101,10 @@ const Perfil = () => {
                     withCredentials: true,
                 });
                 setFotoPerfil(response.data.fotoPerfil);
-            } catch  {
-               // console.error('Erro ao buscar foto de perfil', error);
+            } catch {
+                setFotoPerfil(""); 
+            } finally {
+                setFotoCarregada(true); 
             }
         };
 
@@ -125,87 +128,17 @@ const Perfil = () => {
 
 
 
-    const enviarFotoPerfil = async (imageData: string) => {
+    const enviarFotoPerfil = async (foto: File | string) => {
         setUploading(true);
+    
         const formData = new FormData();
-        const blob = dataURLtoBlob(imageData);
-        formData.append('image', blob);
-
-        try {
-            const response = await fetch(`https://api.imgbb.com/1/upload?key=${API_IMGBB}`, {
-                method: 'POST',
-                body: formData,
-            });
-            const data = await response.json();
-
-            if (data.success) {
-                const urlFoto = data.data.url;
-                userService.saveFoto(urlFoto)
-                const userDTO = { fotoPerfil: urlFoto };
-
-                try {
-                    const updateResponse = await requestBackEnd({
-                        method: 'PUT',
-                        url: `/api/usuarios/${usuario.id}/foto`,
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        withCredentials: true,
-                        data: userDTO,
-                    });
-
-                    if (updateResponse) {
-                        setFotoPerfil(userService.getFoto() || '');
-                        setFotoSelecionada(null);
-                        setUploading(false);
-                        stopCamera();
-                        setCapturedImage(null);
-                        setErroUpload(null);
-                    } else {
-                        setErroUpload('Erro ao salvar a foto no perfil.');
-                        setUploading(false);
-                    }
-                } catch (error) {
-                    if (axios.isAxiosError(error) && error.response) {
-                        const mensagemErro =
-                            error.response.data?.message ||
-                            error.response.data?.trace ||
-                            error.response.data?.error ||
-                            "Ocorreu um erro ao tentar processar a solicitação.";
-
-                        setErroUpload(mensagemErro);
-                        setUploading(false);
-                    } else {
-                        setErroUpload("Erro ao tentar atualizar a foto de perfil. Tente novamente mais tarde.");
-                        setUploading(false);
-                    }
-                }
-            } else {
-                setErroUpload('Erro ao enviar a foto de perfil.');
-                setUploading(false);
-            }
-        } catch {
-        //    console.error('Erro ao enviar foto de perfil', error);
-            setErroUpload("Houve um erro ao enviar sua foto de perfil. Tente novamente mais tarde.");
-            setUploading(false);
-        }
-    };
-
-    const enviarFotoPerfildoPc = async (fotoSelecionada: File) => {
-        if (fotoSelecionada) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-            const imageData = reader.result as string;
-            enviarFotoPerfil(imageData);
-            };
-            reader.readAsDataURL(fotoSelecionada);
-        }
-        setUploading(true);
-        const formData = new FormData();
-        // Usar diretamente o arquivo (fotoSelecionada) em vez de converter para data URL
-        if (fotoSelecionada) {
-            formData.append('image', fotoSelecionada);
-            // fotoSelecionada deve ser um arquivo, não uma URL
+    
+        // Se for uma string (Data URL), convertemos para Blob
+        if (typeof foto === 'string') {
+            const blob = dataURLtoBlob(foto);
+            formData.append('image', blob);
+        } else {
+            formData.append('image', foto);
         }
     
         try {
@@ -219,31 +152,27 @@ const Perfil = () => {
             if (data.success) {
                 const urlFoto = data.data.url;
                 userService.saveFoto(urlFoto);
+    
                 const userDTO = { fotoPerfil: urlFoto };
     
-                try {
-                    const updateResponse = await requestBackEnd({
-                        method: 'PUT',
-                        url: `/api/usuarios/${usuario.id}/foto`,
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        withCredentials: true,
-                        data: userDTO,
-                    });
+                const updateResponse = await requestBackEnd({
+                    method: 'PUT',
+                    url: `/api/usuarios/${usuario.id}/foto`,
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    withCredentials: true,
+                    data: userDTO,
+                });
     
-                    if (updateResponse) {
-                        setFotoPerfil(userService.getFoto() || '');
-                        setFotoSelecionada(null);
-                        setUploading(false);
-                        stopCamera();
-                        setCapturedImage(null);
-                        setErroUpload(null);
-                    } else {
-                        setErroUpload('Erro ao salvar a foto no perfil.');
-                        setUploading(false);
-                    }
-                } catch  {
+                if (updateResponse) {
+                    setFotoPerfil(userService.getFoto() || '');
+                    setFotoSelecionada(null);
+                    setUploading(false);
+                    stopCamera();
+                    setCapturedImage(null);
+                    setErroUpload(null);
+                } else {
                     setErroUpload('Erro ao salvar a foto no perfil.');
                     setUploading(false);
                 }
@@ -256,6 +185,8 @@ const Perfil = () => {
             setUploading(false);
         }
     };
+    
+    
     const stopCamera = async () => {
         if (stream && typeof stream.getTracks === 'function') {
             const tracks = stream.getTracks();
@@ -404,10 +335,11 @@ const Perfil = () => {
 
             ) : (
                 <section className="registro-formulario">
-                    <h2>Perfil do Usuário</h2>
-
-                    <div className="foto-perfil-container">
-                        {fotoPerfil ? (
+                <h2>Perfil do Usuário</h2>
+    
+                <div className="foto-perfil-container">
+                    {fotoCarregada ? (
+                        fotoPerfil ? (
                             <>
                                 <img src={fotoPerfil} alt="Foto de Perfil" className="foto-perfil" />
                                 <button className="remove-button" onClick={handleRemoveFoto}>
@@ -415,45 +347,44 @@ const Perfil = () => {
                                 </button>
                             </>
                         ) : (
-                            <>
-                                {fotoPerfil === "" && (
-                                    <div className="no-profile-msg">
-                                        <AccountCircle fontSize="large" />
-                                        <p>Você ainda não tem uma foto de perfil. <span>Adicione uma foto clicando na câmera</span></p>
-                                    </div>
-                                )}
-                            </>
-                        )}
-                        {!fotoPerfil && !uploading && (
-                            <div className="upload-container">
-                                <input
-                                    type="file"
-                                    accept="image/*"
-                                    onChange={handleFotoUpload}
-                                    ref={uploadFotoRef}
-                                    hidden
-                                />
-                                <button className="upload-button" onClick={handleUploadClick}>
-                                    <UploadFile /> <span className='icon-camera'>Procurar</span>
-
-                                </button>
-                                <button
-                                    className="camera-button"
-                                    onClick={() => {
-                                        setShowCameraModal(true);
-                                        startCamera();
-                                    }}
-                                >
-                                    <PhotoCamera /><span className='icon-camera'>Iniciar</span>
-                                </button>
+                            <div className="no-profile-msg">
+                                <AccountCircle fontSize="large" />
+                                <p>Você ainda não tem uma foto de perfil. <span>Adicione uma foto clicando na câmera</span></p>
                             </div>
-                        )}
+                        )
+                    ) : (
+                        <CircularProgress />
+                    )}
+    
+                    {!fotoPerfil && !uploading && fotoCarregada && (
+                        <div className="upload-container">
+                            <input
+                                type="file"
+                                accept="image/*"
+                                onChange={handleFotoUpload}
+                                ref={uploadFotoRef}
+                                hidden
+                            />
+                            <button className="upload-button" onClick={handleUploadClick}>
+                                <UploadFile /> <span className="icon-camera">Procurar</span>
+                            </button>
+                            <button
+                                className="camera-button"
+                                onClick={() => {
+                                    setShowCameraModal(true);
+                                    startCamera();
+                                }}
+                            >
+                                <PhotoCamera /><span className="icon-camera">Iniciar</span>
+                            </button>
+                        </div>
+                    )}
                         {fotoSelecionada && !uploading && (
                             <div>
                                 <button
                                     className="upload-button"
                                     onClick={() =>
-                                        fotoSelecionada && enviarFotoPerfildoPc(fotoSelecionada)
+                                        fotoSelecionada && enviarFotoPerfil(fotoSelecionada)
                                     }
                                 >
                                     <Send /> <span className='icon-camera'>Enviar</span>
@@ -473,7 +404,6 @@ const Perfil = () => {
                             </div>
                         )}
                     </div>
-                    {/* Dados do Usuário */}
                     <div className="user-info">
                         <FormularioUser
                             className="formulario-grupo"
@@ -567,7 +497,6 @@ const Perfil = () => {
                         />
                     </div>
 
-                    {/* Botões */}
                     <div className="container-btns">
                         <div className="formulario-grupo">
                             <Link to="/perfil/MudarSenha">
