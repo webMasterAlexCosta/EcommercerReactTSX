@@ -13,6 +13,11 @@ import {
 import { isAuthenticated } from "../services/AuthService";
 import { CriptografiaAES } from "../models/domain/CriptografiaAES";
 
+const SECRET_KEY_BASE64_1 = CriptografiaAES.generateRandomKeyBase64();
+const SECRET_KEY_BASE64_2 = CriptografiaAES.generateRandomKeyBase64(); 
+
+
+
 const getMeRepository = async () => {
   if (isAuthenticated()) {
     const config: AxiosRequestConfig = {
@@ -92,44 +97,57 @@ const getTokenRepository = () => {
   return localStorage.getItem(TOKEN_KEY);
 };
 
-const setUserRepository = async () => {
-  if (isAuthenticated()) {
-    const encryptedData = sessionStorage.getItem(DADOCIFRAFADO);
-    const chaveBase64 = sessionStorage.getItem(CHAVECIFRADO);
-    if (encryptedData === null && chaveBase64 === null) {
-      const usuario = await getMeRepository();
-      sessionStorage.setItem(DADOCIFRAFADO, usuario?.data.encryptedData);
-      sessionStorage.setItem(CHAVECIFRADO, usuario?.data?.chaveBase64);
-      if (!usuario?.data?.encryptedData || !usuario?.data?.chaveBase64) {
-        throw new Error("Dados criptografados ou chave não foram retornados corretamente.");
+  const setUserRepository = async () => {
+    if (isAuthenticated()) {
+      
+      const encryptedData = sessionStorage.getItem(DADOCIFRAFADO);
+      const chaveBase64 = sessionStorage.getItem(CHAVECIFRADO);
+      if (encryptedData === null && chaveBase64 === null) {
+        const usuario = await getMeRepository();
+        const ofuscado1 = await CriptografiaAES.obfuscateKey(chaveBase64 || "", SECRET_KEY_BASE64_1);
+        const ofuscado2 = await CriptografiaAES.obfuscateKey(chaveBase64 || "", SECRET_KEY_BASE64_2);
+        console.log("tamanho chave recebida = " + usuario?.data.chaveBase64.length)
+        const misturar =ofuscado1+ usuario?.data.chaveBase64 + ofuscado2
+        sessionStorage.setItem(DADOCIFRAFADO, usuario?.data.encryptedData);
+        sessionStorage.setItem(CHAVECIFRADO, misturar);
+        return Promise.resolve(usuario);
+      
+        
       }
+      return Promise.resolve();
     }
-    // console.log("🔐 Dados criptografados armazenados com sucesso!");
-    return Promise.resolve();
-  }
-};
-const getUserRepository = async () => {
-  await setUserRepository()
+  };
+ const getUserRepository = async () => {
+  await setUserRepository();
   const encryptedData = sessionStorage.getItem(DADOCIFRAFADO);
   const chaveBase64 = sessionStorage.getItem(CHAVECIFRADO);
 
-  if (!encryptedData || !chaveBase64) {
-    //console.error("⚠️ Dados ou chave ausentes.");
+  if (!chaveBase64) {
+    throw new Error("Chave não encontrada no sessionStorage.");
+  }
+
+
+
+  const chaveBase64Recuperada = chaveBase64.slice(SECRET_KEY_BASE64_1.length, chaveBase64.length - SECRET_KEY_BASE64_2.length);
+  
+
+  if (!encryptedData || !chaveBase64Recuperada) {
     return Promise.resolve({ perfil: [] });
   }
 
   try {
-    const decryptedData = await CriptografiaAES.decrypt(encryptedData, chaveBase64);
-
-    // console.log("🔓 Dados descriptografados:", decryptedData);
+    const decryptedData = await CriptografiaAES.decrypt(encryptedData, chaveBase64Recuperada);
 
     const user = JSON.parse(decryptedData);
-    return Promise.resolve({ ...user, perfil: user.perfil || [] }); // Retorna uma Promise resolvida com os dados
-  } catch {
-    // console.error("Erro ao descriptografar os dados:", error);
-    return Promise.resolve({ perfil: [] }); // 
+
+    return Promise.resolve({ ...user, perfil: user.perfil || [] });
+  } catch (error) {
+    console.error("Erro ao descriptografar os dados:", error);
+    return Promise.resolve({ perfil: [] });
   }
 };
+
+
 const saveFoto = (foto: string) => {
   localStorage.setItem(FOTO_PERFIL, foto);
   return;

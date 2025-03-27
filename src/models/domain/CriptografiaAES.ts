@@ -1,22 +1,103 @@
 export class CriptografiaAES {
-  private static IV_SIZE = 12; // Tamanho recomendado para GCM
-  private static TAG_SIZE = 128; // Autenticação de 128 bits
+  private static IV_SIZE = 12; 
+  private static TAG_SIZE = 128;
 
-  public static async decrypt(DADOCIFRAFADO: string, CHAVECIFRADO: string): Promise<string> {
-    if (!DADOCIFRAFADO || !CHAVECIFRADO) {
+  public static async obfuscateKey(chaveBase64: string, secretKeyBase64: string): Promise<string> {
+    const chaveBytes = this.base64ToUint8Array(chaveBase64);
+    const secretKeyBytes = this.base64ToUint8Array(secretKeyBase64);
+
+    try {
+      const secretKey = await window.crypto.subtle.importKey(
+        "raw",
+        secretKeyBytes,
+        { name: "AES-GCM" },
+        false,
+        ["encrypt", "decrypt"]
+      );
+
+      const iv = window.crypto.getRandomValues(new Uint8Array(12));
+
+      const encryptedKey = await window.crypto.subtle.encrypt(
+        { name: "AES-GCM", iv, tagLength: 128 },
+        secretKey,
+        chaveBytes
+      );
+
+      return this.uint8ArrayToBase64(new Uint8Array(encryptedKey));
+    } catch  {
+      throw new Error("Erro ao ofuscar a chave.");
+    }
+  }
+
+  public static async deobfuscateKey(ofuscatedKeyBase64: string, secretKeyBase64: string): Promise<string> {
+    const ofuscatedKey = this.base64ToUint8Array(ofuscatedKeyBase64);
+    const secretKeyBytes = this.base64ToUint8Array(secretKeyBase64);
+
+    try {
+      const secretKey = await window.crypto.subtle.importKey(
+        "raw",
+        secretKeyBytes,
+        { name: "AES-GCM" },
+        false,
+        ["decrypt"]
+      );
+
+      const iv = ofuscatedKey.slice(0, 12);
+      const encryptedKey = ofuscatedKey.slice(12);
+
+      const decryptedKeyBuffer = await window.crypto.subtle.decrypt(
+        { name: "AES-GCM", iv, tagLength: 128 },
+        secretKey,
+        encryptedKey
+      );
+
+      return this.uint8ArrayToBase64(new Uint8Array(decryptedKeyBuffer));
+    } catch  {
+      throw new Error("Erro ao desofuscar a chave.");
+    }
+  }
+
+  public static async encrypt(encryptedData: string, chaveBase64: string): Promise<string> {
+    if (!encryptedData || !chaveBase64) {
+      throw new Error("Dados ou chave ausente.");
+    }
+
+    const chaveBytes = this.base64ToUint8Array(chaveBase64);
+    const iv = window.crypto.getRandomValues(new Uint8Array(12)); 
+
+    try {
+      const key = await window.crypto.subtle.importKey(
+        "raw",
+        chaveBytes,
+        { name: "AES-GCM" },
+        false,
+        ["encrypt"]
+      );
+
+      const encryptedBuffer = await window.crypto.subtle.encrypt(
+        { name: "AES-GCM", iv, tagLength: 128 },
+        key,
+        new TextEncoder().encode(encryptedData)
+      );
+
+      return this.uint8ArrayToBase64(new Uint8Array(encryptedBuffer));
+    } catch  {
+      throw new Error("Erro ao criptografar os dados.");
+    }
+  }
+
+  public static async decrypt(encryptedData: string, chaveBase64: string): Promise<string> {
+    if (!encryptedData || !chaveBase64) {
       throw new Error("Dados criptografados ou chave ausente.");
     }
 
     try {
-      // Converte a chave e os dados criptografados de Base64 para Uint8Array
-      const chaveBytes = this.base64ToUint8Array(CHAVECIFRADO);
-      const encryptedBytes = this.base64ToUint8Array(DADOCIFRAFADO);
+      const chaveBytes = this.base64ToUint8Array(chaveBase64);
+      const encryptedBytes = this.base64ToUint8Array(encryptedData);
 
-      // Extrai IV e dados criptografados
-      const iv = encryptedBytes.slice(0, this.IV_SIZE); // IV é extraído da parte inicial dos bytes
-      const encryptedData = encryptedBytes.slice(this.IV_SIZE); // Dados criptografados começam após o IV
+      const iv = encryptedBytes.slice(0, this.IV_SIZE); 
+      const encryptedPayload = encryptedBytes.slice(this.IV_SIZE); 
 
-      // Importa a chave para uso com a API Web Crypto
       const key = await window.crypto.subtle.importKey(
         "raw",
         chaveBytes,
@@ -25,7 +106,6 @@ export class CriptografiaAES {
         ["decrypt"]
       );
 
-      // Descriptografa os dados
       const decryptedBuffer = await window.crypto.subtle.decrypt(
         {
           name: "AES-GCM",
@@ -33,85 +113,35 @@ export class CriptografiaAES {
           tagLength: this.TAG_SIZE,
         },
         key,
-        encryptedData
+        encryptedPayload
       );
 
-      // Converte o buffer de volta para string (decodificando os dados)
       const decodedData = new TextDecoder().decode(decryptedBuffer);
 
-      // Retorna os dados descriptografados como string
       return decodedData;
-    } catch (error) {
-      console.error("Erro ao descriptografar:", error);
+    } catch  {
       throw new Error("Erro durante a descriptografia");
     }
+  }
+
+  public static generateRandomKeyBase64(): string {
+    const keyBytes = window.crypto.getRandomValues(new Uint8Array(16));
+
+    return this.uint8ArrayToBase64(keyBytes);
+  }
+
+  private static uint8ArrayToBase64(array: Uint8Array): string {
+    let binaryString = "";
+    array.forEach((byte) => {
+      binaryString += String.fromCharCode(byte);
+    });
+    return btoa(binaryString);
   }
 
   private static base64ToUint8Array(base64: string): Uint8Array {
     const binaryString = atob(base64);
     return new Uint8Array(binaryString.split("").map((char) => char.charCodeAt(0)));
   }
+
+ 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//versao 1
-/*export class CriptografiaAES {
-  private static IV_SIZE = 12; // Tamanho recomendado para GCM
-  private static TAG_SIZE = 128; // Autenticação de 128 bits
-
-  public static async decrypt(encryptedDataBase64: string, chaveBase64: string): Promise<string> {
-    if (!encryptedDataBase64 || !chaveBase64) {
-      throw new Error("Dados criptografados ou chave ausente.");
-    }
-
-    try {
-      const chaveBytes = Uint8Array.from(atob(chaveBase64), (c) => c.charCodeAt(0));
-      const encryptedBytes = Uint8Array.from(atob(encryptedDataBase64), (c) => c.charCodeAt(0));
-
-      const iv = encryptedBytes.slice(0, this.IV_SIZE); // Extrai o IV
-      const encryptedData = encryptedBytes.slice(this.IV_SIZE); // Extrai os dados criptografados
-
-      // Importa a chave no formato correto para a API Web Crypto
-      const key = await window.crypto.subtle.importKey(
-        "raw",
-        chaveBytes,
-        { name: "AES-GCM" },
-        false,
-        ["decrypt"]
-      );
-
-      // Descriptografar os dados
-      const decryptedBuffer = await window.crypto.subtle.decrypt(
-        {
-          name: "AES-GCM",
-          iv: iv,
-          tagLength: this.TAG_SIZE,
-        },
-        key,
-        encryptedData
-      );
-
-      return new TextDecoder().decode(decryptedBuffer); // Converte de volta para string UTF-8
-    } catch (error) {
-      console.error("Erro ao descriptografar:", error);
-      throw new Error("Erro durante a descriptografia");
-    }
-  }
-}
-*/
