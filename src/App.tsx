@@ -61,7 +61,10 @@ const App = () => {
             <Route path="/Administrativo" element={<PrivateRouteAdmin><Administrativo /></PrivateRouteAdmin>}>
               <Route path="Listagem" element={<Listagem />} />
               <Route path="AdminHome" element={<AdminHome />} />
-              <Route path="PerfilAdmin" element={<PerfilAdmin />} />
+              <Route path="PerfilAdmin" element={<PerfilAdmin />} >
+                <Route path="MudarSenha" element={<MudarSenha />} />
+                <Route path="NovoEndereco" element={<NovoEndereco />} />
+              </Route>
               <Route path="Formulario/:id" element={<Formulario />} />
               <Route path="CriarNovoProduto/:id" element={<CriarNovoProduto />} />
             </Route>

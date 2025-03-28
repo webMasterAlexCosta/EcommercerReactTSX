@@ -1,125 +1,117 @@
-export class CriptografiaAES {
-  private static IV_SIZE = 12;
-  private static TAG_SIZE = 128; 
+const CriptografiaAES = {
+  IV_SIZE: 12,
+  TAG_SIZE: 128,
 
-  public static async deriveSecondKeyFromFirst(
-    firstKeyBase64: string
-  ): Promise<string> {
+  async deriveSecondKeyFromFirst(firstKeyBase64: string): Promise<string> {
     const firstKeyBytes = this.base64ToUint8Array(firstKeyBase64);
-
-    const salt = new TextEncoder().encode("derivation_salt"); 
+    const salt = new TextEncoder().encode("derivation_salt"); // Salt fixo (idealmente, deve ser aleatório)
 
     try {
-      const hmacKey = await window.crypto.subtle.importKey(
+      const baseKey = await window.crypto.subtle.importKey(
         "raw",
-        firstKeyBytes, 
-        { name: "HMAC", hash: "SHA-512" }, 
+        firstKeyBytes,
+        { name: "PBKDF2" },
         false,
-        ["sign"]
+        ["deriveBits"]
       );
 
-     
-      const derivedKeyBuffer = await window.crypto.subtle.sign(
-        { name: "HMAC" },
-        hmacKey,
-        salt 
+      const derivedBits = await window.crypto.subtle.deriveBits(
+        {
+          name: "PBKDF2",
+          salt,
+          iterations: 100000,
+          hash: "SHA-256",
+        },
+        baseKey,
+        256
       );
 
-      const derivedKey = new Uint8Array(derivedKeyBuffer.slice(0, 16)); 
-      return this.uint8ArrayToBase64(derivedKey); 
+      const derivedKey = new Uint8Array(derivedBits).slice(0, 16); // Pegando os primeiros 32 bytes (AES-256)
+      return this.uint8ArrayToBase64(derivedKey);
     } catch (error) {
       console.error("Erro ao derivar a segunda chave:", error);
       throw new Error("Erro ao derivar a segunda chave.");
     }
-  }
+  },
 
-  public static generateRandomKeyBase64(): string {
-    const keyBytes = window.crypto.getRandomValues(new Uint8Array(16)); 
+  generateRandomKeyBase64(): string {
+    const keyBytes = window.crypto.getRandomValues(new Uint8Array(16)); // 32 bytes para AES-256
     return this.uint8ArrayToBase64(keyBytes);
-  }
+  },
 
-  private static uint8ArrayToBase64(array: Uint8Array): string {
-    let binaryString = "";
-    array.forEach((byte) => {
-      binaryString += String.fromCharCode(byte);
-    });
-    return btoa(binaryString);
-  }
+  uint8ArrayToBase64(array: Uint8Array): string {
+    return btoa(String.fromCharCode(...array));
+  },
 
-  private static base64ToUint8Array(base64: string): Uint8Array {
-    const binaryString = atob(base64); 
-    return new Uint8Array(
-      binaryString.split("").map((char) => char.charCodeAt(0))
-    );
-  }
+  base64ToUint8Array(base64: string): Uint8Array {
+    return Uint8Array.from(atob(base64), (char) => char.charCodeAt(0));
+  },
 
-  public static async encrypt(
-    encryptedData: string,
-    chaveBase64: string
-  ): Promise<string> {
-    if (!encryptedData || !chaveBase64) {
+  async encrypt(data: string, keyBase64: string): Promise<string> {
+    if (!data || !keyBase64) {
       throw new Error("Dados ou chave ausente.");
     }
 
-    const chaveBytes = this.base64ToUint8Array(chaveBase64);
-    const iv = window.crypto.getRandomValues(new Uint8Array(12)); 
+    const keyBytes = this.base64ToUint8Array(keyBase64);
+    const iv = window.crypto.getRandomValues(new Uint8Array(this.IV_SIZE));
 
     try {
       const key = await window.crypto.subtle.importKey(
-        "raw", 
-        chaveBytes,
+        "raw",
+        keyBytes,
         { name: "AES-GCM" },
-        false, 
-        ["encrypt"] 
+        false,
+        ["encrypt"]
       );
 
       const encryptedBuffer = await window.crypto.subtle.encrypt(
-        { name: "AES-GCM", iv, tagLength: 128 },
-        key, 
-        new TextEncoder().encode(encryptedData)
+        { name: "AES-GCM", iv, tagLength: this.TAG_SIZE },
+        key,
+        new TextEncoder().encode(data)
       );
 
-      return this.uint8ArrayToBase64(new Uint8Array(encryptedBuffer)); 
+      // Concatenar IV + Dados Criptografados
+      const encryptedData = new Uint8Array([...iv, ...new Uint8Array(encryptedBuffer)]);
+      return this.uint8ArrayToBase64(encryptedData);
     } catch (error) {
       console.error("Erro ao criptografar os dados:", error);
       throw new Error("Erro ao criptografar os dados.");
     }
-  }
+  },
 
-  public static async decrypt(
-    encryptedData: string,
-    chaveBase64: string
-  ): Promise<string> {
-    if (!encryptedData || !chaveBase64) {
+  async decrypt(encryptedData: string, keyBase64: string): Promise<string> {
+    if (!encryptedData || !keyBase64) {
       throw new Error("Dados criptografados ou chave ausente.");
     }
 
     try {
-      const chaveBytes = this.base64ToUint8Array(chaveBase64);
+      const keyBytes = this.base64ToUint8Array(keyBase64);
       const encryptedBytes = this.base64ToUint8Array(encryptedData);
 
-      const iv = encryptedBytes.slice(0, this.IV_SIZE); 
-      const encryptedPayload = encryptedBytes.slice(this.IV_SIZE); 
+      // Separar IV e Payload Criptografado
+      const iv = encryptedBytes.slice(0, this.IV_SIZE);
+      const encryptedPayload = encryptedBytes.slice(this.IV_SIZE);
 
       const key = await window.crypto.subtle.importKey(
-        "raw", 
-        chaveBytes, 
-        { name: "AES-GCM" }, 
-        false, 
-        ["decrypt"] 
+        "raw",
+        keyBytes,
+        { name: "AES-GCM" },
+        false,
+        ["decrypt"]
       );
 
       const decryptedBuffer = await window.crypto.subtle.decrypt(
-        { name: "AES-GCM", iv, tagLength: this.TAG_SIZE }, 
-        key, 
-        encryptedPayload 
+        { name: "AES-GCM", iv, tagLength: this.TAG_SIZE },
+        key,
+        encryptedPayload
       );
 
-      const decodedData = new TextDecoder().decode(decryptedBuffer);
-      return decodedData;
+      return new TextDecoder().decode(decryptedBuffer);
     } catch (error) {
       console.error("Erro ao descriptografar:", error);
-      throw new Error("Erro durante a descriptografia");
+      throw new Error("Erro durante a descriptografia.");
     }
   }
-}
+};
+
+export default CriptografiaAES;

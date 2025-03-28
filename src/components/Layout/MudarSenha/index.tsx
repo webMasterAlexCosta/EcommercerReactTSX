@@ -6,6 +6,7 @@ const MudarSenha = () => {
     const token = authService.isAuthenticated()
     const [isToken, setIsToken] = useState<boolean>(false)
     const [isSubmitted, setIsSubmitted] = useState(false);
+   
 
     useEffect(() => {
         if (token) {
@@ -21,7 +22,7 @@ const MudarSenha = () => {
         <>
             <main>
                 
-                <RedefinirSenha isToken={isToken} isSubmitted={isSubmitted} />
+                <RedefinirSenha  isToken={isToken} isSubmitted={isSubmitted} />
             </main>
         </>
     )

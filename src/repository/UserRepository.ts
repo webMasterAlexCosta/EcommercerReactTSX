@@ -13,15 +13,16 @@ import {
   TOKEN_KEY,
 } from "../utils/system";
 import { isAuthenticated } from "../services/AuthService";
-import { CriptografiaAES } from "../models/domain/CriptografiaAES";
+import CriptografiaAES from "../models/domain/CriptografiaAES";
 
 // Função para gerar e derivar as chaves
 const gerarChaves = async () => {
   const SECRET_KEY_BASE64_1 = CriptografiaAES.generateRandomKeyBase64();
-
+  console.log(SECRET_KEY_BASE64_1.length)
   const SECRET_KEY_BASE64_2 = await CriptografiaAES.deriveSecondKeyFromFirst(
     SECRET_KEY_BASE64_1
   );
+  console.log(SECRET_KEY_BASE64_2.length)
 
   return { SECRET_KEY_BASE64_1, SECRET_KEY_BASE64_2 };
 };

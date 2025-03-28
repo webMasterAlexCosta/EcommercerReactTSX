@@ -42,7 +42,21 @@ const Perfil = () => {
     const uploadFotoRef = useRef<HTMLInputElement | null>(null);
     const [fotoCarregada, setFotoCarregada] = useState<boolean>(false);
     const [mostrarPedido, setMostrarPedido] = useState<boolean>(false)
+    const [ caminhoSenha,setCaminhoSenha] = useState<string>("/PerfilClient/MudarSenha")
+    const [ caminhoEndereco,setCaminhoEndereco] = useState<string>("/PerfilClient/NovoEndereco")
 
+    useEffect(()=>{
+        const obterPerfil = async () => {
+            const response = await userService.getUserService()
+            if(response.perfil.includes("ADMIN")){
+                setCaminhoSenha("/Administrativo/PerfilAdmin/MudarSenha")
+                setCaminhoEndereco("/Administrativo/PerfilAdmin/NovoEndereco")
+                console.log("caminhoSenha set to Administrativo/MudarSenha")
+                console.log("caminhoEndereco set to Administrativo/NovoEndereco")
+            }
+        }
+        obterPerfil()
+    },[])
 
     useEffect(() => {
         if (!(userService.getTokenService() && authService.isAuthenticated())) {
@@ -275,7 +289,7 @@ const Perfil = () => {
                 </div>
             )}
             {mudarSenha ? (
-                <MudarSenha />
+                <MudarSenha/>
             ) : mudarEndereco ? (
                 <NovoEndereco />
 
@@ -445,14 +459,14 @@ const Perfil = () => {
 
                     <div className="container-btns">
                         <div className="formulario-grupo">
-                            <Link to="/PerfilClient/MudarSenha">
+                            <Link to={caminhoSenha}>
                                 <button id="botao2" onClick={() => setMudarSenha(true)}>
                                     Mudar Senha
                                 </button>
                             </Link>
                         </div>
                         <div className="formulario-grupo">
-                            <Link to="/PerfilClient/NovoEndereco">
+                            <Link to={caminhoEndereco}>
                                 <button id="botao1" onClick={() => setMudarEndereco(true)}>Mudar Endereço</button>
                             </Link>
                         </div>
