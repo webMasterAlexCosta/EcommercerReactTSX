@@ -458,31 +458,26 @@ const Perfil = () => {
                         </div>
                     </div>
 
-                    <h3>Histórico de Pedidos</h3>
-                    <div id="historico-pedidos">
-                        <ul>
-
-                            <>
-                                {!mostrarPedido && (
-                                    <button onClick={toggleMostrarPedido}>
-                                        Mostrar Pedido
-                                    </button>
-                                )}
-
-                                {mostrarPedido && (
-                                    <>
+                    {!usuario.perfil.includes("ADMIN") && (
+                        <div>
+                            <h3>Histórico de Pedidos</h3>
+                            <div id="historico-pedidos">
+                                <ul>
+                                    {!mostrarPedido ? (
+                                        <button onClick={toggleMostrarPedido}>Mostrar Pedido</button>
+                                    ) : (
                                         <PedidoUsuario
                                             historicoPedidos={historicoPedidos.map(pedido => ({
                                                 ...pedido,
                                                 numeroPedido: pedido.numeroPedido
                                             }))}
                                         />
-                                    </>
-                                )}
-                            </>
+                                    )}
+                                </ul>
+                            </div>
+                        </div>
+                    )}
 
-                        </ul>
-                    </div>
                 </section>
             )}
         </main>

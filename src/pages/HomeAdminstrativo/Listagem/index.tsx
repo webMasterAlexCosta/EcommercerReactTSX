@@ -5,6 +5,8 @@ import { BarraBuscar } from "../../../components/Layout/BarraBuscar";
 import { useEffect, useState } from "react";
 import { ProdutoDTO } from "../../../models/dto/ProdutosDTO";
 import { findByRequest, findAll } from "../../../services/ProdutoService";
+import { Carregando } from "../../../components/UI/Carregando";
+import { TEXTO_PADRAO_SOLICITACAO } from "../../../utils/system";
 
 const Listagem = () => {
   const [searchName, setSearchName] = useState('');
@@ -78,13 +80,11 @@ const Listagem = () => {
         }} />
 
         {loading ? (
-          <div className="loading">Carregando...</div>
+          <Carregando title={TEXTO_PADRAO_SOLICITACAO}/>
         ) : (
-          <table className="alex-table alex-mb20 alex-mt20">
-            <tbody>
+          
               <ListaProdutos produtosRecebidos={produtos} />
-            </tbody>
-          </table>
+          
         )}
 
         {!loading && (

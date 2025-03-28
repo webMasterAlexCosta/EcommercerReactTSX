@@ -23,6 +23,18 @@ const Formulario = () => {
         icon: "success" | "error" | "warning" | "info";
     } | null>(null);
 
+
+    useEffect(() => {
+        if (alertData) {
+
+           setTimeout(() => {
+                handleAlertClose();
+            }, 5000);
+
+
+        }
+    }, [alertData]);
+
     useEffect(() => {
         const buscarProduto = async () => {
             try {
@@ -176,12 +188,29 @@ const Formulario = () => {
             </section>
 
             {alertData && (
-                <Alert
-                    severity={alertData.icon}
-                    onClose={handleAlertClose}
-                >
-                    {alertData.text}
-                </Alert>
+                alertData && (
+                    <Alert
+                        severity={alertData.icon}
+                        onClose={handleAlertClose}
+                        sx={{
+                            width: '400px',
+                            height: '150px',
+                            fontSize: '24px',
+                            fontWeight: 'bold',
+                            position: 'fixed',
+                            top: '85%',
+                            left: '50%',
+                            transform: 'translate(-50%, -50%)',
+                            zIndex: 1300,
+                            color: 'blue',
+                            '& .MuiAlert-message': {
+                                color: 'green',
+                            },
+                        }}
+                    >
+                        {alertData.text}
+                    </Alert>
+                )
             )}
         </main>
     );

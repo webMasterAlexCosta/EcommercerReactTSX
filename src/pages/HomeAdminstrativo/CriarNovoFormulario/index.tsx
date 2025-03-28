@@ -22,6 +22,18 @@ const CriarNovoProduto = () => {
   } | null>(null);
 
   useEffect(() => {
+    if (alertData) {
+
+       setTimeout(() => {
+            handleAlertClose();
+        }, 5000);
+
+
+        
+    }
+}, [alertData]);
+  
+  useEffect(() => {
     const buscar = async () => {
       const response = await produtoService.findAllCategories();
       setCategorias(response);

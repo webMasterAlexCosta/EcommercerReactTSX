@@ -1,7 +1,7 @@
 import { Outlet } from 'react-router-dom';
 import HeaderAdmin from '../../components/Layout/HeaderAdmin';
 import { Usuario } from '../../models/dto/CredenciaisDTO';
-import AdminLayout from '../../pages/HomeAdminstrativo/AdminLayout/index'; // Adjust the path if necessary
+import AdminLayout from '../../pages/HomeAdminstrativo/AdminLayout/index'; 
 
 interface AdministrativoProps {
   user?: Usuario | null;
@@ -10,14 +10,12 @@ interface AdministrativoProps {
 const Administrativo = ({ user }: AdministrativoProps) => {
   return (
     <div>
-      {/* Renderiza o HeaderAdmin e passa o `user` como prop */}
       <HeaderAdmin
         user={user ?? null}
         setViewerHeaderClient={() => {}}
         setContextIsLogin={() => {}}
       />
       <AdminLayout user={user}/>
-      {/* Passa o `user` para os componentes filhos via Outlet */}
       <Outlet context={{ user }} />
     </div>
   );

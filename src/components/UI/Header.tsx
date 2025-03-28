@@ -4,15 +4,12 @@ import HeaderClient from '../Layout/HeaderClient';
 import { useContext } from 'react';
 import ContextIsLogin from './../../data/LoginContext';
 import UserContext from '../../data/UsuarioContext';
-import { Carregando } from './Carregando'; 
 import { isAuthenticated } from '../../services/AuthService';
 import { getUserService } from '../../services/UserServices';
-import { TEXTO_PADRAO_SOLICITACAO } from '../../utils/system';
 
 const Header = () => {
   const [isAdmin, setIsAdmin] = useState<string | null>(null);
   const [viewerHeaderClient, setViewerHeaderClient] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(true);  
 
   const { setContextIsLogin } = useContext(ContextIsLogin);
   const { usuario, setUsuario } = useContext(UserContext);
@@ -20,7 +17,6 @@ const Header = () => {
   useEffect(() => {
     if (!isAuthenticated()) {
       setUsuario(null);
-      setLoading(false);  
       return;
     }
 
@@ -29,7 +25,6 @@ const Header = () => {
       const userData = await getUserService();
      
       setUsuario(userData);
-      setLoading(false); 
       }catch{
         window.location.href="/";
       } 
@@ -44,15 +39,13 @@ const Header = () => {
     }
   }, [usuario]);
 
-  if (loading) {
-    return <Carregando title={TEXTO_PADRAO_SOLICITACAO} />; 
-  }
+ 
 
   return (
     <>
       {isAdmin === 'ADMIN' && viewerHeaderClient === true ? (
         <HeaderAdmin
-         
+          user={usuario}
           setViewerHeaderClient={setViewerHeaderClient}
           setContextIsLogin={setContextIsLogin}
         />

@@ -2,9 +2,9 @@ import "../../../pages/HomeAdminstrativo/Formulario/styles.css";
 import editar from "../../../assets/images/edit.svg";
 import deletar from "../../../assets/images/delete.svg";
 import * as produtoService from "../../../services/ProdutoService";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ProdutoDTO } from "../../../models/dto/ProdutosDTO";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Alert } from "@mui/material";
 
 interface IListaProdutos {
@@ -12,11 +12,25 @@ interface IListaProdutos {
 }
 
 const ListaProdutos = ({ produtosRecebidos }: IListaProdutos) => {
+  const navigate = useNavigate();
   const [alertData, setAlertData] = useState<{
     title: string;
     text: string;
     icon: "success" | "error" | "warning" | "info";
-  } | null>(null);  // Estado para o alerta
+  } | null>(null);  
+
+
+useEffect(() => {
+        if (alertData) {
+
+            const timer = setTimeout(() => {
+                handleAlertClose();
+            }, 5000);
+
+
+            return () => clearTimeout(timer);
+        }
+    }, [alertData]);
 
   const handleDelete = async (id: number | undefined) => {
     if (id === undefined) {
@@ -50,9 +64,14 @@ const ListaProdutos = ({ produtosRecebidos }: IListaProdutos) => {
     }
   };
 
+  
+
   const handleAlertClose = () => {
+    if (alertData?.icon === "success") {
+        navigate(-1);
+    }
     setAlertData(null);
-  };
+};
 
   return (
     <>

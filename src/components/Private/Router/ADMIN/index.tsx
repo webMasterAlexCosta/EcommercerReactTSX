@@ -18,11 +18,11 @@ const PrivateRouteAdmin: React.FC<Props> = ({ children }) => {
       try {
         if (authService.isAuthenticated()) {
           const userProfile = await userService.getUserService();
-          console.log("Dados do usuário buscados:", userProfile);
+          //console.log("Dados do usuário buscados:", userProfile);
           setUser(userProfile);
         }
-      } catch (error) {
-        console.error("Erro ao buscar usuário:", error);
+      } catch  {
+      //  console.error("Erro ao buscar usuário:", error);
         setUser(null);
       } finally {
         setIsLoading(false);
