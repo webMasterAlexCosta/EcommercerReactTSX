@@ -4,7 +4,8 @@ import { Link } from 'react-router-dom';
 import * as userService from "../../../services/UserServices";
 import { AccountCircle, ExitToApp, Home, Inventory, SupervisorAccount } from '@mui/icons-material';
 import UsuarioContext from '../../../data/UsuarioContext';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
+import { isAuthenticated } from '../../../services/AuthService';
 
 interface HeaderAdminProps {
   setViewerHeaderClient: (value: boolean) => void;
@@ -12,11 +13,25 @@ interface HeaderAdminProps {
 }
 
 const HeaderAdmin = ({ setViewerHeaderClient, setContextIsLogin }: HeaderAdminProps) => {
-  const {usuario} = useContext(UsuarioContext)
+  const {usuario,setUsuario} = useContext(UsuarioContext)
 
   const getIsActive = ({ isActive }: { isActive: boolean }) =>
     isActive ? { color: "red" } : { color: "black" };
 
+useEffect(()=>{
+  if(usuario===undefined && isAuthenticated()){
+    const obterUsuario=async()=>{
+      const response =await userService.getUserService()
+
+      if(!response.perfil.includes("ADMIN"))return;
+
+      setUsuario(response.nome)
+  
+    }
+    obterUsuario()
+
+  }
+},[])
 
   const handlerClick = () => {
     userService.logoutService();
