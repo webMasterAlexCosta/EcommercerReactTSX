@@ -103,9 +103,10 @@ p,
   .alex-menu-items-container,
   .logout-link
   {
+
     margin: 0px;
     padding: 0px;
-    gap: 0px;
+    gap: 5px;
   }
   
 }

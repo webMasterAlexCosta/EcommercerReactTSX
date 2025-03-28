@@ -59,7 +59,7 @@ const HeaderAdmin = ({ setViewerHeaderClient, setContextIsLogin }: HeaderAdminPr
           <div className="alex-logged-user">
             <div className="user-info-icon">
               <SupervisorAccount style={{ fontSize: 40, color: 'black' }} />
-              {usuario?.nome}
+              
             </div>
             <Link to="/catalogo" onClick={handlerClick} className="logout-link">
               <ExitToApp style={{ fontSize: 40, color: 'black' }} />
