@@ -10,7 +10,7 @@ const {usuario} = useContext(UsuarioContext);
   return (
     <div>
       <HeaderAdmin 
-        user={usuario?.nome} 
+      
         setViewerHeaderClient={() => {}}
         setContextIsLogin={() => {}}
       />
