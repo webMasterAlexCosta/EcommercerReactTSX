@@ -3,87 +3,112 @@ import { NavLink } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import * as userService from "../../../services/UserServices";
 import { AccountCircle, ExitToApp, Home, Inventory, SupervisorAccount } from '@mui/icons-material';
-import UsuarioContext from '../../../data/UsuarioContext';
-import { useContext, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { isAuthenticated } from '../../../services/AuthService';
+import { Usuario } from '../../../models/dto/CredenciaisDTO';
 
 interface HeaderAdminProps {
-  setViewerHeaderClient: (value: boolean) => void;
-  setContextIsLogin: (value: boolean) => void;
+  user: Usuario | null;
+  setViewerHeaderClient: () => void;
+  setContextIsLogin: () => void;
 }
 
 const HeaderAdmin = ({ setViewerHeaderClient, setContextIsLogin }: HeaderAdminProps) => {
-  const {usuario,setUsuario} = useContext(UsuarioContext)
+  const [usuario, setUsuario] = useState<{ nome: string } | null>(null);  // Armazena o nome do usuário ou null
+  const [loading, setLoading] = useState(true);  // Estado de loading para aguardar a resposta da API
 
   const getIsActive = ({ isActive }: { isActive: boolean }) =>
     isActive ? { color: "red" } : { color: "black" };
 
-useEffect(()=>{
-  if(usuario===undefined && isAuthenticated()){
-    const obterUsuario=async()=>{
-      const response =await userService.getUserService()
+  useEffect(() => {
+    if (isAuthenticated()) {
+      const obterUsuario = async () => {
+        setLoading(true);  // Começando o carregamento
+        try {
+          const response = await userService.getUserService();  // Fazendo a chamada para a API
 
-      if(!response.perfil.includes("ADMIN"))return;
+          // Verificando se a resposta contém o nome
+          if (response && response.nome) {
+            setUsuario({ nome: response.nome });  // Atualiza o estado com o nome do usuário
+          } else {
+            setUsuario(null);  // Se não houver nome, define como null
+          }
+        } catch (error) {
+          console.error("Erro ao buscar usuário:", error);
+          setUsuario(null);  // Caso ocorra erro, também define como null
+        } finally {
+          setLoading(false);  // Finalizando o carregamento
+        }
+      };
 
-      setUsuario(response.nome)
-  
+      obterUsuario();  // Chama a função para obter o usuário
+    } else {
+      setLoading(false);  // Caso o usuário não esteja autenticado, já finaliza o loading
     }
-    obterUsuario()
-
-  }
-},[])
+  }, []);  // Executa apenas uma vez quando o componente for montado
 
   const handlerClick = () => {
     userService.logoutService();
-    setViewerHeaderClient(false);
-    setContextIsLogin(false);
+    setViewerHeaderClient();
+    setContextIsLogin();
   };
 
   return (
-    <header className="alex-header-admin">
-      <nav className="alex-container-admin">
-        <NavLink style={getIsActive} to="/Administrativo">
-          <h1 className='usuario'>{usuario?.nome}</h1>
-        </NavLink>
+    <>
+      <header className="alex-header-admin">
+        <nav className="alex-container-admin">
 
-        <div className="alex-navbar-left-admin">
-          <div className="alex-menu-items-container">
-            <NavLink to="PerfilAdmin" style={getIsActive} className="user-profile-link">
-              <AccountCircle style={{ fontSize: 40, color: 'black' }} />
-              <span className="user-name"><strong>Perfil</strong></span>
-            </NavLink>
+          <NavLink style={getIsActive} to="/Administrativo">
+            <div className="alex-contaner-admin-inicio">
+              <h1 className='usuario' >
+                {loading ? "Carregando..." : usuario ? usuario.nome : "Usuário Desconhecido"}  {/* Exibe o nome do usuário ou mensagem de erro */}
+              </h1>
 
+              <NavLink style={getIsActive} to="/" className="alex-contaner-admin-inicio" >
+                <Home style={{ fontSize: 40, color: 'black' }} />
 
-            <div className="alex-menu-item">
-              <Home style={{ fontSize: 40, color: 'black' }} />
-              <NavLink style={getIsActive} to="/" >
-              <strong>Início</strong>
+                <h3>Início</h3>
               </NavLink>
             </div>
 
-            <div className="alex-menu-item">
-              <Inventory style={{ fontSize: 40, color: 'black', }} />
-              <p className="alex-menu-item-active">
-                <NavLink style={getIsActive} to="/Administrativo/Listagem">
-                  <strong>Produtos</strong>
-                </NavLink>
-              </p>
-            </div>
-          </div>
 
-          <div className="alex-logged-user">
-            <div className="user-info-icon">
-              <SupervisorAccount style={{ fontSize: 40, color: 'black' }} />
-              
+          </NavLink>
+
+          <div className="alex-navbar-left-admin">
+            <div className="alex-menu-items-container">
+
+              <NavLink to="PerfilAdmin" style={getIsActive} className="user-profile-link">
+                <AccountCircle style={{ fontSize: 40, color: 'black' }} />
+                <h3>Perfil</h3>
+              </NavLink>
+
+
+
+              <div className="alex-menu-item-produto">
+                <p className="alex-menu-item-active">
+                  <NavLink style={getIsActive} to="/Administrativo/Listagem" className="produtos">
+                    <Inventory style={{ fontSize: 40, color: 'black', marginRight: 8 }} />
+                    <h3>Produtos</h3>
+                  </NavLink>
+                </p>
+              </div>
+
             </div>
-            <Link to="/catalogo" onClick={handlerClick} className="logout-link">
-              <ExitToApp style={{ fontSize: 40, color: 'black' }} />
-             <h1>Sair</h1> 
-            </Link>
+
+            <div className="alex-logged-user">
+              <div className="user-info-icon">
+                <SupervisorAccount style={{ fontSize: 40, color: 'black' }} />
+              </div>
+              <Link to="/catalogo" onClick={handlerClick} className="logout-link">
+                <ExitToApp style={{ fontSize: 40, color: 'black' }} />
+                
+              </Link> 
+            </div>
+           
           </div>
-        </div>
-      </nav>
-    </header>
+        </nav>
+      </header >
+    </>
   );
 };
 

@@ -1,3 +1,6 @@
 #admin-home-section {
   padding: 20px 0;
+  display: flex;
+  width: 100vw;
+  justify-content: center;
 }

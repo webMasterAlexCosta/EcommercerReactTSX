@@ -52,28 +52,39 @@ const Catalogo = () => {
 
         if (produtosLocal && produtosLocal.content && produtosLocal.content.length > 0) {
           produtosRecebidos = produtosLocal.content;
-          setProdutos(produtosRecebidos);
         } else {
           response = await produtoService.findAll(page);
           produtosRecebidos = response.data.content ?? response.data;
+          
           salvarProdutosNoLocalStorage(produtosRecebidos); 
-          setProdutos(produtosRecebidos);
         }
       }
 
-      setCarregarMais("Carregar Mais");
-      setUltimaBusca(new Date()); 
+      setProdutos(produtosRecebidos);  
+      setCarregarMais("Carregar Mais"); 
+      setUltimaBusca(new Date());  
     } catch (error) {
       console.error("Erro na busca:", error);
       setCarregarMais("Ocorreu um erro ao Buscar");
     } finally {
-      setLoading(false);
+      setLoading(false); 
     }
   };
 
   useEffect(() => {
-    buscarProdutos(); 
-  }, [page, searchName]);
+    buscarProdutos();  
+  }, [searchName]);  
+
+  useEffect(() => {
+    const currentTime = Date.now(); 
+    const tempoDesdeUltimaBusca = currentTime - ultimaBusca.getTime(); 
+
+    if (tempoDesdeUltimaBusca >= TEMPO_DE_BUSCA_PRODUTOS) {
+      produtoService.limparProdutoLocal();
+      buscarProdutos();
+      setUltimaBusca(new Date()); 
+    }
+  }, [ultimaBusca]);
 
   const carregarMaisProdutos = async () => {
     setCarregarMais("Aguarde");
@@ -84,19 +95,8 @@ const Catalogo = () => {
     const localProdutos = produtosLocal && produtosLocal.content ? produtosLocal.content : [];
     const novosProdutos = [...localProdutos, ...produtosRecebidos];
     salvarProdutosNoLocalStorage(novosProdutos);
-    setProdutos((prevProdutos) => [...prevProdutos, ...produtosRecebidos]); 
+    setProdutos((prevProdutos) => [...prevProdutos, ...produtosRecebidos]);  
   };
-
-  useEffect(() => {
-    const currentTime = Date.now(); 
-    const tempoDesdeUltimaBusca = currentTime - ultimaBusca.getTime(); 
-
-    if (tempoDesdeUltimaBusca >= TEMPO_DE_BUSCA_PRODUTOS) {
-      produtoService.limparProdutoLocal()
-      buscarProdutos();
-      setUltimaBusca(new Date()); 
-    }
-  }, [ultimaBusca]);
 
   if (isDetailsPage) {
     return <Outlet />;
@@ -106,7 +106,7 @@ const Catalogo = () => {
     <section id="catalog-section" className="alex-container">
       <BarraBuscar onSearch={(item) => {
         setSearchName(item);
-        setPage(0);
+        setPage(0);  
       }} />
 
       <CardProduto produtos={produtos} loading={loading} />

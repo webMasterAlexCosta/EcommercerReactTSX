@@ -9,7 +9,14 @@
   margin: 0;
 }
 .alex-container-admin {
+  justify-content: space-between;
+  gap: 0;
+}
+.alex-contaner-admin-inicio{
+  display: flex;
+  flex-direction: row;
   justify-content: center;
+  align-items: center;
 }
 nav {
   display: flex;
@@ -23,6 +30,7 @@ nav h1 {
   margin: 0;
   font-weight: 700;
   color: black;
+  cursor: not-allowed;
 }
 
 a,
@@ -31,6 +39,26 @@ p,
 .element.style a {
   font-size: 1rem;
   font-weight: 700;
+}
+.produtos ,.alex-menu-item-produto{
+display: flex;
+flex-direction: row;
+align-items: center;
+margin: 0;
+padding: 0;
+gap: 0;
+}
+
+.alex-menu-item-active {
+  display: flex; /* Flexbox na tag <p> também para alinhar ícone e nome */
+  flex-direction: column;
+  align-items: center; /* Alinha o ícone e o nome verticalmente */
+  justify-content: center; /* Centraliza o conteúdo horizontalmente */
+  justify-items: center;
+}
+
+.alex-menu-item-active strong {
+  margin-left: 8px; /* Dá um pequeno espaçamento entre o ícone e o nome */
 }
 
 .alex-navbar-left-admin {
@@ -63,6 +91,7 @@ p,
   align-items: center;
   color: black;
   font-weight: 700;
+  cursor: not-allowed;
 }
 
 .logout-link {
@@ -103,10 +132,15 @@ p,
   .alex-menu-items-container,
   .logout-link
   {
-
-    margin: 0px;
+    
+    margin-right: 5px;
     padding: 0px;
-    gap: 0px;
+    gap: 10px;
+  }
+  .alex-container-admin {
+     justify-content: center;
+  
+     
   }
   
 }

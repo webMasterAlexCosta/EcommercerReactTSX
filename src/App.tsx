@@ -20,6 +20,7 @@ import { NovoEndereco } from './components/Layout/NovoEndereco';
 import ContextProviders from './data/Contextos';
 import { PerfilClient } from './pages/HomeClient/PerfilClient/index';
 import { PerfilAdmin } from './pages/HomeAdminstrativo/PerfilAdmin/index';
+import AdminHome from './pages/HomeAdminstrativo/AdminLayout';
 
 const MainLayout = () => {
   const location = useLocation();
@@ -35,39 +36,40 @@ const MainLayout = () => {
 };
 
 const App = () => {
-  
+
   return (
     <ContextProviders>
-              <BrowserRouter>
-                <div className="app-container">
-                  <Routes>
-                    <Route path="/" element={<MainLayout />}>
-                      <Route path="/PerfilClient" element={<PrivateRouteClient><PerfilClient /></PrivateRouteClient>} >
-                        <Route path="MudarSenha" element={<PrivateRouteClient><MudarSenha /></PrivateRouteClient>} />
-                        <Route path="NovoEndereco" element={<PrivateRouteClient><NovoEndereco /></PrivateRouteClient>} />
-                      </Route>
-                      <Route path="/Carrinho" element={<Carrinho />} >
-                        <Route path="Pagamento" element={<CardPaymentComponent />} />
-                      </Route>
-                      <Route path="/Catalogo" element={<Catalogo />}>
-                        <Route path="Detalhes/:id" element={<Detalhes />} />
-                      </Route>
-                      <Route path="/certificados" element={<CertificadoPage />} />
-                      <Route path="/certificado/:id" element={<CertificadoDetailPage />} />
-                      <Route path="/Login" element={<Login />} />
-                      <Route path="*" element={<Link to="/"><h1 style={{ color: "red" }}>404 - Página não encontrada</h1></Link>} />
-                    </Route>
-                    <Route path="/Administrativo" element={<PrivateRouteAdmin><Administrativo /></PrivateRouteAdmin>}>
-                      <Route path="Listagem" element={<PrivateRouteAdmin><Listagem /></PrivateRouteAdmin>} />
-                      <Route path="PerfilAdmin" element={<PrivateRouteAdmin><PerfilAdmin /></PrivateRouteAdmin>} />
+      <BrowserRouter>
+        <div className="app-container">
+          <Routes>
+            <Route path="/" element={<MainLayout />}>
+              <Route path="/PerfilClient" element={<PrivateRouteClient><PerfilClient /></PrivateRouteClient>} >
+                <Route path="MudarSenha" element={<PrivateRouteClient><MudarSenha /></PrivateRouteClient>} />
+                <Route path="NovoEndereco" element={<PrivateRouteClient><NovoEndereco /></PrivateRouteClient>} />
+              </Route>
+              <Route path="/Carrinho" element={<Carrinho />} >
+                <Route path="Pagamento" element={<CardPaymentComponent />} />
+              </Route>
+              <Route path="/Catalogo" element={<Catalogo />}>
+                <Route path="Detalhes/:id" element={<Detalhes />} />
+              </Route>
+              <Route path="/certificados" element={<CertificadoPage />} />
+              <Route path="/certificado/:id" element={<CertificadoDetailPage />} />
+              <Route path="/Login" element={<Login />} />
 
-                      <Route path="Formulario/:id" element={<PrivateRouteAdmin><Formulario /></PrivateRouteAdmin>} />
-                      <Route path="CriarNovoProduto/:id" element={<PrivateRouteAdmin><CriarNovoProduto /></PrivateRouteAdmin>} />
-                    </Route>
-                  </Routes>
-                </div>
-              </BrowserRouter>
-              </ContextProviders>
+            </Route>
+            <Route path="/Administrativo" element={<PrivateRouteAdmin><Administrativo /></PrivateRouteAdmin>}>
+              <Route path="Listagem" element={<Listagem />} />
+              <Route path="AdminHome" element={<AdminHome />} />
+              <Route path="PerfilAdmin" element={<PerfilAdmin />} />
+              <Route path="Formulario/:id" element={<Formulario />} />
+              <Route path="CriarNovoProduto/:id" element={<CriarNovoProduto />} />
+            </Route>
+            <Route path="*" element={<Link to="/"><h1 style={{ color: "red" }}>404 - Página não encontrada</h1></Link>} />
+          </Routes>
+        </div>
+      </BrowserRouter>
+    </ContextProviders>
   );
 };
 export default App;

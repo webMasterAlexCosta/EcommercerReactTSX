@@ -1,23 +1,26 @@
 import { Outlet } from 'react-router-dom';
 import HeaderAdmin from '../../components/Layout/HeaderAdmin';
-import { useContext } from 'react';
-import AdminHome from './AdminLayout';
-import UsuarioContext from '../../data/UsuarioContext';
+import { Usuario } from '../../models/dto/CredenciaisDTO';
+import AdminLayout from '../../pages/HomeAdminstrativo/AdminLayout/index'; // Adjust the path if necessary
 
-const HomeAdminstrativo = () => {
-const {usuario} = useContext(UsuarioContext);
-  
+interface AdministrativoProps {
+  user?: Usuario | null;
+}
+
+const Administrativo = ({ user }: AdministrativoProps) => {
   return (
     <div>
-      <HeaderAdmin 
-       
+      {/* Renderiza o HeaderAdmin e passa o `user` como prop */}
+      <HeaderAdmin
+        user={user ?? null}
         setViewerHeaderClient={() => {}}
         setContextIsLogin={() => {}}
       />
-      <AdminHome user={usuario?.nome} />
-      <Outlet />
+      <AdminLayout user={user}/>
+      {/* Passa o `user` para os componentes filhos via Outlet */}
+      <Outlet context={{ user }} />
     </div>
   );
 };
 
-export default HomeAdminstrativo;
+export default Administrativo;

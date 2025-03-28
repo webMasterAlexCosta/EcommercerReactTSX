@@ -46,13 +46,7 @@ const Login = () => {
 
         const userProfile = buscarUsuario?.perfil?.includes("ADMIN") ? "ADMIN" : "CLIENTE";
         setIconAdminContext(userProfile);
-       //   console.log(userProfile)
-        // if (userProfile === "ADMIN") {
-        //   navigate("/administrativo");
-        // } else {
-        //   navigate("/catalogo");
-        // }
-
+     
         setAlertData({
           title: "Login Aceito",
           text: `Usuário ${buscarUsuario?.nome} logado com sucesso`,
@@ -66,13 +60,15 @@ const Login = () => {
 
   const handleAlertClose = () => {
     if (alertData?.icon === "success") {
-      if (user?.perfil.includes("ADMIN")) {
-        navigate("/Administrativo");
-      } else if (user?.perfil.includes("CLIENTE")) {
-        navigate("/catalogo");
-      } else {
-        setAlertData(null);
-      }
+      setTimeout(() => {
+        if (user?.perfil.includes("ADMIN")) {
+          navigate("/Administrativo");
+        } else if (user?.perfil.includes("CLIENTE")) {
+          navigate("/catalogo");
+        } else {
+          setAlertData(null);
+        }
+      }, 1000);
     }
   };
 

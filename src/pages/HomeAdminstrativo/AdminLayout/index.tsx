@@ -1,19 +1,26 @@
-import './styles.css';
-interface AdminHomeProps{
-  user:string | undefined
+import { Usuario } from "../../../models/dto/CredenciaisDTO";
+
+interface AdminLayoutProps {
+  user?: Usuario | null;
 }
 
-const AdminHome = ({user}:AdminHomeProps) => {
-  
+const AdminLayout = ({ user }: AdminLayoutProps) => {
+ 
+  if (!user) {
+    return <div>Carregando...</div>;
+  }
+
   return (
     <>
-      
       <main>
         <section id="admin-home-section" className="alex-container">
-          <h2 className="alex-section-title alex-mb20">Bem-vindo à àrea administrativa {user}</h2>
+          <h2 className="alex-section-title alex-mb20">
+            Bem-vindo à área administrativa, {user?.nome}
+          </h2>
         </section>
       </main>
     </>
-  )
-}
-export default AdminHome;
+  );
+};
+
+export default AdminLayout;
