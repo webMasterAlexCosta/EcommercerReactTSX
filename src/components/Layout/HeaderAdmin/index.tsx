@@ -1,46 +1,53 @@
 import './Styles.css';
-import homeImg from '../../../assets/images/home.svg';
-import produtosImg from '../../../assets/images/products.svg';
 import { NavLink } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import * as userService from "../../../services/UserServices";
-
+import { AccountCircle, ExitToApp, Home, ShoppingCart, SupervisorAccount } from '@mui/icons-material';
+import UsuarioContext from '../../../data/UsuarioContext';
+import { useContext } from 'react';
 
 interface HeaderAdminProps {
-  user: string | undefined;
-  setViewerHeaderClient: (value: boolean) => void; 
+  setViewerHeaderClient: (value: boolean) => void;
   setContextIsLogin: (value: boolean) => void;
 }
 
-const HeaderAdmin = ({ user, setViewerHeaderClient,setContextIsLogin }: HeaderAdminProps) => {
+const HeaderAdmin = ({ setViewerHeaderClient, setContextIsLogin }: HeaderAdminProps) => {
+  const {usuario} = useContext(UsuarioContext)
 
   const getIsActive = ({ isActive }: { isActive: boolean }) =>
     isActive ? { color: "red" } : { color: "black" };
 
+
   const handlerClick = () => {
     userService.logoutService();
-    setViewerHeaderClient(false);  
+    setViewerHeaderClient(false);
     setContextIsLogin(false);
-    return 
   };
 
   return (
     <header className="alex-header-admin">
       <nav className="alex-container">
         <NavLink style={getIsActive} to="/Administrativo">
-          <h1>{user}</h1>
+          <h1 className='usuario'>{usuario?.nome}</h1>
         </NavLink>
 
         <div className="alex-navbar-right">
           <div className="alex-menu-items-container">
+            <NavLink to="PerfilAdmin" style={getIsActive} className="user-profile-link">
+              <AccountCircle style={{ fontSize: 40, color: 'black' }} />
+              <span className="user-name">Perfil</span>
+            </NavLink>
+
+
             <div className="alex-menu-item">
-              <img src={homeImg} alt="Início" />
+              <Home style={{ fontSize: 40, color: 'black' }} />
               <NavLink style={getIsActive} to="/">
                 <p>Início</p>
               </NavLink>
             </div>
+
             <div className="alex-menu-item">
-              <img src={produtosImg} alt="Cadastro de produtos" />
+              <ShoppingCart style={{ fontSize: 40, color: 'black' }} />
               <p className="alex-menu-item-active">
                 <NavLink style={getIsActive} to="/Administrativo/Listagem">
                   Produtos
@@ -48,9 +55,14 @@ const HeaderAdmin = ({ user, setViewerHeaderClient,setContextIsLogin }: HeaderAd
               </p>
             </div>
           </div>
+
           <div className="alex-logged-user">
-            <p>{user}</p>
-            <Link to="/catalogo" onClick={handlerClick}>
+            <div className="user-info-icon">
+              <SupervisorAccount style={{ fontSize: 40, color: 'black' }} />
+              {usuario?.nome}
+            </div>
+            <Link to="/catalogo" onClick={handlerClick} className="logout-link">
+              <ExitToApp style={{ fontSize: 40, color: 'black' }} />
               Sair
             </Link>
           </div>

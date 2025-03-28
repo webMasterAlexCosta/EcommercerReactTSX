@@ -5,15 +5,15 @@ import ContextIsLogin from '../../../data/LoginContext';
 import * as userService from "../../../services/UserServices";
 import * as authService from "../../../services/AuthService";
 import IconAdminContext from '../../../data/IconAdminContext';
-import { Login, Logout, Home, MenuBook, AccountCircle } from '@mui/icons-material';
+import { Login, Logout, Home, MenuBook, AccountCircle, Settings } from '@mui/icons-material';
 import { CartIcon } from '../../UI/CartIcon';
 import UsuarioContext from '../../../data/UsuarioContext';
 
 const HeaderClient = () => {
   const { contextIsLogin, setContextIsLogin } = useContext(ContextIsLogin);
   const { iconAdminContext, setIconAdminContext } = useContext(IconAdminContext);
-  const {usuario , setUsuario} = useContext(UsuarioContext)
-  
+  const { usuario, setUsuario } = useContext(UsuarioContext)
+
   useEffect(() => {
     const payload = userService.getTokenService() ? authService.getAccessTokenPayload() : null;
 
@@ -21,10 +21,10 @@ const HeaderClient = () => {
       const buscar = async () => {
         const token = userService.getTokenService();
         setContextIsLogin(!!token);
-     
+
         const userProfile = await userService.getUserService()
         setUsuario(userProfile)
-       
+
       }
       buscar()
 
@@ -45,11 +45,11 @@ const HeaderClient = () => {
     }
   }, [setContextIsLogin, setIconAdminContext, setUsuario]);
 
-      /** posso usar esse recurso, mas no react vou usar navigate
-       window.addEventListener("storage", checkLoginStatus); // Escuta mudanças no storage
-   
-       return () => window.removeEventListener('storage', checkLoginStatus); // Limpa o event listener ao desmontar
-        *  */
+  /** posso usar esse recurso, mas no react vou usar navigate
+   window.addEventListener("storage", checkLoginStatus); // Escuta mudanças no storage
+ 
+   return () => window.removeEventListener('storage', checkLoginStatus); // Limpa o event listener ao desmontar
+    *  */
   const getIsActive = ({ isActive }: { isActive: boolean }) => (isActive ? { color: "red" } : { color: "black" });
   function handleOnclick(event: React.MouseEvent<HTMLElement> | React.MouseEvent<SVGSVGElement, MouseEvent>, tipo: string): void {
     if (tipo === "logout") {
@@ -87,7 +87,7 @@ const HeaderClient = () => {
 
         <div className="alex-navbar-right">
           {iconAdminContext === "CLIENTE" && (
-            <NavLink to="/perfil" style={getIsActive}>
+            <NavLink to="/PerfilClient" style={getIsActive}>
               <AccountCircle style={{ fontSize: 40, color: 'black' }} />
               <h3>Perfil</h3>
             </NavLink>
@@ -95,14 +95,14 @@ const HeaderClient = () => {
 
           <NavLink to="/carrinho" style={getIsActive}>
             <div className="alex-menu-item">
-              <CartIcon />
+            <CartIcon/>  
             </div>
             <h3>Carrinho</h3>
           </NavLink>
 
           {iconAdminContext === "ADMIN" && (
             <NavLink to="/Administrativo" style={getIsActive}>
-              <span className="material-icons">settings</span>
+              <Settings  style={{ fontSize: 40, color: 'black' }} />  
               <h3>Admin</h3>
             </NavLink>
           )}

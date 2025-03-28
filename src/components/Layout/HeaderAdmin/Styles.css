@@ -1,5 +1,4 @@
-
-  .alex-header-admin {
+.alex-header-admin {
   background-color: var(--alex-color-bg-quaternary);
   color: var(--alex-color-font-tertiary);
 }
@@ -12,23 +11,91 @@ nav {
 }
 
 nav h1 {
-  font-size: 16px;
-  margin: 0; /* Remover margens padrão */
+  font-size: 1rem;
+  margin: 0;
+  color: var(--alex-colot-font-header);
+  font-weight: 700;
 }
 
-nav a {
-  font-size: 14px;
-  margin-right: 15px; /* Espaçamento entre os links */
-  color: var(--alex-color-font-primary);
-  font-weight: 500;
+a,
+p {
+  font-size: 1rem;
+  margin-right: 15px;
+  color: var(--alex-colot-font-header);
+  font-weight: 700;
 }
 
 nav a:hover {
-  color: var(--alex-color-btn-primary); /* Cor ao passar o mouse */
+  color: var(--alex-color-bg-secondary);
 }
 
 .alex-navbar-right {
   display: flex;
   align-items: center;
-  gap: 15px; /* Espaçamento entre os elementos */
+  gap: 15px; 
+}
+
+.alex-logged-user {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px; 
+}
+
+.user-info-icon {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logout-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: black;
+}
+
+.logout-link:hover {
+  color: red; 
+}
+
+.user-profile-link {
+  display: flex;
+  align-items: center; 
+  gap: 10px; 
+  text-decoration: none; 
+}
+
+.user-name {
+  font-size: 16px; 
+  color: black;
+}
+
+@media (max-width: 576px) {
+  .alex-container .usuario {
+    display: none;
+  }
+
+  .alex-menu-item svg,
+  .user-profile-link svg,
+  .alex-logged-user svg {
+    font-size: 25px !important; 
+  
+  }
+
+  .user-name,
+  .alex-menu-item p,
+  .alex-logged-user p {
+    font-size: 0.8rem ; 
+    margin: 0;
+  }
+
+  .alex-header-admin {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem; 
+    
+  }
+  
 }

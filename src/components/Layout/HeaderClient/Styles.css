@@ -1,14 +1,14 @@
 .alex-header-client {
-    background-color: var(--alex-color-bg-secondary);
-    color: var(--alex-color-font-primary);
-  }
-  header {
-    height: 70px;
-    display: flex;
-    align-items: center;
-    padding: 0 20px;
-  }
-  .alex-header-admin {
+  background-color: var(--alex-color-bg-secondary);
+  color: var(--alex-color-font-primary);
+}
+header {
+  height: 70px;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+}
+.alex-header-admin {
   background-color: var(--alex-color-bg-quaternary);
   color: var(--alex-color-font-tertiary);
 }
@@ -41,7 +41,7 @@ nav a:hover {
   align-items: center;
   gap: 15px; /* Espaçamento entre os elementos */
 }
-.number{
+.number {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -55,5 +55,25 @@ nav a:hover {
   top: -10px;
   left: -10px;
   font-size: 10px;
-  
+}
+.alex-menu-item svg {
+  font-size: 50px !important;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+
+  font-weight: 700;
+}
+
+/* Tamanho padrão para telas maiores */
+.iconeCarrinho {
+  font-size: 40px; /* Tamanho normal */
+}
+
+/* Para dispositivos móveis */
+@media (max-width: 576px) {
+  .iconeCarrinho {
+    font-size: 80px; /* Tamanho menor para telas pequenas */
+  }
 }

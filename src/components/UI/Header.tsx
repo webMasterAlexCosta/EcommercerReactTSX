@@ -52,7 +52,7 @@ const Header = () => {
     <>
       {isAdmin === 'ADMIN' && viewerHeaderClient === true ? (
         <HeaderAdmin
-          user={usuario?.nome}
+         
           setViewerHeaderClient={setViewerHeaderClient}
           setContextIsLogin={setContextIsLogin}
         />
