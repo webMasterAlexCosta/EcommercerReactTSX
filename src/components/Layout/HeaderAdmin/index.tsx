@@ -26,12 +26,12 @@ const HeaderAdmin = ({ setViewerHeaderClient, setContextIsLogin }: HeaderAdminPr
 
   return (
     <header className="alex-header-admin">
-      <nav className="alex-container">
+      <nav className="alex-container-admin">
         <NavLink style={getIsActive} to="/Administrativo">
           <h1 className='usuario'>{usuario?.nome}</h1>
         </NavLink>
 
-        <div className="alex-navbar-right">
+        <div className="alex-navbar-left-admin">
           <div className="alex-menu-items-container">
             <NavLink to="PerfilAdmin" style={getIsActive} className="user-profile-link">
               <AccountCircle style={{ fontSize: 40, color: 'black' }} />

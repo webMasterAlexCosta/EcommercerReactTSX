@@ -1,10 +1,19 @@
 .alex-header-admin {
   background-color: var(--alex-color-bg-quaternary);
+  display: flex;
+  justify-items: center;
+  justify-content: center;
+  align-items: center;
+  max-width: 100vw;
+  width: 100%;
+  margin: 0;
 }
-
+.alex-container-admin {
+  justify-content: center;
+}
 nav {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
   width: 100%;
 }
@@ -13,37 +22,45 @@ nav h1 {
   font-size: 1rem;
   margin: 0;
   font-weight: 700;
-  color:black;
+  color: black;
 }
 
 a,
-p ,.alex-menu-item p , .element.style a {
+p,
+.alex-menu-item p,
+.element.style a {
   font-size: 1rem;
-  margin-right: 15px;
   font-weight: 700;
 }
 
-.alex-navbar-right {
+.alex-navbar-left-admin {
   display: flex;
   align-items: center;
-  gap: 15px; 
+  justify-content: flex-start;
+  width: auto;
+  gap: 0px;
+}
+
+.alex-menu-items-container {
+  display: flex;
+  gap: 50px; 
 }
 
 .alex-logged-user {
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 10px; 
+  justify-content: flex-start;
+  gap: 50px;
 }
 
-.alex-menu-item-active p{
+.alex-menu-item-active p {
   color: red;
 }
 
 .user-info-icon {
   display: flex;
   align-items: center;
-  gap: 10px;
   color: black;
   font-weight: 700;
 }
@@ -51,24 +68,19 @@ p ,.alex-menu-item p , .element.style a {
 .logout-link {
   display: flex;
   align-items: center;
-  gap: 10px;
   text-decoration: none;
 }
 
-
 .user-profile-link {
   display: flex;
-  align-items: center; 
-  gap: 10px; 
-  text-decoration: none; 
+  align-items: center;
+  text-decoration: none;
 }
 
 .user-name {
-  
-  font-size: 12px; 
+  font-size: 12px;
 }
 
-/* Estilização dos ícones */
 .icon-profile,
 .icon-home,
 .icon-inventary,
@@ -78,12 +90,22 @@ p ,.alex-menu-item p , .element.style a {
   color: black;
 }
 
-/* Estilo de ícones em telas pequenas */
-@media (max-width: 576px) {
-  .alex-container .usuario {
+@media (max-width: 760px) {
+  .usuario {
     display: none;
   }
 
-
-
+  .user-profile-link,
+  .alex-menu-item-active,
+  .alex-header-admin,
+  .alex-navbar-left,
+  .alex-logged-user,
+  .alex-menu-items-container,
+  .logout-link
+  {
+    margin: 0px;
+    padding: 0px;
+    gap: 0px;
+  }
+  
 }

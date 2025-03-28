@@ -445,14 +445,14 @@ const Perfil = () => {
 
                     <div className="container-btns">
                         <div className="formulario-grupo">
-                            <Link to="/perfil/MudarSenha">
+                            <Link to="/PerfilClient/MudarSenha">
                                 <button id="botao2" onClick={() => setMudarSenha(true)}>
                                     Mudar Senha
                                 </button>
                             </Link>
                         </div>
                         <div className="formulario-grupo">
-                            <Link to="/perfil/NovoEndereco">
+                            <Link to="/PerfilClient/NovoEndereco">
                                 <button id="botao1" onClick={() => setMudarEndereco(true)}>Mudar Endereço</button>
                             </Link>
                         </div>
