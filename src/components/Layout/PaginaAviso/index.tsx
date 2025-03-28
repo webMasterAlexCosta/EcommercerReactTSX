@@ -1,5 +1,5 @@
 import React from "react";
-import { FaGithub, FaLinkedin, FaWhatsapp, FaFacebook, FaCertificate } from "react-icons/fa";
+import { FaGithub, FaLinkedin, FaWhatsapp, FaFacebook, FaCertificate, FaChartLine, FaShieldAlt, FaLock } from "react-icons/fa";
 import './style.css'; // Estilo localizado
 import { Link } from "react-router-dom";
 
@@ -24,8 +24,8 @@ const PaginaAviso: React.FC = () => {
     <div className="container">
       {/* Header */}
       <header className="header">
-       
-       <h1> <p className="sub-title">Este projeto é fictício. Nada é Real, sinta se a vontade pra explorar</p></h1>
+
+        <h1> <p className="sub-title">Este projeto é fictício. Nada é Real, sinta se a vontade pra explorar</p></h1>
       </header>
 
       {/* Hero Section */}
@@ -36,11 +36,11 @@ const PaginaAviso: React.FC = () => {
             Aqui você encontrará soluções inovadoras, designs modernos e uma experiência única.
           </p>
           <Link to="/Catalogo" >
-          <button className="cta-button">Projeto 1</button>
+            <button className="cta-button">Projeto 1</button>
           </Link>
-         
+
         </div>
-       
+
       </section>
 
       {/* Features Section */}
@@ -62,30 +62,46 @@ const PaginaAviso: React.FC = () => {
             description="Equipe dedicada para ajudar em cada etapa do projeto."
             icon={<FaLinkedin size={40} />}
           />
+          <FeatureCard
+            title="Análise de Dados Avançada"
+            description="Transforme dados brutos em insights valiosos com nossas soluções de análise de dados."
+            icon={<FaChartLine size={40} />}
+          />
+          <FeatureCard
+            title="Segurança em Criptografia e Derivação"
+            description="Tecnologias avançadas para garantir a proteção de dados através de criptografia e derivação segura de chaves."
+            icon={<FaLock size={40} />}
+          />
+          <FeatureCard
+            title="Criptografia Elíptica"
+            description="Soluções de criptografia baseadas em curvas elípticas para garantir máxima segurança e eficiência."
+            icon={<FaShieldAlt size={40} />}
+          />
+
         </div>
       </section>
 
       {/* Social Links */}
       <section className="social-section">
-  <h2>Conecte-se comigo:</h2>
-  <div className="social-links">
-    {socialLinks.map((link, index) => (
-      <a
-        key={index}
-        href={link.href}
-        target={link.href === "/Certificados" ? undefined : "_blank"}
-        rel="noopener noreferrer"
-        className="social-link"
-        aria-label={link.label}
-      >
-        <div className="icon-container">
-          {link.icon}
+        <h2>Conecte-se comigo:</h2>
+        <div className="social-links">
+          {socialLinks.map((link, index) => (
+            <a
+              key={index}
+              href={link.href}
+              target={link.href === "/Certificados" ? undefined : "_blank"}
+              rel="noopener noreferrer"
+              className="social-link"
+              aria-label={link.label}
+            >
+              <div className="icon-container">
+                {link.icon}
+              </div>
+              <p>{link.label}</p>
+            </a>
+          ))}
         </div>
-        <p>{link.label}</p>
-      </a>
-    ))}
-  </div>
-</section>
+      </section>
 
     </div>
   );
