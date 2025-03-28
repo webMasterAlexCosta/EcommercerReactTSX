@@ -91,7 +91,7 @@ p,
 }
 
 @media (max-width: 760px) {
-  .usuario {
+  .usuario ,.user-info-icon{
     display: none;
   }
 
