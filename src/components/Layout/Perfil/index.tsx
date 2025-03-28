@@ -5,15 +5,15 @@ import requestBackEnd from '../../../utils/request';
 import { FOTO_PERFIL_LOCAL } from '../../../utils/system';
 import { PedidoHistorico } from '../../../models/dto/CarrinhoDTO';
 import { Link, useNavigate } from 'react-router-dom';
-import { MudarSenha } from '../../../components/Layout/MudarSenha';
-import { FormularioUser } from '../../../components/UI/Formulario';
+import { MudarSenha } from '../MudarSenha';
+import { FormularioUser } from '../../UI/Formulario';
 import { EnderecoDTO, UserDTO } from '../../../models/dto/UserDTO';
 import { PhotoCamera, UploadFile, Delete, Send, AccountCircle, Error } from '@mui/icons-material';
 import { CircularProgress } from '@mui/material';
-import { NovoEndereco } from '../../../components/Layout/NovoEndereco';
+import { NovoEndereco } from '../NovoEndereco';
 import * as userService from "../../../services/UserServices"
 import * as perfilFotoService from "../../../services/PerfilFotoService"
-import PedidoUsuario from '../../../components/UI/Pedido';
+import PedidoUsuario from '../../UI/Pedido';
 const Perfil = () => {
     const [usuario, setUsuario] = useState<UserDTO>({
         id: "",

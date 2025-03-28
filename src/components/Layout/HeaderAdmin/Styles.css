@@ -1,6 +1,5 @@
 .alex-header-admin {
   background-color: var(--alex-color-bg-quaternary);
-  color: var(--alex-color-font-tertiary);
 }
 
 nav {
@@ -13,20 +12,15 @@ nav {
 nav h1 {
   font-size: 1rem;
   margin: 0;
-  color: var(--alex-colot-font-header);
   font-weight: 700;
+  color:black;
 }
 
 a,
-p {
+p ,.alex-menu-item p , .element.style a {
   font-size: 1rem;
   margin-right: 15px;
-  color: var(--alex-colot-font-header);
   font-weight: 700;
-}
-
-nav a:hover {
-  color: var(--alex-color-bg-secondary);
 }
 
 .alex-navbar-right {
@@ -42,10 +36,16 @@ nav a:hover {
   gap: 10px; 
 }
 
+.alex-menu-item-active p{
+  color: red;
+}
+
 .user-info-icon {
   display: flex;
   align-items: center;
   gap: 10px;
+  color: black;
+  font-weight: 700;
 }
 
 .logout-link {
@@ -53,11 +53,9 @@ nav a:hover {
   align-items: center;
   gap: 10px;
   text-decoration: none;
-  color: black;
 }
 
 .logout-link:hover {
-  color: red; 
 }
 
 .user-profile-link {
@@ -68,34 +66,26 @@ nav a:hover {
 }
 
 .user-name {
-  font-size: 16px; 
+  
+  font-size: 12px; 
+}
+
+/* Estilização dos ícones */
+.icon-profile,
+.icon-home,
+.icon-inventary,
+.icon-user-info,
+.icon-logout {
+  font-size: 50px;
   color: black;
 }
 
+/* Estilo de ícones em telas pequenas */
 @media (max-width: 576px) {
   .alex-container .usuario {
     display: none;
   }
 
-  .alex-menu-item svg,
-  .user-profile-link svg,
-  .alex-logged-user svg {
-    font-size: 25px !important; 
-  
-  }
 
-  .user-name,
-  .alex-menu-item p,
-  .alex-logged-user p {
-    font-size: 0.8rem ; 
-    margin: 0;
-  }
 
-  .alex-header-admin {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.8rem; 
-    
-  }
-  
 }

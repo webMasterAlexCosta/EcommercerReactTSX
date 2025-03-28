@@ -2,7 +2,7 @@ import './Styles.css';
 import { NavLink } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import * as userService from "../../../services/UserServices";
-import { AccountCircle, ExitToApp, Home, ShoppingCart, SupervisorAccount } from '@mui/icons-material';
+import { AccountCircle, ExitToApp, Home, Inventory, SupervisorAccount } from '@mui/icons-material';
 import UsuarioContext from '../../../data/UsuarioContext';
 import { useContext } from 'react';
 
@@ -35,22 +35,22 @@ const HeaderAdmin = ({ setViewerHeaderClient, setContextIsLogin }: HeaderAdminPr
           <div className="alex-menu-items-container">
             <NavLink to="PerfilAdmin" style={getIsActive} className="user-profile-link">
               <AccountCircle style={{ fontSize: 40, color: 'black' }} />
-              <span className="user-name">Perfil</span>
+              <span className="user-name"><strong>Perfil</strong></span>
             </NavLink>
 
 
             <div className="alex-menu-item">
               <Home style={{ fontSize: 40, color: 'black' }} />
-              <NavLink style={getIsActive} to="/">
-                <p>Início</p>
+              <NavLink style={getIsActive} to="/" >
+              <strong>Início</strong>
               </NavLink>
             </div>
 
             <div className="alex-menu-item">
-              <ShoppingCart style={{ fontSize: 40, color: 'black' }} />
+              <Inventory style={{ fontSize: 40, color: 'black', }} />
               <p className="alex-menu-item-active">
                 <NavLink style={getIsActive} to="/Administrativo/Listagem">
-                  Produtos
+                  <strong>Produtos</strong>
                 </NavLink>
               </p>
             </div>
@@ -63,7 +63,7 @@ const HeaderAdmin = ({ setViewerHeaderClient, setContextIsLogin }: HeaderAdminPr
             </div>
             <Link to="/catalogo" onClick={handlerClick} className="logout-link">
               <ExitToApp style={{ fontSize: 40, color: 'black' }} />
-              Sair
+             <h1>Sair</h1> 
             </Link>
           </div>
         </div>

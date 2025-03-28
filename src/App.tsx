@@ -10,7 +10,6 @@ import CriarNovoProduto from './pages/HomeAdminstrativo/CriarNovoFormulario/inde
 import Formulario from './pages/HomeAdminstrativo/Formulario';
 import { PrivateRouteAdmin } from './components/Private/Router/ADMIN/index';
 import { PrivateRouteClient } from './components/Private/Router/CLIENTE/index';
-import { Perfil } from './pages/HomeClient/Perfil';
 import { Header } from './components/UI/Header';
 import PaginaAviso from './components/Layout/PaginaAviso';
 import CertificadoPage from './components/Layout/CertificadoPage';
@@ -19,6 +18,8 @@ import CardPaymentComponent from './components/UI/CardPaymentComponent';
 import { MudarSenha } from './components/Layout/MudarSenha/index';
 import { NovoEndereco } from './components/Layout/NovoEndereco';
 import ContextProviders from './data/Contextos';
+import { PerfilClient } from './pages/HomeClient/PerfilClient/index';
+import { PerfilAdmin } from './pages/HomeAdminstrativo/PerfilAdmin/index';
 
 const MainLayout = () => {
   const location = useLocation();
@@ -41,7 +42,7 @@ const App = () => {
                 <div className="app-container">
                   <Routes>
                     <Route path="/" element={<MainLayout />}>
-                      <Route path="/Perfil" element={<PrivateRouteClient><Perfil /></PrivateRouteClient>} >
+                      <Route path="/PerfilClient" element={<PrivateRouteClient><PerfilClient /></PrivateRouteClient>} >
                         <Route path="MudarSenha" element={<PrivateRouteClient><MudarSenha /></PrivateRouteClient>} />
                         <Route path="NovoEndereco" element={<PrivateRouteClient><NovoEndereco /></PrivateRouteClient>} />
                       </Route>
@@ -58,6 +59,8 @@ const App = () => {
                     </Route>
                     <Route path="/Administrativo" element={<PrivateRouteAdmin><Administrativo /></PrivateRouteAdmin>}>
                       <Route path="Listagem" element={<PrivateRouteAdmin><Listagem /></PrivateRouteAdmin>} />
+                      <Route path="PerfilAdmin" element={<PrivateRouteAdmin><PerfilAdmin /></PrivateRouteAdmin>} />
+
                       <Route path="Formulario/:id" element={<PrivateRouteAdmin><Formulario /></PrivateRouteAdmin>} />
                       <Route path="CriarNovoProduto/:id" element={<PrivateRouteAdmin><CriarNovoProduto /></PrivateRouteAdmin>} />
                     </Route>
