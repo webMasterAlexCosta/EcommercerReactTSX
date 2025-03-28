@@ -26,7 +26,7 @@ const CriptografiaAES = {
         256
       );
 
-      const derivedKey = new Uint8Array(derivedBits).slice(0, 16); // Pegando os primeiros 32 bytes (AES-256)
+      const derivedKey = new Uint8Array(derivedBits).slice(0, 32); // Pegando os primeiros 32 bytes (AES-256)
       return this.uint8ArrayToBase64(derivedKey);
     } catch (error) {
       console.error("Erro ao derivar a segunda chave:", error);
@@ -35,7 +35,7 @@ const CriptografiaAES = {
   },
 
   generateRandomKeyBase64(): string {
-    const keyBytes = window.crypto.getRandomValues(new Uint8Array(16)); // 32 bytes para AES-256
+    const keyBytes = window.crypto.getRandomValues(new Uint8Array(32)); // 32 bytes para AES-256
     return this.uint8ArrayToBase64(keyBytes);
   },
 

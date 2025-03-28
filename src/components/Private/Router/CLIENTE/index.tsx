@@ -6,41 +6,44 @@ import { Usuario } from '../../../../models/dto/CredenciaisDTO';
 import { Carregando } from '../../../UI/Carregando';
 
 interface Props {
-    children: React.ReactNode;
+  children: React.ReactElement<{ user?: Usuario }>;
 }
 
-const PrivateRouteClient: React.FC<Props> = ({ children }: Props) => {
-    const [user, setUser] = useState<Usuario | null>(null);
-    const [isLoading, setIsLoading] = useState(true);
+const PrivateRouteClient: React.FC<Props> = ({ children }) => {
+  const [user, setUser] = useState<Usuario | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-    useEffect(() => {
-        const buscar = async () => {
-            try {
-                if (authService.isAuthenticated()) {
-                    const userProfile = await userService.getUserService();
-                   // console.log("Dados do usuário:", userProfile);
-                    setUser(userProfile);
-                }
-            } catch {
-             //   console.error("Erro ao carregar usuário:", error);
-                setUser(null);
-            } finally {
-                setIsLoading(false);
-            }
-        };
+  useEffect(() => {
+    const buscar = async () => {
+      try {
+        if (authService.isAuthenticated()) {
+          const userProfile = await userService.getUserService();
+          //console.log("Dados do usuário buscados:", userProfile);
+          setUser(userProfile);
+        }
+      } catch  {
+      //  console.error("Erro ao buscar usuário:", error);
+        setUser(null);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-        buscar();
-    }, []);
+    buscar();
+  }, []);
 
-    if (isLoading) {
-        return <><Carregando title="Aguarde"/></>; 
-    }
+  if (isLoading) {
+    return <Carregando title="Aguarde" />;
+  }
 
-    if (authService.isAuthenticated() && user?.perfil?.includes("CLIENTE")) {
-        return children;
-    }
+  if (authService.isAuthenticated() && user?.perfil?.includes("CLIENTE")) {
+    // Passa o `user` como prop para o componente pai
+    return React.isValidElement(children)
+      ? React.cloneElement(children, { user: user as Usuario })
+      : null;
+  }
 
-    return <Navigate to="/catalogo" />;
+  return <Navigate to="/catalogo" />;
 };
 
 export { PrivateRouteClient };

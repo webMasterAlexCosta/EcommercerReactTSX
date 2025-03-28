@@ -43,7 +43,7 @@ const HeaderClient = () => {
 
 
     }
-  }, [setContextIsLogin, setIconAdminContext, setUsuario]);
+  }, [setContextIsLogin, setIconAdminContext, setUsuario, usuario]);
 
       /** posso usar esse recurso, mas no react vou usar navigate
        window.addEventListener("storage", checkLoginStatus); // Escuta mudanças no storage
@@ -87,7 +87,7 @@ const HeaderClient = () => {
 
         <div className="alex-navbar-right">
           {iconAdminContext === "CLIENTE" && (
-            <NavLink to="/perfil" style={getIsActive}>
+            <NavLink to="/PerfilClient" style={getIsActive}>
               <AccountCircle style={{ fontSize: 40, color: 'black' }} />
               <h3>Perfil</h3>
             </NavLink>
