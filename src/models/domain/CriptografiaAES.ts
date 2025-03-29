@@ -1,117 +1,144 @@
 const CriptografiaAES = {
-  IV_SIZE: 12,
-  TAG_SIZE: 128,
-
-  async deriveSecondKeyFromFirst(firstKeyBase64: string): Promise<string> {
-    const firstKeyBytes = this.base64ToUint8Array(firstKeyBase64);
-    const salt = new TextEncoder().encode("derivation_salt"); // Salt fixo (idealmente, deve ser aleatório)
-
-    try {
-      const baseKey = await window.crypto.subtle.importKey(
-        "raw",
-        firstKeyBytes,
-        { name: "PBKDF2" },
+    IV_SIZE: 12, 
+    SALT_SIZE: 16, 
+    ITERATIONS: 1000,  // Aumentado para aumentar a segurança
+    ALGORITHM: 'AES-GCM',
+  
+    async deriveSecondKeyFromFirst(firstKeyBase64: string): Promise<string> {
+      const firstKeyBytes = this.base64ToUint8Array(firstKeyBase64);
+      const salt = window.crypto.getRandomValues(new Uint8Array(this.SALT_SIZE)); // Salt aleatório agora
+  
+      try {
+        const baseKey = await window.crypto.subtle.importKey(
+          "raw",
+          firstKeyBytes,
+          { name: "PBKDF2" },
+          false,
+          ["deriveBits"]
+        );
+  
+        const derivedBits = await window.crypto.subtle.deriveBits(
+          {
+            name: "PBKDF2",
+            salt,
+            iterations: this.ITERATIONS,
+            hash: "SHA-512",
+          },
+          baseKey,
+          256
+        );
+  
+        const derivedKey = new Uint8Array(derivedBits).slice(0, 32); // Pegando os 32 bytes (AES-256)
+        return this.uint8ArrayToBase64(derivedKey);
+      } catch (error) {
+        console.error("Erro ao derivar a segunda chave:", error);
+        throw new Error("Erro ao derivar a segunda chave.");
+      }
+    },
+  
+    generateRandomKeyBase64(): string {
+      const keyBytes = window.crypto.getRandomValues(new Uint8Array(32)); // 32 bytes para AES-256
+      return this.uint8ArrayToBase64(keyBytes);
+    },
+  
+    uint8ArrayToBase64(array: Uint8Array): string {
+      return btoa(String.fromCharCode(...array));
+    },
+  
+    base64ToUint8Array(base64: string): Uint8Array {
+      return Uint8Array.from(atob(base64), (char) => char.charCodeAt(0));
+    },
+  
+    async encrypt(data: string, password: string): Promise<string> {
+      const passwordBuffer = new TextEncoder().encode(password);
+      const salt = window.crypto.getRandomValues(new Uint8Array(this.SALT_SIZE));
+  
+      const keyMaterial = await window.crypto.subtle.importKey(
+        'raw',
+        passwordBuffer,
+        { name: 'PBKDF2' },
         false,
-        ["deriveBits"]
+        ['deriveKey']
       );
-
-      const derivedBits = await window.crypto.subtle.deriveBits(
+  
+      const key = await window.crypto.subtle.deriveKey(
         {
-          name: "PBKDF2",
-          salt,
-          iterations: 100000,
-          hash: "SHA-256",
+          name: 'PBKDF2',
+          salt: salt,
+          iterations: this.ITERATIONS,
+          hash: 'SHA-512'  
         },
-        baseKey,
-        256
-      );
-
-      const derivedKey = new Uint8Array(derivedBits).slice(0, 32); // Pegando os primeiros 32 bytes (AES-256)
-      return this.uint8ArrayToBase64(derivedKey);
-    } catch (error) {
-      console.error("Erro ao derivar a segunda chave:", error);
-      throw new Error("Erro ao derivar a segunda chave.");
-    }
-  },
-
-  generateRandomKeyBase64(): string {
-    const keyBytes = window.crypto.getRandomValues(new Uint8Array(32)); // 32 bytes para AES-256
-    return this.uint8ArrayToBase64(keyBytes);
-  },
-
-  uint8ArrayToBase64(array: Uint8Array): string {
-    return btoa(String.fromCharCode(...array));
-  },
-
-  base64ToUint8Array(base64: string): Uint8Array {
-    return Uint8Array.from(atob(base64), (char) => char.charCodeAt(0));
-  },
-
-  async encrypt(data: string, keyBase64: string): Promise<string> {
-    if (!data || !keyBase64) {
-      throw new Error("Dados ou chave ausente.");
-    }
-
-    const keyBytes = this.base64ToUint8Array(keyBase64);
-    const iv = window.crypto.getRandomValues(new Uint8Array(this.IV_SIZE));
-
-    try {
-      const key = await window.crypto.subtle.importKey(
-        "raw",
-        keyBytes,
-        { name: "AES-GCM" },
+        keyMaterial,
+        { name: this.ALGORITHM, length: 256 },  
         false,
-        ["encrypt"]
+        ['encrypt']
       );
-
-      const encryptedBuffer = await window.crypto.subtle.encrypt(
-        { name: "AES-GCM", iv, tagLength: this.TAG_SIZE },
+  
+      const iv = window.crypto.getRandomValues(new Uint8Array(this.IV_SIZE));
+  
+      const encryptedData = await window.crypto.subtle.encrypt(
+        {
+          name: this.ALGORITHM,
+          iv: iv
+        },
         key,
         new TextEncoder().encode(data)
       );
-
-      // Concatenar IV + Dados Criptografados
-      const encryptedData = new Uint8Array([...iv, ...new Uint8Array(encryptedBuffer)]);
-      return this.uint8ArrayToBase64(encryptedData);
-    } catch (error) {
-      console.error("Erro ao criptografar os dados:", error);
-      throw new Error("Erro ao criptografar os dados.");
-    }
-  },
-
-  async decrypt(encryptedData: string, keyBase64: string): Promise<string> {
-    if (!encryptedData || !keyBase64) {
-      throw new Error("Dados criptografados ou chave ausente.");
-    }
-
-    try {
-      const keyBytes = this.base64ToUint8Array(keyBase64);
-      const encryptedBytes = this.base64ToUint8Array(encryptedData);
-
-      // Separar IV e Payload Criptografado
-      const iv = encryptedBytes.slice(0, this.IV_SIZE);
-      const encryptedPayload = encryptedBytes.slice(this.IV_SIZE);
-
-      const key = await window.crypto.subtle.importKey(
-        "raw",
-        keyBytes,
-        { name: "AES-GCM" },
+  
+      const combined = new Uint8Array([
+        ...salt,
+        ...iv,
+        ...new Uint8Array(encryptedData)
+      ]);
+  
+      return this.uint8ArrayToBase64(combined);
+    },
+  
+    async decrypt(encryptedData: string, password: string): Promise<string> {
+      const binaryString = atob(encryptedData);
+      const combined = new Uint8Array(binaryString.length);
+      for (let i = 0; i < binaryString.length; i++) {
+        combined[i] = binaryString.charCodeAt(i);
+      }
+  
+      const salt = combined.slice(0, this.SALT_SIZE);
+      const iv = combined.slice(this.SALT_SIZE, this.SALT_SIZE + this.IV_SIZE);
+      const data = combined.slice(this.SALT_SIZE + this.IV_SIZE);
+  
+      const passwordBuffer = new TextEncoder().encode(password);
+      const keyMaterial = await window.crypto.subtle.importKey(
+        'raw',
+        passwordBuffer,
+        { name: 'PBKDF2' },
         false,
-        ["decrypt"]
+        ['deriveKey']
       );
-
-      const decryptedBuffer = await window.crypto.subtle.decrypt(
-        { name: "AES-GCM", iv, tagLength: this.TAG_SIZE },
+  
+      const key = await window.crypto.subtle.deriveKey(
+        {
+          name: 'PBKDF2',
+          salt: salt,
+          iterations: this.ITERATIONS,
+          hash: 'SHA-512'  
+        },
+        keyMaterial,
+        { name: this.ALGORITHM, length: 256 }, 
+        false,
+        ['decrypt']
+      );
+  
+      const decrypted = await window.crypto.subtle.decrypt(
+        {
+          name: this.ALGORITHM,
+          iv: iv
+        },
         key,
-        encryptedPayload
+        data
       );
-
-      return new TextDecoder().decode(decryptedBuffer);
-    } catch (error) {
-      console.error("Erro ao descriptografar:", error);
-      throw new Error("Erro durante a descriptografia.");
+  
+      return new TextDecoder().decode(decrypted);
     }
-  }
-};
-
-export default CriptografiaAES;
+  };
+  
+  export default CriptografiaAES;
+  

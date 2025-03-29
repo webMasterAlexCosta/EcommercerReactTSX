@@ -1,12 +1,9 @@
-import { AxiosRequestConfig, AxiosResponse } from "axios";
+import { AxiosRequestConfig } from "axios";
 import { CadastroUserDTO } from "../models/dto/CadastroUserDTO";
 import { Endereco, Login } from "../models/dto/CredenciaisDTO";
 import requestBackEnd from "../utils/request";
 import {
   CADASTRO_NOVO_USUARIO,
-  CHAVECIFRADO,
-  DADOCIFRAFADO,
-  ENVIAR_PEDIDO,
   FOTO_PERFIL_LINK,
   HISTORICO_PEDIDO_USER,
   PRODUTO_KEY,
@@ -15,18 +12,12 @@ import {
 } from "../utils/system";
 import { isAuthenticated } from "../services/AuthService";
 import CriptografiaAES from "../models/domain/CriptografiaAES";
-import { CarrinhoItem, PedidoData, PedidoItem } from "../models/dto/CarrinhoDTO";
-import PedidoCriptografia from "../models/domain/PedidoCriptografia";
 
-
-// Função para gerar e derivar as chaves
 const gerarChaves = async () => {
   const SECRET_KEY_BASE64_1 = CriptografiaAES.generateRandomKeyBase64();
- // console.log(SECRET_KEY_BASE64_1.length)
   const SECRET_KEY_BASE64_2 = await CriptografiaAES.deriveSecondKeyFromFirst(
     SECRET_KEY_BASE64_1
   );
- // console.log(SECRET_KEY_BASE64_2.length)
 
   return { SECRET_KEY_BASE64_1, SECRET_KEY_BASE64_2 };
 };
@@ -51,7 +42,6 @@ const getMeRepository = async () => {
 
     try {
       const response = await requestBackEnd(config);
-
       return response;
     } catch (error) {
       console.error("Erro ao buscar usuário", error);
@@ -73,6 +63,51 @@ const recuperarSenhaRepository = async (email: string, cpf: string) => {
   } catch (error) {
     console.error("Erro ao recuperar senha", error);
     throw error;
+  }
+};
+
+const setUserRepository = async () => {
+  if (isAuthenticated()) {
+    const encryptedData = sessionStorage.getItem("encryptedData");
+    const chaveBase64 = sessionStorage.getItem("chave");
+    if (encryptedData === null || chaveBase64 === null) {
+      const usuario = await getMeRepository();
+
+      const misturar =
+        SECRET_KEY_BASE64_1 + usuario?.data.chave + SECRET_KEY_BASE64_2;
+      sessionStorage.setItem("encryptedData", usuario?.data.encryptedData);
+      sessionStorage.setItem("chave", misturar);
+      return Promise.resolve(usuario);
+    }
+    return Promise.resolve();
+  }
+};
+
+const getUserRepository = async () => {
+  await setUserRepository();
+
+  const encryptedData = sessionStorage.getItem("encryptedData");
+  const chaveMisturadas = sessionStorage.getItem("chave");
+
+  if (!chaveMisturadas) {
+    throw new Error("Chave não encontrada no sessionStorage.");
+  }
+
+  const chave = chaveMisturadas.slice(
+    SECRET_KEY_BASE64_1.length,
+    chaveMisturadas?.length - SECRET_KEY_BASE64_2.length
+  );
+  if (!encryptedData || !chave) {
+    return Promise.resolve({ perfil: [] });
+  }
+
+  try {
+    const decryptedData = await CriptografiaAES.decrypt(encryptedData, chave);
+    const user = JSON.parse(decryptedData);
+    return Promise.resolve({ ...user, perfil: user.perfil || [] });
+  } catch (error) {
+    console.error("Erro ao descriptografar os dados:", error);
+    return Promise.resolve({ perfil: [] });
   }
 };
 
@@ -117,7 +152,7 @@ const logoutRepository = () => {
   localStorage.removeItem(TOKEN_KEY);
   localStorage.removeItem(FOTO_PERFIL_LINK);
   localStorage.removeItem(PRODUTO_KEY);
-  return (window.location.href = "/login");
+  window.location.href = "/login";
 };
 
 const saveTokenRepository = async (response: Login) => {
@@ -128,58 +163,6 @@ const saveTokenRepository = async (response: Login) => {
 
 const getTokenRepository = () => {
   return localStorage.getItem(TOKEN_KEY);
-};
-
-const setUserRepository = async () => {
-  if (isAuthenticated()) {
-    const encryptedData = sessionStorage.getItem(DADOCIFRAFADO);
-    const chaveBase64 = sessionStorage.getItem(CHAVECIFRADO);
-
-    if (encryptedData === null || chaveBase64 === null) {
-      const usuario = await getMeRepository();
-
-      const misturar =
-        SECRET_KEY_BASE64_1 + usuario?.data.chaveBase64 + SECRET_KEY_BASE64_2;
-
-      sessionStorage.setItem(DADOCIFRAFADO, usuario?.data.encryptedData);
-      sessionStorage.setItem(CHAVECIFRADO, misturar);
-
-      return Promise.resolve(usuario);
-    }
-    return Promise.resolve();
-  }
-};
-
-const getUserRepository = async () => {
-  await setUserRepository();
-
-  const encryptedData = sessionStorage.getItem(DADOCIFRAFADO);
-  const chaveBase64 = sessionStorage.getItem(CHAVECIFRADO);
-
-  if (!chaveBase64) {
-    throw new Error("Chave não encontrada no sessionStorage.");
-  }
-
-  const chaveBase64Recuperada = chaveBase64.slice(
-    SECRET_KEY_BASE64_1.length,
-    chaveBase64.length - SECRET_KEY_BASE64_2.length
-  );
-
-  if (!encryptedData || !chaveBase64Recuperada) {
-    return Promise.resolve({ perfil: [] });
-  }
-
-  try {
-    const decryptedData = await CriptografiaAES.decrypt(
-      encryptedData,
-      chaveBase64Recuperada
-    );
-    const user = JSON.parse(decryptedData);
-    return Promise.resolve({ ...user, perfil: user.perfil || [] });
-  } catch (error) {
-    console.error("Erro ao descriptografar os dados:", error);
-    return Promise.resolve({ perfil: [] });
-  }
 };
 
 const obterHistoricoPedidoRepository = async () => {
@@ -193,64 +176,10 @@ const obterHistoricoPedidoRepository = async () => {
   };
   try {
     const response = await requestBackEnd(config);
-    // setHistoricoPedidos(response.data);
     return response;
   } catch (error) {
     console.error("Erro ao obter histórico de pedidos", error);
-    throw new Error();
-  }
-};
-
-
-const enviarPedidoRepository = async (carrinhoAtual: CarrinhoItem[]): Promise<AxiosResponse<unknown>> => {
-  if (carrinhoAtual.length === 0) {
-    return Promise.reject("Carrinho está vazio");
-  }
-
-  try {
-    const data: PedidoData = {
-      items: carrinhoAtual.map(
-        (item: CarrinhoItem): PedidoItem => ({
-          id: item.id,
-          nome: item.nome,
-          preco: item.preco,
-          descricao: item.descricao,
-          imgUrl: item.imgUrl,
-          quantidade: item.quantidade,
-          categorias: item.categorias || [],
-          subTotal: item.preco * item.quantidade,
-        })
-      ),
-    };
-
-     const chaveBase64 = PedidoCriptografia.generateRandomKey();
-
-     const encryptedData = await PedidoCriptografia.encrypt(JSON.stringify(data), chaveBase64);
-
-    const config: AxiosRequestConfig = {
-      method: "POST",
-      url: ENVIAR_PEDIDO,
-      headers: { "Content-Type": "application/json" },
-      data:{
-        chaveBase64, 
-       encryptedData,  
-      }
-    };
-
-    const enviado = await requestBackEnd(config);
-   // console.log("pedido enciado " + enviado.data)
-
-    if (enviado.status === 200 || enviado.status === 201) {
-      setTimeout(() => {
-        window.location.href = "/Carrinho";
-      }, 4000);
-      return enviado;
-    }
-
-    return Promise.reject("Falha ao enviar o pedido");
-  } catch (error) {
-    console.error("Erro ao enviar o pedido:", error);
-    return Promise.reject("Erro ao enviar o pedido");
+    throw new Error("Erro ao obter histórico de pedidos");
   }
 };
 
@@ -265,5 +194,4 @@ export {
   saveTokenRepository,
   setUserRepository,
   obterHistoricoPedidoRepository,
-  enviarPedidoRepository
 };
