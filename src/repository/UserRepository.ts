@@ -16,16 +16,17 @@ import {
 import { isAuthenticated } from "../services/AuthService";
 import CriptografiaAES from "../models/domain/CriptografiaAES";
 import { CarrinhoItem, PedidoData, PedidoItem } from "../models/dto/CarrinhoDTO";
+import PedidoCriptografia from "../models/domain/PedidoCriptografia";
 
 
 // Função para gerar e derivar as chaves
 const gerarChaves = async () => {
   const SECRET_KEY_BASE64_1 = CriptografiaAES.generateRandomKeyBase64();
-  console.log(SECRET_KEY_BASE64_1.length)
+ // console.log(SECRET_KEY_BASE64_1.length)
   const SECRET_KEY_BASE64_2 = await CriptografiaAES.deriveSecondKeyFromFirst(
     SECRET_KEY_BASE64_1
   );
-  console.log(SECRET_KEY_BASE64_2.length)
+ // console.log(SECRET_KEY_BASE64_2.length)
 
   return { SECRET_KEY_BASE64_1, SECRET_KEY_BASE64_2 };
 };
@@ -199,9 +200,9 @@ const obterHistoricoPedidoRepository = async () => {
     throw new Error();
   }
 };
-const enviarPedidoRepository = async (carrinhoAtual :CarrinhoItem[]): Promise<AxiosResponse<unknown>> => {
- 
 
+
+const enviarPedidoRepository = async (carrinhoAtual: CarrinhoItem[]): Promise<AxiosResponse<unknown>> => {
   if (carrinhoAtual.length === 0) {
     return Promise.reject("Carrinho está vazio");
   }
@@ -222,14 +223,22 @@ const enviarPedidoRepository = async (carrinhoAtual :CarrinhoItem[]): Promise<Ax
       ),
     };
 
+     const chaveBase64 = PedidoCriptografia.generateRandomKey();
+
+     const encryptedData = await PedidoCriptografia.encrypt(JSON.stringify(data), chaveBase64);
+
     const config: AxiosRequestConfig = {
       method: "POST",
       url: ENVIAR_PEDIDO,
       headers: { "Content-Type": "application/json" },
-      data,
+      data:{
+        chaveBase64, 
+       encryptedData,  
+      }
     };
 
     const enviado = await requestBackEnd(config);
+   // console.log("pedido enciado " + enviado.data)
 
     if (enviado.status === 200 || enviado.status === 201) {
       setTimeout(() => {
