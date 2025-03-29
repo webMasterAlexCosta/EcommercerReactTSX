@@ -1,4 +1,4 @@
-import { AxiosRequestConfig } from "axios";
+import { AxiosRequestConfig, AxiosResponse } from "axios";
 import { CadastroUserDTO } from "../models/dto/CadastroUserDTO";
 import { Endereco, Login } from "../models/dto/CredenciaisDTO";
 import requestBackEnd from "../utils/request";
@@ -6,6 +6,7 @@ import {
   CADASTRO_NOVO_USUARIO,
   CHAVECIFRADO,
   DADOCIFRAFADO,
+  ENVIAR_PEDIDO,
   FOTO_PERFIL_LINK,
   HISTORICO_PEDIDO_USER,
   PRODUTO_KEY,
@@ -14,6 +15,8 @@ import {
 } from "../utils/system";
 import { isAuthenticated } from "../services/AuthService";
 import CriptografiaAES from "../models/domain/CriptografiaAES";
+import { CarrinhoItem, PedidoData, PedidoItem } from "../models/dto/CarrinhoDTO";
+
 
 // Função para gerar e derivar as chaves
 const gerarChaves = async () => {
@@ -196,6 +199,51 @@ const obterHistoricoPedidoRepository = async () => {
     throw new Error();
   }
 };
+const enviarPedidoRepository = async (carrinhoAtual :CarrinhoItem[]): Promise<AxiosResponse<unknown>> => {
+ 
+
+  if (carrinhoAtual.length === 0) {
+    return Promise.reject("Carrinho está vazio");
+  }
+
+  try {
+    const data: PedidoData = {
+      items: carrinhoAtual.map(
+        (item: CarrinhoItem): PedidoItem => ({
+          id: item.id,
+          nome: item.nome,
+          preco: item.preco,
+          descricao: item.descricao,
+          imgUrl: item.imgUrl,
+          quantidade: item.quantidade,
+          categorias: item.categorias || [],
+          subTotal: item.preco * item.quantidade,
+        })
+      ),
+    };
+
+    const config: AxiosRequestConfig = {
+      method: "POST",
+      url: ENVIAR_PEDIDO,
+      headers: { "Content-Type": "application/json" },
+      data,
+    };
+
+    const enviado = await requestBackEnd(config);
+
+    if (enviado.status === 200 || enviado.status === 201) {
+      setTimeout(() => {
+        window.location.href = "/Carrinho";
+      }, 4000);
+      return enviado;
+    }
+
+    return Promise.reject("Falha ao enviar o pedido");
+  } catch (error) {
+    console.error("Erro ao enviar o pedido:", error);
+    return Promise.reject("Erro ao enviar o pedido");
+  }
+};
 
 export {
   cadastrarNovoUsuarioRepository,
@@ -208,4 +256,5 @@ export {
   saveTokenRepository,
   setUserRepository,
   obterHistoricoPedidoRepository,
+  enviarPedidoRepository
 };

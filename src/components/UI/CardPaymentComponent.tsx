@@ -37,7 +37,7 @@ const CardPaymentComponent2: React.FC = () => {
 
     setTimeout(async () => {
       try {
-        await gerarPDF(response.data as PedidoFeito);
+        await gerarPDF( response?.data as PedidoFeito);
         setContextCartCount(0);
         carrinhoService.removeCarrinho();
         setProdutos([]);
