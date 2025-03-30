@@ -61,6 +61,8 @@ useEffect(() => {
         text: "Ocorreu um erro ao tentar deletar o produto. Tente novamente.",
         icon: "error",
       });
+    }finally{
+      navigate(0)
     }
   };
 

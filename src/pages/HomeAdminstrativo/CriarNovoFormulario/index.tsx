@@ -44,7 +44,12 @@ const CriarNovoProduto = () => {
   const handleSubmit = async (produto: ProdutoDTO) => {
   //  console.log("produto a ser enviado " + produto)
     try {
-      const response = await produtoService.novoProduto(produto);
+      const response = await produtoService.novoProduto({
+      ...produto,
+      preco : Number(produto.preco)  
+      
+      })
+      
       console.log(response)
       if (response?.status === 201) {
         // Alerta de sucesso

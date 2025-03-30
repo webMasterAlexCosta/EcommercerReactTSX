@@ -42,8 +42,7 @@ const findByRequest = async (item: string) => {
 };
 
 const novoProduto = async (dto: ProdutoDTO) => {
- // console.log(dto)
-  alert(dto)
+  console.log(dto)
   const user = await getUserService();
   if (await isAuthenticated() && user.perfil.includes("ADMIN")) {
     const config: AxiosRequestConfig = {
