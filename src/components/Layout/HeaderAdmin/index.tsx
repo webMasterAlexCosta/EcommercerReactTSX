@@ -20,23 +20,26 @@ const HeaderAdmin = ({ setViewerHeaderClient, setContextIsLogin }: HeaderAdminPr
     isActive ? { color: 'red' } : { color: 'black' };
 
   useEffect(() => {
-    if (isAuthenticated()) {
-      const obterUsuario = async () => {
-        setLoading(true);
-        try {
-          const response = await userService.getUserService();
-          setUsuario(response && response.nome ? { nome: response.nome } : null);
-        } catch (error) {
-          console.error('Erro ao buscar usuário:', error);
-          setUsuario(null);
-        } finally {
-          setLoading(false);
-        }
-      };
-      obterUsuario();
-    } else {
-      setLoading(false);
-    }
+    const checkAuthentication = async () => {
+      if (await isAuthenticated()) {
+        const obterUsuario = async () => {
+          setLoading(true);
+          try {
+            const response = await userService.getUserService();
+            setUsuario(response && response.nome ? { nome: response.nome } : null);
+          } catch (error) {
+            console.error('Erro ao buscar usuário:', error);
+            setUsuario(null);
+          } finally {
+            setLoading(false);
+          }
+        };
+        obterUsuario();
+      } else {
+        setLoading(false);
+      }
+    };
+    checkAuthentication();
   }, []);
 
   const handlerClick = () => {

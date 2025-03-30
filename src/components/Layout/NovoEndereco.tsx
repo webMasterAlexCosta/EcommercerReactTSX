@@ -32,10 +32,15 @@ const NovoEndereco = () => {
     const [textoCarregando, setTextoCarregando] = useState(TEXTO_PADRAO_SOLICITACAO);
 
     useEffect(() => {
-        if (!(userService.getTokenService() && authService.isAuthenticated())) {
-            navigate("/login");
-            throw new Error();
+
+        const verificar =async()=>{
+            if (!(await userService.getTokenService() && authService.isAuthenticated())) {
+                navigate("/login");
+                throw new Error();
+            }
         }
+        verificar()
+        
     }, [navigate]);
 
     const buscarEnderecoPorCep = async (cep: string) => {
@@ -99,7 +104,7 @@ const NovoEndereco = () => {
         }
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
         
@@ -114,7 +119,8 @@ const NovoEndereco = () => {
             return;
         }
     
-        const id = authService.getAccessTokenPayload()?.sub || null;
+        const payload = await authService.getAccessTokenPayload();
+        const id = payload?.sub || null;
         const enviar = userServices.mudarEnderecoUserAutenticado({
             ...enderecoUsuario,
             cep: cepFormatado 

@@ -29,10 +29,10 @@ const CriarNovoProduto = () => {
         }, 5000);
 
 
-        
+
     }
 }, [alertData]);
-  
+
   useEffect(() => {
     const buscar = async () => {
       const response = await produtoService.findAllCategories();

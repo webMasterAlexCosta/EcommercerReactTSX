@@ -15,22 +15,21 @@ const Header = () => {
   const { usuario, setUsuario } = useContext(UserContext);
  
   useEffect(() => {
-    if (!isAuthenticated()) {
-      setUsuario(null);
-      return;
-    }
+    const checkAuthentication = async () => {
+      if (!await isAuthenticated()) {
+        setUsuario(null);
+        return;
+      }
 
-    const fetchUserData = async () => {
-      try{
-      const userData = await getUserService();
-     
-      setUsuario(userData);
-      }catch{
-        window.location.href="/";
-      } 
+      try {
+        const userData = await getUserService();
+        setUsuario(userData);
+      } catch {
+        window.location.href = "/";
+      }
     };
 
-    fetchUserData();
+    checkAuthentication();
   }, [setUsuario]);
 
   useEffect(() => {

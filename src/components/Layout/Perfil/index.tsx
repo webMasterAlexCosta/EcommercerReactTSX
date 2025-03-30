@@ -14,6 +14,7 @@ import { NovoEndereco } from '../NovoEndereco';
 import * as userService from "../../../services/UserServices"
 import * as perfilFotoService from "../../../services/PerfilFotoService"
 import PedidoUsuario from '../../UI/Pedido';
+
 const Perfil = () => {
     const [usuario, setUsuario] = useState<UserDTO>({
         id: "",
@@ -42,13 +43,13 @@ const Perfil = () => {
     const uploadFotoRef = useRef<HTMLInputElement | null>(null);
     const [fotoCarregada, setFotoCarregada] = useState<boolean>(false);
     const [mostrarPedido, setMostrarPedido] = useState<boolean>(false)
-    const [ caminhoSenha,setCaminhoSenha] = useState<string>("/PerfilClient/MudarSenha")
-    const [ caminhoEndereco,setCaminhoEndereco] = useState<string>("/PerfilClient/NovoEndereco")
+    const [caminhoSenha, setCaminhoSenha] = useState<string>("/PerfilClient/MudarSenha")
+    const [caminhoEndereco, setCaminhoEndereco] = useState<string>("/PerfilClient/NovoEndereco")
 
-    useEffect(()=>{
+    useEffect(() => {
         const obterPerfil = async () => {
             const response = await userService.getUserService()
-            if(response.perfil.includes("ADMIN")){
+            if (response.perfil.includes("ADMIN")) {
                 setCaminhoSenha("/Administrativo/PerfilAdmin/MudarSenha")
                 setCaminhoEndereco("/Administrativo/PerfilAdmin/NovoEndereco")
                 console.log("caminhoSenha set to Administrativo/MudarSenha")
@@ -56,16 +57,19 @@ const Perfil = () => {
             }
         }
         obterPerfil()
-    },[])
+    }, [])
 
     useEffect(() => {
-        if (!(userService.getTokenService() && authService.isAuthenticated())) {
-            navigate("/login");
-            return;
+        const verificar = async () => {
+            if (!(await userService.getTokenService() && authService.isAuthenticated())) {
+             //   navigate("/login");
+                return;
+            }
         }
-
+        verificar()
         const obterUsuario = async () => {
-            const idUserToken = authService.getAccessTokenPayload()?.sub;
+            const accessTokenPayload = await authService.getAccessTokenPayload();
+            const idUserToken = accessTokenPayload?.sub;
 
             const usuarioLogado = await userService.getUserService();
             setUsuario({
@@ -289,7 +293,7 @@ const Perfil = () => {
                 </div>
             )}
             {mudarSenha ? (
-                <MudarSenha/>
+                <MudarSenha />
             ) : mudarEndereco ? (
                 <NovoEndereco />
 

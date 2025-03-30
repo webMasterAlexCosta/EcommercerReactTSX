@@ -9,8 +9,8 @@ import {
 import { getTokenService } from "../services/UserServices";
 import { isAuthenticated } from "../services/AuthService";
 
-const requestBackEnd = (config: AxiosRequestConfig) => {
-  const token = getTokenService();
+const requestBackEnd =async (config: AxiosRequestConfig) => {
+  const token =await  getTokenService();
   const headers = {
     ...config.headers,
     Authorization: token ? `Bearer ${token}` : undefined,
@@ -23,9 +23,9 @@ axios.interceptors.response.use(
   function (response) {
     return response;
   },
-  function (error) {
-    if (isAuthenticated()) {
-     window.location.href = "/login";
+  async function (error) {
+    if (await isAuthenticated()) {
+   //   window.location.href = "/login";
       localStorage.removeItem(TOKEN_KEY);
       localStorage.removeItem(FOTO_PERFIL_LINK);
       localStorage.removeItem(PRODUTO_KEY);
@@ -45,7 +45,7 @@ axios.interceptors.response.use(
         confirmButtonText: "OK",
       });
       setTimeout(() => {
-        window.location.reload();
+     //  window.location.reload();
       }, 3000);
     } else {
       Swal.fire({
@@ -55,7 +55,7 @@ axios.interceptors.response.use(
         confirmButtonText: "OK",
       });
       setTimeout(() => {
-       window.location.reload();
+    //    window.location.reload();
       }, 3000);
     }
     /*

@@ -4,6 +4,7 @@ import { Endereco, Login } from "../models/dto/CredenciaisDTO";
 import requestBackEnd from "../utils/request";
 import {
   CADASTRO_NOVO_USUARIO,
+  CHAVE,
   FOTO_PERFIL_LINK,
   HISTORICO_PEDIDO_USER,
   PRODUTO_KEY,
@@ -12,6 +13,7 @@ import {
 } from "../utils/system";
 import { isAuthenticated } from "../services/AuthService";
 import CriptografiaAES from "../models/domain/CriptografiaAES";
+
 
 const gerarChaves = async () => {
   const SECRET_KEY_BASE64_1 = CriptografiaAES.generateRandomKeyBase64();
@@ -28,13 +30,14 @@ const chaves = async () => {
 };
 
 let SECRET_KEY_BASE64_1: string, SECRET_KEY_BASE64_2: string;
+
 chaves().then((keys) => {
   SECRET_KEY_BASE64_1 = keys.SECRET_KEY_BASE64_1;
   SECRET_KEY_BASE64_2 = keys.SECRET_KEY_BASE64_2;
 });
 
 const getMeRepository = async () => {
-  if (isAuthenticated()) {
+  if (await isAuthenticated()) {
     const config: AxiosRequestConfig = {
       url: "/api/users/me",
       withCredentials: true,
@@ -67,7 +70,7 @@ const recuperarSenhaRepository = async (email: string, cpf: string) => {
 };
 
 const setUserRepository = async () => {
-  if (isAuthenticated()) {
+  if (await isAuthenticated()) {
     const encryptedData = sessionStorage.getItem("encryptedData");
     const chaveBase64 = sessionStorage.getItem("chave");
     if (encryptedData === null || chaveBase64 === null) {
@@ -77,6 +80,7 @@ const setUserRepository = async () => {
         SECRET_KEY_BASE64_1 + usuario?.data.chave + SECRET_KEY_BASE64_2;
       sessionStorage.setItem("encryptedData", usuario?.data.encryptedData);
       sessionStorage.setItem("chave", misturar);
+      console.log("secreto" +SECRET_KEY_BASE64_1 + SECRET_KEY_BASE64_2)
       return Promise.resolve(usuario);
     }
     return Promise.resolve();
@@ -139,8 +143,8 @@ const mudarEnderecoUserAutenticadoRepository = (
   return requestBackEnd(config);
 };
 
-const logoutRepository = () => {
-  if (isAuthenticated()) {
+const logoutRepository = async () => {
+  if (await isAuthenticated()) {
     const config: AxiosRequestConfig = {
       method: "POST",
       url: "/api/login/logout",
@@ -156,13 +160,29 @@ const logoutRepository = () => {
 };
 
 const saveTokenRepository = async (response: Login) => {
-  localStorage.setItem(TOKEN_KEY, response.token);
-  await setUserRepository();
+ 
+    console.log("token Recebido  no decript > " + response.token)
+   // const base64Token =  btoa(response.token);
+    
+    const encryptToken = await CriptografiaAES.encrypt(response.token, CHAVE);
+    console.log("token criptografado > " +encryptToken)
+   
+  
+
+  localStorage.setItem(TOKEN_KEY, encryptToken);
+ // await setUserRepository();
   return Promise.resolve();
 };
 
-const getTokenRepository = () => {
-  return localStorage.getItem(TOKEN_KEY);
+const getTokenRepository = async () => {
+  const tokensalvo = localStorage.getItem(TOKEN_KEY);
+
+  if (!tokensalvo) {
+    return null; 
+  }
+
+  const decrypt = await CriptografiaAES.decrypt(tokensalvo,CHAVE);
+  return decrypt;
 };
 
 const obterHistoricoPedidoRepository = async () => {

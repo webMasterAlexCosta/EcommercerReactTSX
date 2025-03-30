@@ -10,9 +10,6 @@ import { ALTERAR_SENHA_AUTENTICADO, ENVIAR_PEDIDO } from "../utils/system";
 import CriptografiaAES from "../models/domain/CriptografiaAES";
 
 
-
-
-
 const getMeService = async () => {
   return userRepository.getMeRepository();
 };
@@ -81,15 +78,12 @@ const enviarPedido = async () => {
   }
 };
   
-   
-
-
-
+  
 const alterarSenhaAutenticado = async (
   antigaSenha: string,
   novaSenha: string
 ) => {
-  if (authService.isAuthenticated()) {
+  if (await authService.isAuthenticated()) {
     const user = await getUserService();
     const email = user?.email;
 
@@ -119,6 +113,11 @@ const mudarEnderecoUserAutenticado = (
 const logoutService = () => {
   return userRepository.logoutRepository();
 };
+
+
+
+
+
 
 const saveTokenService = (response: Login) => {
   return userRepository.saveTokenRepository(response);
@@ -153,4 +152,5 @@ export {
   saveTokenService,
   setUserService,
   obterHistoricoPedidoService,
+  
 };

@@ -16,13 +16,12 @@ const PrivateRouteAdmin: React.FC<Props> = ({ children }) => {
   useEffect(() => {
     const buscar = async () => {
       try {
-        if (authService.isAuthenticated()) {
+        const authenticated = await authService.isAuthenticated(); 
+        if (authenticated) {
           const userProfile = await userService.getUserService();
-          //console.log("Dados do usuário buscados:", userProfile);
           setUser(userProfile);
         }
-      } catch  {
-      //  console.error("Erro ao buscar usuário:", error);
+      } catch {
         setUser(null);
       } finally {
         setIsLoading(false);
@@ -36,8 +35,8 @@ const PrivateRouteAdmin: React.FC<Props> = ({ children }) => {
     return <Carregando title="Aguarde" />;
   }
 
-  if (authService.isAuthenticated() && user?.perfil?.includes("ADMIN")) {
-    // Passa o `user` como prop para o componente pai
+  // Aqui, já estamos aguardando a autenticação ser resolvida.
+  if (user && user.perfil?.includes("ADMIN")) {
     return React.isValidElement(children)
       ? React.cloneElement(children, { user: user as Usuario })
       : null;

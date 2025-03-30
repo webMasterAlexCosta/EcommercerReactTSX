@@ -30,8 +30,8 @@ const getFoto = () => {
 };
 
 const deleteFoto = async () => {
-  if (isAuthenticated()) {
-    const usuario = getAccessTokenPayload();
+  if (await isAuthenticated()) {
+    const usuario = await getAccessTokenPayload();
 
     if (usuario && usuario.sub) {
       await requestBackEnd({
@@ -53,8 +53,8 @@ const deleteFoto = async () => {
 };
 
 const enviarFotoRepository = async (foto: File | string) => {
-  const usuario = getAccessTokenPayload();
-  if (usuario && isAuthenticated()) {
+  const usuario = await getAccessTokenPayload();
+  if (usuario && await isAuthenticated()) {
     const formData = new FormData();
 
     if (typeof foto === "string") {

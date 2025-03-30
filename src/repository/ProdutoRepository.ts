@@ -45,7 +45,7 @@ const novoProduto = async (dto: ProdutoDTO) => {
  // console.log(dto)
   alert(dto)
   const user = await getUserService();
-  if (isAuthenticated() && user.perfil.includes("ADMIN")) {
+  if (await isAuthenticated() && user.perfil.includes("ADMIN")) {
     const config: AxiosRequestConfig = {
       method: "POST",
       url: CADASTRO_PRODUTO,
@@ -58,7 +58,7 @@ const novoProduto = async (dto: ProdutoDTO) => {
 
 const updatedProduto = async (produto: ProdutoDTO) => {
   const user = await getUserService();
-  if (isAuthenticated() && user.perfil.includes("ADMIN")) {
+  if (await isAuthenticated() && user.perfil.includes("ADMIN")) {
     const config: AxiosRequestConfig = {
       method: "PUT",
       url: `/api/produtos/${produto.id}/atualizar`,

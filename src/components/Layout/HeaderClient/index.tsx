@@ -12,44 +12,50 @@ import UsuarioContext from '../../../data/UsuarioContext';
 const HeaderClient = () => {
   const { contextIsLogin, setContextIsLogin } = useContext(ContextIsLogin);
   const { iconAdminContext, setIconAdminContext } = useContext(IconAdminContext);
-  const {usuario , setUsuario} = useContext(UsuarioContext)
-  
+  const { usuario, setUsuario } = useContext(UsuarioContext)
+
   useEffect(() => {
-    const payload = userService.getTokenService() ? authService.getAccessTokenPayload() : null;
+    const verificar = async () => {
+      const payload = await userService.getTokenService() ? authService.getAccessTokenPayload() : null;
 
-    if (payload) {
-      const buscar = async () => {
-        const token = userService.getTokenService();
-        setContextIsLogin(!!token);
-     
-        const userProfile = await userService.getUserService()
-        setUsuario(userProfile)
-       
+
+
+
+      if (payload) {
+        const buscar = async () => {
+          const token = userService.getTokenService();
+          setContextIsLogin(!!token);
+
+          const userProfile = await userService.getUserService()
+          setUsuario(userProfile)
+
+        }
+        buscar()
+
+        if ((await payload) && !authService.isAuthenticated()) {
+          setContextIsLogin(true);
+          userService.logoutService();
+        }
+
+        if (usuario?.perfil?.includes("ADMIN")) {
+          setIconAdminContext("ADMIN");
+        } else if (usuario?.perfil?.includes("CLIENTE")) {
+          setIconAdminContext("CLIENTE");
+        } else {
+          setIconAdminContext(null);
+        }
       }
-      buscar()
-
-      if (payload && !authService.isAuthenticated()) {
-        setContextIsLogin(true);
-        userService.logoutService();
-      }
-
-      if (usuario?.perfil?.includes("ADMIN")) {
-        setIconAdminContext("ADMIN");
-      } else if (usuario?.perfil?.includes("CLIENTE")) {
-        setIconAdminContext("CLIENTE");
-      } else {
-        setIconAdminContext(null);
-      }
-
 
     }
+
+    verificar()
   }, [setContextIsLogin, setIconAdminContext, setUsuario, usuario]);
 
-      /** posso usar esse recurso, mas no react vou usar navigate
-       window.addEventListener("storage", checkLoginStatus); // Escuta mudanças no storage
-   
-       return () => window.removeEventListener('storage', checkLoginStatus); // Limpa o event listener ao desmontar
-        *  */
+  /** posso usar esse recurso, mas no react vou usar navigate
+   window.addEventListener("storage", checkLoginStatus); // Escuta mudanças no storage
+ 
+   return () => window.removeEventListener('storage', checkLoginStatus); // Limpa o event listener ao desmontar
+    *  */
   const getIsActive = ({ isActive }: { isActive: boolean }) => (isActive ? { color: "red" } : { color: "black" });
   function handleOnclick(event: React.MouseEvent<HTMLElement> | React.MouseEvent<SVGSVGElement, MouseEvent>, tipo: string): void {
     if (tipo === "logout") {
