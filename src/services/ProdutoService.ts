@@ -5,6 +5,7 @@ import requestBackEnd from "../utils/request";
 import { ProdutoDTO } from "../models/dto/ProdutosDTO";
 
 const findAll = async (page?: number) => {
+  
   try {
     return produtoRepository.findAll(page);
   } catch (error) {
@@ -14,11 +15,13 @@ const findAll = async (page?: number) => {
 };
 //posso usar esse serviço tambem
 const findPageRequest = (
+  
   pagina: number,
   nome: string,
   tamanho = 8,
   sort = "nome"
 ) => {
+  
   const config: AxiosRequestConfig = {
     method: "GET",
     url: "/produtos/paginas",
@@ -33,6 +36,7 @@ const findPageRequest = (
 };
 
 const findById = async (id: number) => {
+  
   try {
     return produtoRepository.findById(id);
   } catch (error) {
@@ -42,6 +46,7 @@ const findById = async (id: number) => {
 };
 
 const findByRequest = async (item: string) => {
+  
   try {
     return produtoRepository.findByRequest(item);
   } catch (error) {
@@ -51,6 +56,7 @@ const findByRequest = async (item: string) => {
 };
 
 const subTotal = async (id: number) => {
+  
   const prod: string | null = await produtoRepository.getLocalStorage(
     storageCarrinho
   );
@@ -65,6 +71,7 @@ const subTotal = async (id: number) => {
   return resul.preco * resul.quantidade;
 };
 async function updateProduto(produto: ProdutoDTO) {
+  
   return produtoRepository.updatedProduto(produto);
 }
 
@@ -73,23 +80,28 @@ const novoProduto=async(dto:ProdutoDTO)=>{
   return response
 }
 const findAllCategories=async()=>{
+  
   const response = await produtoRepository.findAllCategories()
   return response.data
 }
 
 const deleteProduto=async(id : number | undefined)=>{
+  
   const respose=  produtoRepository.deleteProduto(id)
   return respose
 }
 
 const savarProdutoLocal = (prod: ProdutoDTO): ReturnType<typeof produtoRepository.savarProdutoLocal> => {
+ 
   return produtoRepository.savarProdutoLocal(prod)
 }
 const getProdutoLocal = () => {
+  
  
   return produtoRepository.getProdutoLocal();
 }
 const limparProdutoLocal = ()=>{
+  
   produtoRepository.limparProdutoLocal();
 }
 export {

@@ -34,7 +34,7 @@ useEffect(() => {
 
   const handleDelete = async (id: number | undefined) => {
     if (id === undefined) {
-      console.error("Produto ID is undefined");
+  //    console.error("Produto ID is undefined");
       return;
     }
 

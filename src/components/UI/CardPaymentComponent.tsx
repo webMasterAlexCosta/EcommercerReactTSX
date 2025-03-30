@@ -44,7 +44,7 @@ const CardPaymentComponent2: React.FC = () => {
         return response;
       } catch (error) {
         setAlertData({ title: "Erro ao Enviar Pedido", text: "Ocorreu um erro ao enviar seu pedido. Tente novamente.", icon: "error" });
-        console.error("Erro ao enviar pedido: ", error);
+    //    console.error("Erro ao enviar pedido: ", error);
         throw error;
       }
     }, 2000);
@@ -70,8 +70,8 @@ const CardPaymentComponent2: React.FC = () => {
           });
 
           setClientSecret(response.data.clientSecret);
-        } catch (error) {
-          console.error("Erro ao buscar o clientSecret", error);
+        } catch  {
+       //   console.error("Erro ao buscar o clientSecret", error);
         }
       };
 

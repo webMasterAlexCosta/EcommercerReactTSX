@@ -70,6 +70,7 @@ const recuperarSenhaRepository = async (email: string, cpf: string) => {
 };
 
 const setUserRepository = async () => {
+  
   if (await isAuthenticated()) {
     const encryptedData = sessionStorage.getItem("encryptedData");
     const chaveBase64 = sessionStorage.getItem("chave");
@@ -80,7 +81,7 @@ const setUserRepository = async () => {
         SECRET_KEY_BASE64_1 + usuario?.data.chave + SECRET_KEY_BASE64_2;
       sessionStorage.setItem("encryptedData", usuario?.data.encryptedData);
       sessionStorage.setItem("chave", misturar);
-      console.log("secreto" +SECRET_KEY_BASE64_1 + SECRET_KEY_BASE64_2)
+      //console.log("secreto" +SECRET_KEY_BASE64_1 + SECRET_KEY_BASE64_2)
       return Promise.resolve(usuario);
     
     }
@@ -88,7 +89,7 @@ const setUserRepository = async () => {
 };
 
 const getUserRepository = async () => {
-  console.log("token criptografado > ");
+ 
   if (await isAuthenticated()) {
     await setUserRepository();
 
@@ -104,16 +105,16 @@ const getUserRepository = async () => {
       chaveMisturadas?.length - SECRET_KEY_BASE64_2.length
     );
     if (!encryptedData || !chave) {
-      return { perfil: [] }; // Retorna um objeto vazio se faltar dados
+      return { perfil: [] }; 
     }
 
     try {
       const decryptedData = await CriptografiaAES.decrypt(encryptedData, chave);
       const user = JSON.parse(decryptedData);
-      return { ...user, perfil: user.perfil || [] }; // Retorna o usuário
+      return { ...user, perfil: user.perfil || [] }; 
     } catch (error) {
       console.error("Erro ao descriptografar os dados:", error);
-      return { perfil: [] }; // Retorna um objeto vazio em caso de erro
+      return { perfil: [] }; 
     }
   }
 };

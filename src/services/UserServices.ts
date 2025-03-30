@@ -11,10 +11,12 @@ import CriptografiaAES from "../models/domain/CriptografiaAES";
 
 
 const getMeService = async () => {
+  
   return userRepository.getMeRepository();
 };
 
 const recuperarSenha = (email: string, cpf: string) => {
+  
   return userRepository.recuperarSenhaRepository(
     email.toString().toLowerCase(),
     cpf.toString()
@@ -22,9 +24,11 @@ const recuperarSenha = (email: string, cpf: string) => {
 };
 
 const cadastrarNovoUsuario = (formData: CadastroUserDTO) => {
+  
   return userRepository.cadastrarNovoUsuarioRepository(formData);
 };
 const enviarPedido = async () => {
+  
   const carrinhoAtual: CarrinhoItem[] = getCarrinho();
   if (carrinhoAtual.length === 0) {
     return Promise.reject("Carrinho está vazio");
@@ -80,9 +84,11 @@ const enviarPedido = async () => {
   
   
 const alterarSenhaAutenticado = async (
+  
   antigaSenha: string,
   novaSenha: string
 ) => {
+  
   if (await authService.isAuthenticated()) {
     const user = await getUserService();
     const email = user?.email;
@@ -103,6 +109,7 @@ const mudarEnderecoUserAutenticado = (
   usuarioEndereco: Endereco,
   id: string
 ) => {
+  
   const enviar = userRepository.mudarEnderecoUserAutenticadoRepository(
     usuarioEndereco,
     id
@@ -114,27 +121,27 @@ const logoutService = () => {
   return userRepository.logoutRepository();
 };
 
-
-
-
-
-
 const saveTokenService = (response: Login) => {
+  
   return userRepository.saveTokenRepository(response);
 };
 
 const getTokenService = () => {
+  
   return userRepository.getTokenRepository();
 };
 
 const getUserService = () => {
+  
   return userRepository.getUserRepository();
 };
 const setUserService = () => {
+  
   userRepository.setUserRepository();
 };
 
 const obterHistoricoPedidoService = async () => {
+  
   const response = await userRepository.obterHistoricoPedidoRepository();
   return response;
 };

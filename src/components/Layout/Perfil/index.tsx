@@ -52,8 +52,8 @@ const Perfil = () => {
             if (response.perfil.includes("ADMIN")) {
                 setCaminhoSenha("/Administrativo/PerfilAdmin/MudarSenha")
                 setCaminhoEndereco("/Administrativo/PerfilAdmin/NovoEndereco")
-                console.log("caminhoSenha set to Administrativo/MudarSenha")
-                console.log("caminhoEndereco set to Administrativo/NovoEndereco")
+             //   console.log("caminhoSenha set to Administrativo/MudarSenha")
+             //   console.log("caminhoEndereco set to Administrativo/NovoEndereco")
             }
         }
         obterPerfil()
