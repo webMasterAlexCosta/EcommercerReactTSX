@@ -3,9 +3,11 @@ import { CadastroUserDTO } from "../models/dto/CadastroUserDTO";
 import { Endereco, Login } from "../models/dto/CredenciaisDTO";
 import requestBackEnd from "../utils/request";
 import {
+  ALTERAR_SENHA_AUTENTICADO,
   CADASTRO_NOVO_USUARIO,
   CHAVE1,
   CHAVE2,
+  ENVIAR_PEDIDO,
   FOTO_PERFIL_LINK,
   HISTORICO_PEDIDO_USER,
   PRODUTO_KEY,
@@ -14,6 +16,9 @@ import {
 } from "../utils/system";
 import { isAuthenticated } from "../services/AuthService";
 import CriptografiaAES from "../models/domain/CriptografiaAES";
+import { getUserService } from "../services/UserServices";
+import { CarrinhoItem, PedidoData, PedidoItem } from "../models/dto/CarrinhoDTO";
+import { getCarrinho } from "./CarrinhoRepository";
 
 const gerarChaves = async () => {
   const SECRET_KEY_BASE64_1 = CriptografiaAES.generateRandomKeyBase64();
@@ -212,6 +217,82 @@ const obterHistoricoPedidoRepository = async () => {
   }
 };
 
+
+const alterarSenhaAutenticado=async(antigaSenha:string, novaSenha:string)=>{
+  if (await isAuthenticated()) {
+    const user = await getUserService();
+    const email = user?.email;
+
+    const config: AxiosRequestConfig = {
+      method: "POST",
+      url: ALTERAR_SENHA_AUTENTICADO,
+      headers: { "Content-Type": "application/json" },
+      withCredentials: true,
+
+      data: { antigaSenha, novaSenha, email },
+    };
+    //  console.log(config);
+    return requestBackEnd(config);
+  }
+}
+
+const enviarPedido = async()=>{
+  const carrinhoData = getCarrinho();
+  const carrinhoAtual: CarrinhoItem[] = carrinhoData ? JSON.parse(carrinhoData) : [];
+  if (carrinhoAtual.length === 0) {
+    return Promise.reject("Carrinho está vazio");
+  }
+
+  try {
+    const data: PedidoData = {
+      items: carrinhoAtual.map(
+        (item: CarrinhoItem): PedidoItem => ({
+          id: item.id,
+          nome: item.nome,
+          preco: item.preco,
+          descricao: item.descricao,
+          imgUrl: item.imgUrl,
+          quantidade: item.quantidade,
+          categorias: item.categorias || [],
+          subTotal: item.preco * item.quantidade,
+        })
+      ),
+    };
+
+     const chave = CriptografiaAES.generateRandomKeyBase64();
+
+     const encryptedData = await CriptografiaAES.encrypt(JSON.stringify(data), chave);
+
+    const config: AxiosRequestConfig = {
+      method: "POST",
+      url: ENVIAR_PEDIDO,
+      headers: { "Content-Type": "application/json" },
+      data:{
+        encryptedData,
+        chave
+        
+      }
+    };
+
+    const enviado = await requestBackEnd(config);
+   // console.log("pedido enciado " + enviado.data)
+
+    if (enviado.status === 200 || enviado.status === 201) {
+      setTimeout(() => {
+        window.location.href = "/Carrinho";
+      }, 4000);
+      return enviado;
+    }
+
+    return Promise.reject("Falha ao enviar o pedido");
+  } catch  {
+    //console.error("Erro ao enviar o pedido:", error);
+    return Promise.reject("Erro ao enviar o pedido");
+  }
+}
+
+
+
 export {
   cadastrarNovoUsuarioRepository,
   getMeRepository,
@@ -223,4 +304,6 @@ export {
   saveTokenRepository,
   setUserRepository,
   obterHistoricoPedidoRepository,
+  alterarSenhaAutenticado,
+  enviarPedido
 };
