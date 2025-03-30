@@ -62,7 +62,7 @@ const Perfil = () => {
     useEffect(() => {
         const verificar = async () => {
             if (!(await userService.getTokenService() && authService.isAuthenticated())) {
-             //   navigate("/login");
+                navigate("/login");
                 return;
             }
         }

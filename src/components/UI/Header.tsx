@@ -30,7 +30,7 @@ const Header = () => {
     };
 
     checkAuthentication();
-  }, [setUsuario]);
+  }, []);
 
   useEffect(() => {
     if (usuario?.perfil) {

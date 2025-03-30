@@ -82,40 +82,44 @@ const setUserRepository = async () => {
       sessionStorage.setItem("chave", misturar);
       console.log("secreto" +SECRET_KEY_BASE64_1 + SECRET_KEY_BASE64_2)
       return Promise.resolve(usuario);
+    
     }
-    return Promise.resolve();
   }
 };
 
 const getUserRepository = async () => {
-  await setUserRepository();
+  console.log("token criptografado > ");
+  if (await isAuthenticated()) {
+    await setUserRepository();
 
-  const encryptedData = sessionStorage.getItem("encryptedData");
-  const chaveMisturadas = sessionStorage.getItem("chave");
+    const encryptedData = sessionStorage.getItem("encryptedData");
+    const chaveMisturadas = sessionStorage.getItem("chave");
 
-  if (!chaveMisturadas) {
-    throw new Error("Chave não encontrada no sessionStorage.");
-  }
+    if (!chaveMisturadas) {
+      throw new Error("Chave não encontrada no sessionStorage.");
+    }
 
-  const chave = chaveMisturadas.slice(
-    SECRET_KEY_BASE64_1.length,
-    chaveMisturadas?.length - SECRET_KEY_BASE64_2.length
-  );
-  if (!encryptedData || !chave) {
-    return Promise.resolve({ perfil: [] });
-  }
+    const chave = chaveMisturadas.slice(
+      SECRET_KEY_BASE64_1.length,
+      chaveMisturadas?.length - SECRET_KEY_BASE64_2.length
+    );
+    if (!encryptedData || !chave) {
+      return { perfil: [] }; // Retorna um objeto vazio se faltar dados
+    }
 
-  try {
-    const decryptedData = await CriptografiaAES.decrypt(encryptedData, chave);
-    const user = JSON.parse(decryptedData);
-    return Promise.resolve({ ...user, perfil: user.perfil || [] });
-  } catch (error) {
-    console.error("Erro ao descriptografar os dados:", error);
-    return Promise.resolve({ perfil: [] });
+    try {
+      const decryptedData = await CriptografiaAES.decrypt(encryptedData, chave);
+      const user = JSON.parse(decryptedData);
+      return { ...user, perfil: user.perfil || [] }; // Retorna o usuário
+    } catch (error) {
+      console.error("Erro ao descriptografar os dados:", error);
+      return { perfil: [] }; // Retorna um objeto vazio em caso de erro
+    }
   }
 };
 
 const cadastrarNovoUsuarioRepository = async (FormData: CadastroUserDTO) => {
+  
   try {
     const config: AxiosRequestConfig = {
       method: "POST",
@@ -157,20 +161,13 @@ const logoutRepository = async () => {
   localStorage.removeItem(FOTO_PERFIL_LINK);
   localStorage.removeItem(PRODUTO_KEY);
   window.location.href = "/login";
+  
 };
 
 const saveTokenRepository = async (response: Login) => {
- 
-    console.log("token Recebido  no decript > " + response.token)
-   // const base64Token =  btoa(response.token);
-    
     const encryptToken = await CriptografiaAES.encrypt(response.token, CHAVE);
-    console.log("token criptografado > " +encryptToken)
-   
-  
-
   localStorage.setItem(TOKEN_KEY, encryptToken);
- // await setUserRepository();
+ await setUserRepository();
   return Promise.resolve();
 };
 

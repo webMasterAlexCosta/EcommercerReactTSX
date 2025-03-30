@@ -38,10 +38,10 @@ const Login = () => {
     if (formData.email && formData.senha) {
       
         const response = await loginRequest(formData);
-        console.log("token no login sendo recebido > " + response.data.token)
+    
         await userService.saveTokenService(response.data);
        
-        const buscarUsuario = await userService.getUserService();
+       const buscarUsuario = await userService.getUserService();
         setUser(buscarUsuario);
         setContextIsLogin(true);
 

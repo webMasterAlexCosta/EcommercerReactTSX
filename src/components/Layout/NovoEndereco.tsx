@@ -1,4 +1,4 @@
-import { Send, LocationOn, Apartment, Public, Place, LocationCity, Streetview } from '@mui/icons-material';
+import { Send, LocationOn, Apartment, Public, Place, LocationCity, Streetview, Close } from '@mui/icons-material';
 import { useEffect, useState } from "react";
 import { FormularioUser } from "../UI/Formulario";
 import { Endereco } from "../../models/dto/CredenciaisDTO";
@@ -8,8 +8,9 @@ import { useNavigate } from "react-router-dom";
 import { ViaCepService } from '../../utils/funcoes';
 import { TEXTO_PADRAO_SOLICITACAO } from '../../utils/system';
 import { Carregando } from '../UI/Carregando';
-import { Alert } from '@mui/material';
-import * as userServices from "../../services/UserServices"
+import { Alert, IconButton } from '@mui/material';
+import * as userServices from "../../services/UserServices";
+
 const NovoEndereco = () => {
     const [enderecoUsuario, setEnderecoUsuario] = useState<Endereco>({
         cep: '',
@@ -32,25 +33,23 @@ const NovoEndereco = () => {
     const [textoCarregando, setTextoCarregando] = useState(TEXTO_PADRAO_SOLICITACAO);
 
     useEffect(() => {
-
-        const verificar =async()=>{
+        const verificar = async () => {
             if (!(await userService.getTokenService() && authService.isAuthenticated())) {
                 navigate("/login");
                 throw new Error();
             }
-        }
-        verificar()
-        
+        };
+        verificar();
     }, [navigate]);
 
     const buscarEnderecoPorCep = async (cep: string) => {
         if (cep.length === 8) {
             setTextoCarregando("Aguarde, buscando seu CEP...");
             setLoading(true);
-    
+
             try {
                 const response = await ViaCepService(cep);
-    
+
                 if (!response || response.data.erro) {
                     setAlertData({
                         title: "Erro",
@@ -58,17 +57,17 @@ const NovoEndereco = () => {
                         icon: "error"
                     });
                 } else {
-                    setAlertData(null);
+                    setAlertData(null); // Limpar qualquer alerta anterior
                     setEnderecoUsuario({
                         ...enderecoUsuario,
-                        cep: response.data.cep || '',  
+                        cep: response.data.cep || '',
                         logradouro: response.data.logradouro,
                         bairro: response.data.bairro,
                         cidade: response.data.localidade,
                         uf: response.data.uf
                     });
                 }
-            } catch  {
+            } catch {
                 setAlertData({
                     title: "Erro",
                     text: "Não foi possível buscar o CEP.",
@@ -80,17 +79,16 @@ const NovoEndereco = () => {
             }
         }
     };
-    
 
     const handleOnchangeFormulario = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
-    
+
         if (name === 'cep') {
             const cepFormatado = value.replace(/\D/g, '');
             if (cepFormatado.length <= 8) {
                 setEnderecoUsuario({
                     ...enderecoUsuario,
-                    [name]: cepFormatado 
+                    [name]: cepFormatado
                 });
                 if (cepFormatado.length === 8) {
                     buscarEnderecoPorCep(cepFormatado);
@@ -107,7 +105,7 @@ const NovoEndereco = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
-        
+
         const cepFormatado = enderecoUsuario.cep.replace(/\D/g, '');
         if (cepFormatado.length !== 8) {
             setAlertData({
@@ -118,28 +116,32 @@ const NovoEndereco = () => {
             setLoading(false);
             return;
         }
-    
+
         const payload = await authService.getAccessTokenPayload();
         const id = payload?.sub || null;
-        const enviar = userServices.mudarEnderecoUserAutenticado({
+        
+        // Envia os dados para alterar o endereço
+        const enviar = await userServices.mudarEnderecoUserAutenticado({
             ...enderecoUsuario,
-            cep: cepFormatado 
+            cep: cepFormatado
         }, id!);
-    
-       // console.log("id do user", id);
+
+        // Alerta de sucesso após a operação
         setAlertData({
             title: "Cadastro realizado com sucesso!",
             text: `${enviar}`,
             icon: "success"
         });
-    
+
+        // Recarrega a página após 4 segundos
         setTimeout(() => {
-             window.location.reload(); 
+            userService.setUserService();
+            sessionStorage.clear()
+            window.location.reload();
         }, 4000);
-    
+
         setLoading(false);
     };
-    
 
     return (
         <main>
@@ -161,14 +163,78 @@ const NovoEndereco = () => {
                             icon={<LocationOn />}
                             onChange={handleOnchangeFormulario}
                             minLength={0}
-                            maxLength={8}  
+                            maxLength={8}
                             required={true}
                         />
 
                         {alertData && alertData.icon === "error" && (
-                            <Alert severity={alertData.icon} style={{ marginTop: 10 }}>
-                                <strong>{alertData.title}:</strong> {alertData.text}
-                            </Alert>
+                           <Alert
+                           severity={alertData.icon}
+                           sx={{
+                               width: '400px',
+                               height: '80px',
+                               fontSize: '24px',
+                               fontWeight: 'bold',
+                               position: 'fixed',
+                               top: '95%',
+                               left: '50%',
+                               transform: 'translate(-50%, -50%)',
+                               zIndex: 1300,
+                               color: 'blue',
+                               '& .MuiAlert-message': {
+                                   color: 'green',
+                               },
+                               
+                           }}
+                           action={
+                            <IconButton
+                                aria-label="close"
+                                color="inherit"
+                                size="large"
+                                onClick={()=>  setAlertData(null)} 
+                            >
+                                <Close />
+                            </IconButton>
+                        }
+                    >
+                           
+                       
+                           {alertData.text}
+                       </Alert>
+                        )}
+
+                        {alertData && alertData.icon === "success" && (
+                            <Alert
+                            severity={alertData.icon}                        
+                            sx={{
+                                width: '400px',
+                                height: '100px',
+                                fontSize: '24px',
+                                fontWeight: 'bold',
+                                position: 'fixed',
+                                top: '85%',
+                                left: '50%',
+                                transform: 'translate(-50%, -50%)',
+                                zIndex: 1300,
+                                color: 'blue',
+                                '& .MuiAlert-message': {
+                                    color: 'green',
+                                },
+                            }}
+                            action={
+                                <IconButton
+                                    aria-label="close"
+                                    color="inherit"
+                                    size="large"
+                                    onClick={()=>  setAlertData(null)} 
+                                >
+                                    <Close />
+                                </IconButton>
+                            }
+                        
+                        >
+                            {alertData.title="Sucesso ao cadastrar seu endereco novo"}
+                        </Alert>
                         )}
 
                         <FormularioUser

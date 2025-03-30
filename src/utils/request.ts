@@ -25,7 +25,7 @@ axios.interceptors.response.use(
   },
   async function (error) {
     if (await isAuthenticated()) {
-   //   window.location.href = "/login";
+     window.location.href = "/login";
       localStorage.removeItem(TOKEN_KEY);
       localStorage.removeItem(FOTO_PERFIL_LINK);
       localStorage.removeItem(PRODUTO_KEY);
@@ -45,7 +45,7 @@ axios.interceptors.response.use(
         confirmButtonText: "OK",
       });
       setTimeout(() => {
-     //  window.location.reload();
+       window.location.reload();
       }, 3000);
     } else {
       Swal.fire({
@@ -55,7 +55,7 @@ axios.interceptors.response.use(
         confirmButtonText: "OK",
       });
       setTimeout(() => {
-    //    window.location.reload();
+      window.location.reload();
       }, 3000);
     }
     /*

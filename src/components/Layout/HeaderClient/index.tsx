@@ -14,6 +14,16 @@ const HeaderClient = () => {
   const { iconAdminContext, setIconAdminContext } = useContext(IconAdminContext);
   const { usuario, setUsuario } = useContext(UsuarioContext)
 
+
+
+  useEffect(() => {
+    const buscar = async () => {
+      const userProfile = await userService.getUserService()
+      setUsuario(userProfile)
+    }
+    buscar()
+  }, [])
+
   useEffect(() => {
     const verificar = async () => {
       const payload = await userService.getTokenService() ? authService.getAccessTokenPayload() : null;
@@ -25,10 +35,6 @@ const HeaderClient = () => {
         const buscar = async () => {
           const token = userService.getTokenService();
           setContextIsLogin(!!token);
-
-          const userProfile = await userService.getUserService()
-          setUsuario(userProfile)
-
         }
         buscar()
 
