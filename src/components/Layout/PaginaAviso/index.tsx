@@ -25,7 +25,7 @@ const PaginaAviso: React.FC = () => {
       {/* Header */}
       <header className="header">
 
-        <h1> <p className="sub-title">Este projeto é fictício. Nada é Real, sinta se a vontade pra explorar</p></h1>
+        <h1> <p className="sub-title"> 89618815 Alex Costa Este projeto é fictício. Nada é Real, sinta se a vontade pra explorar</p></h1>
       </header>
 
       {/* Hero Section */}
