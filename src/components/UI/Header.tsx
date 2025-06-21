@@ -33,8 +33,8 @@ const Header = () => {
   }, []);
 
   useEffect(() => {
-    if (usuario?.perfil) {
-      setIsAdmin(usuario.perfil.includes('ADMIN') ? 'ADMIN' : 'CLIENTE');
+    if (usuario?.perfis) {
+      setIsAdmin(usuario.perfis.includes('ADMIN') ? 'ADMIN' : 'CLIENTE');
     }
   }, [usuario]);
 

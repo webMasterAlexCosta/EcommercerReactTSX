@@ -12,58 +12,51 @@ import UsuarioContext from '../../../data/UsuarioContext';
 const HeaderClient = () => {
   const { contextIsLogin, setContextIsLogin } = useContext(ContextIsLogin);
   const { iconAdminContext, setIconAdminContext } = useContext(IconAdminContext);
-  const { usuario, setUsuario } = useContext(UsuarioContext)
+  const { usuario, setUsuario } = useContext(UsuarioContext);
 
-
-
+  // Carrega o usuário ao montar o componente
   useEffect(() => {
     const buscar = async () => {
-      const userProfile = await userService.getUserService()
-      setUsuario(userProfile)
-    }
-    buscar()
-  }, [])
+      const userProfile = await userService.getUserService();
+      setUsuario(userProfile);
 
+      // Define o tipo de perfil imediatamente após carregar o usuário
+      if (userProfile?.perfis?.includes("ADMIN")) {
+        setIconAdminContext("ADMIN");
+      } else if (userProfile?.perfis?.includes("CLIENTE")) {
+        setIconAdminContext("CLIENTE");
+      } else {
+        setIconAdminContext(null);
+      }
+    };
+    buscar();
+  }, [setUsuario, setIconAdminContext]);
+
+  // Atualiza o contexto de login com base no token
   useEffect(() => {
     const verificar = async () => {
-      const payload = await userService.getTokenService() ? authService.getAccessTokenPayload() : null;
+      const token = userService.getTokenService();
+      const isAuth = await authService.isAuthenticated();
 
-
-
-
-      if (payload) {
-        const buscar = async () => {
-          const token = userService.getTokenService();
-          setContextIsLogin(!!token);
-        }
-        buscar()
-
-        if ((await payload) && !authService.isAuthenticated()) {
-          setContextIsLogin(true);
-          userService.logoutService();
-        }
-
-        if (usuario?.perfil?.includes("ADMIN")) {
-          setIconAdminContext("ADMIN");
-        } else if (usuario?.perfil?.includes("CLIENTE")) {
-          setIconAdminContext("CLIENTE");
-        } else {
-          setIconAdminContext(null);
-        }
+      if (token && isAuth) {
+        setContextIsLogin(true);
+      } else {
+        setContextIsLogin(false);
+        setIconAdminContext(null);
       }
+    };
 
-    }
+    verificar();
+  }, [setContextIsLogin, setIconAdminContext]);
 
-    verificar()
-  }, [setContextIsLogin, setIconAdminContext, setUsuario, usuario]);
+  const getIsActive = ({ isActive }: { isActive: boolean }) => (
+    isActive ? { color: "red" } : { color: "black" }
+  );
 
-  /** posso usar esse recurso, mas no react vou usar navigate
-   window.addEventListener("storage", checkLoginStatus); // Escuta mudanças no storage
- 
-   return () => window.removeEventListener('storage', checkLoginStatus); // Limpa o event listener ao desmontar
-    *  */
-  const getIsActive = ({ isActive }: { isActive: boolean }) => (isActive ? { color: "red" } : { color: "black" });
-  function handleOnclick(event: React.MouseEvent<HTMLElement> | React.MouseEvent<SVGSVGElement, MouseEvent>, tipo: string): void {
+  const handleOnclick = (
+    event: React.MouseEvent<HTMLElement> | React.MouseEvent<SVGSVGElement, MouseEvent>,
+    tipo: string
+  ): void => {
     if (tipo === "logout") {
       event.preventDefault();
       userService.logoutService();
@@ -72,17 +65,15 @@ const HeaderClient = () => {
       return;
     }
 
-
-
-    if (usuario?.perfil.includes("ADMIN")) {
+    // Reforça o tipo de perfil ao clicar
+    if (usuario?.perfis.includes("ADMIN")) {
       setIconAdminContext("ADMIN");
-    } else if (usuario?.perfil.includes("CLIENTE")) {
+    } else if (usuario?.perfis.includes("CLIENTE")) {
       setIconAdminContext("CLIENTE");
     } else {
       setIconAdminContext(null);
     }
-  }
-
+  };
 
   return (
     <header className="alex-header-client">
@@ -119,16 +110,17 @@ const HeaderClient = () => {
             </NavLink>
           )}
 
-          {!contextIsLogin
-            ? <NavLink to="/login" onClick={(e) => handleOnclick(e, "login")} style={getIsActive}>
+          {!contextIsLogin ? (
+            <NavLink to="/login" onClick={(e) => handleOnclick(e, "login")} style={getIsActive}>
               <Login style={{ fontSize: 40, color: 'black' }} />
               <h3>Entrar</h3>
             </NavLink>
-            : <NavLink to="/catalogo" onClick={(e) => handleOnclick(e, "logout")} style={getIsActive}>
+          ) : (
+            <NavLink to="/catalogo" onClick={(e) => handleOnclick(e, "logout")} style={getIsActive}>
               <Logout style={{ fontSize: 40, color: 'black' }} />
               <h3>Sair</h3>
             </NavLink>
-          }
+          )}
         </div>
       </nav>
     </header>

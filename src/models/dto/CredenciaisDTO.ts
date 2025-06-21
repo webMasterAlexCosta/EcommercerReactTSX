@@ -3,7 +3,7 @@ export interface CredenciaisDTO{
     email:string;
     senha:string;
 }
-export type perfil = "CLIENTE" | "ADMIN";
+export type perfis = "CLIENTE" | "ADMIN";
 
 
 export interface AccessTokenPayloadDTO{
@@ -28,7 +28,7 @@ export interface Endereco {
     email: string;
     telefone: string;
     dataNascimento: string;
-    perfil: perfil[];
+    perfis: perfis[];
     endereco: Endereco;
   }
   

@@ -45,7 +45,7 @@ const Login = () => {
         setUser(buscarUsuario);
         setContextIsLogin(true);
 
-        const userProfile = buscarUsuario?.perfil?.includes("ADMIN") ? "ADMIN" : "CLIENTE";
+        const userProfile = buscarUsuario?.perfis?.includes("ADMIN") ? "ADMIN" : "CLIENTE";
         setIconAdminContext(userProfile);
      
         setAlertData({
@@ -62,9 +62,9 @@ const Login = () => {
   const handleAlertClose = () => {
     if (alertData?.icon === "success") {
       setTimeout(() => {
-        if (user?.perfil.includes("ADMIN")) {
+        if (user?.perfis.includes("ADMIN")) {
           navigate("/Administrativo");
-        } else if (user?.perfil.includes("CLIENTE")) {
+        } else if (user?.perfis.includes("CLIENTE")) {
           navigate("/catalogo");
         } else {
           setAlertData(null);

@@ -36,7 +36,7 @@ const PrivateRouteClient: React.FC<Props> = ({ children }) => {
   }
 
   // Aqui, já estamos aguardando a autenticação ser resolvida.
-  if (user && user.perfil?.includes("CLIENTE")) {
+  if (user && user.perfis?.includes("CLIENTE")) {
     return React.isValidElement(children)
       ? React.cloneElement(children, { user: user as Usuario })
       : null;

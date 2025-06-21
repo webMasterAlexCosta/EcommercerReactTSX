@@ -36,7 +36,7 @@ const PrivateRouteAdmin: React.FC<Props> = ({ children }) => {
   }
 
   // Aqui, já estamos aguardando a autenticação ser resolvida.
-  if (user && user.perfil?.includes("ADMIN")) {
+  if (user && user.perfis?.includes("ADMIN")) {
     return React.isValidElement(children)
       ? React.cloneElement(children, { user: user as Usuario })
       : null;

@@ -23,7 +23,7 @@ const Perfil = () => {
         telefone: "",
         cpf: "",
         dataNascimento: "",
-        perfil: [],
+        perfis: [],
         endereco: {} as EnderecoDTO
     });
     const [historicoPedidos, setHistoricoPedidos] = useState<PedidoHistorico[]>([]);
@@ -49,7 +49,7 @@ const Perfil = () => {
     useEffect(() => {
         const obterPerfil = async () => {
             const response = await userService.getUserService()
-            if (response.perfil.includes("ADMIN")) {
+            if (response.perfis.includes("ADMIN")) {
                 setCaminhoSenha("/Administrativo/PerfilAdmin/MudarSenha")
                 setCaminhoEndereco("/Administrativo/PerfilAdmin/NovoEndereco")
              //   console.log("caminhoSenha set to Administrativo/MudarSenha")
@@ -79,7 +79,7 @@ const Perfil = () => {
                 telefone: usuarioLogado?.telefone || "",
                 cpf: usuarioLogado?.cpf || "",
                 dataNascimento: usuarioLogado?.dataNascimento || "",
-                perfil: usuarioLogado?.perfil || [],
+                perfis: usuarioLogado?.perfil || [],
                 endereco: usuarioLogado?.endereco || {} as EnderecoDTO
             });
 
@@ -476,7 +476,7 @@ const Perfil = () => {
                         </div>
                     </div>
 
-                    {!usuario.perfil.includes("ADMIN") && (
+                    {!usuario.perfis.includes("ADMIN") && (
                         <div>
                             <h3>Histórico de Pedidos</h3>
                             <div id="historico-pedidos">
