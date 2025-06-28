@@ -41,7 +41,7 @@ const Login = () => {
     
         await userService.saveTokenService(response.data);
        
-       const buscarUsuario = await userService.getUserService();
+       const buscarUsuario = await userService.getUserService() as Usuario;
         setUser(buscarUsuario);
         setContextIsLogin(true);
 

@@ -1,5 +1,5 @@
-export const BASE_URL_LOCAL2="http://localhost:8080"
-export const BASE_URL_LOCAL="https://graci5546.c44.integrator.host/"
+export const BASE_URL_LOCAL="http://localhost:8080"
+export const BASE_URL_LOCAL2="https://graci5546.c44.integrator.host/"
 export const TOKEN_KEY = "br.com.alexcosta/token"
 export const DADOS_USER = "br.com.alexcosta/user"
 export const PRODUTO_KEY = "br.com.alexcosta/produtos"

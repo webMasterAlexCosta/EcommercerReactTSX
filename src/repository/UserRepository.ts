@@ -16,12 +16,46 @@ import {
 import { isAuthenticated } from "../services/AuthService";
 import CriptografiaAES from "../models/domain/CriptografiaAES";
 import { getUserService } from "../services/UserServices";
-import { CarrinhoItem, PedidoData, PedidoItem } from "../models/dto/CarrinhoDTO";
+import {
+  CarrinhoItem,
+  PedidoData,
+  PedidoItem,
+} from "../models/dto/CarrinhoDTO";
 import { getCarrinho } from "./CarrinhoRepository";
 
+// Adicionando js-cookie
+import Cookies from "js-cookie";
 
+// Helper para cookies (json)
+interface SetJsonCookie {
+  (key: string, value: unknown, expires?: number): void;
+}
 
+const setJsonCookie: SetJsonCookie = (key, value, expires = 7) => {
+  Cookies.set(key, JSON.stringify(value), { expires, path: "/" });
+};
 
+interface GetJsonCookie {
+  (key: string): unknown | null;
+}
+
+const getJsonCookie: GetJsonCookie = (key) => {
+  const value = Cookies.get(key);
+  if (!value) return null;
+  try {
+    return JSON.parse(value);
+  } catch {
+    return null;
+  }
+};
+
+interface RemoveCookie {
+  (key: string): void;
+}
+
+const removeCookie: RemoveCookie = (key) => {
+  Cookies.remove(key, { path: "/" });
+};
 
 const getMeRepository = async () => {
   const config: AxiosRequestConfig = {
@@ -56,16 +90,12 @@ const recuperarSenhaRepository = async (email: string, cpf: string) => {
 
 const setUserRepository = async () => {
   const usuario = await getMeRepository();
-  sessionStorage.setItem(DADOS_USER, JSON.stringify(usuario.data));
+  setJsonCookie(DADOS_USER, usuario.data);
   return Promise.resolve();
 };
 
 const getUserRepository = () => {
-  const dados = sessionStorage.getItem(DADOS_USER);
-  if (dados !== null) {
-    return JSON.parse(dados);
-  }
-  return null;
+  return getJsonCookie(DADOS_USER);
 };
 
 const cadastrarNovoUsuarioRepository = async (FormData: CadastroUserDTO) => {
@@ -105,22 +135,20 @@ const logoutRepository = async () => {
     };
     requestBackEnd(config);
   }
-  sessionStorage.clear();
-  localStorage.removeItem(TOKEN_KEY);
-  localStorage.removeItem(FOTO_PERFIL_LINK);
-  localStorage.removeItem(PRODUTO_KEY);
+  removeCookie(DADOS_USER);
+  removeCookie(TOKEN_KEY);
+  removeCookie(FOTO_PERFIL_LINK);
+  removeCookie(PRODUTO_KEY);
   window.location.href = "/login";
 };
 
 const saveTokenRepository = async (response: Login) => {
-  localStorage.setItem(TOKEN_KEY, response.token);
-
+  Cookies.set(TOKEN_KEY, response.token, { expires: 7, path: "/" });
   await setUserRepository();
-  return Promise.resolve();
 };
 
 const getTokenRepository = () => {
-  return localStorage.getItem(TOKEN_KEY);
+  return Cookies.get(TOKEN_KEY) || null;
 };
 
 const obterHistoricoPedidoRepository = async () => {
@@ -141,10 +169,12 @@ const obterHistoricoPedidoRepository = async () => {
   }
 };
 
-
-const alterarSenhaAutenticado=async(antigaSenha:string, novaSenha:string)=>{
+const alterarSenhaAutenticado = async (
+  antigaSenha: string,
+  novaSenha: string
+) => {
   if (await isAuthenticated()) {
-    const user = await getUserService();
+    const user = await getUserService() as { email?: string };
     const email = user?.email;
 
     const config: AxiosRequestConfig = {
@@ -158,11 +188,13 @@ const alterarSenhaAutenticado=async(antigaSenha:string, novaSenha:string)=>{
     //  console.log(config);
     return requestBackEnd(config);
   }
-}
+};
 
-const enviarPedido = async()=>{
+const enviarPedido = async () => {
   const carrinhoData = getCarrinho();
-  const carrinhoAtual: CarrinhoItem[] = carrinhoData ? JSON.parse(carrinhoData) : [];
+  const carrinhoAtual: CarrinhoItem[] = carrinhoData
+    ? JSON.parse(carrinhoData)
+    : [];
   if (carrinhoAtual.length === 0) {
     return Promise.reject("Carrinho está vazio");
   }
@@ -183,23 +215,25 @@ const enviarPedido = async()=>{
       ),
     };
 
-     const chave = CriptografiaAES.generateRandomKeyBase64();
+    const chave = CriptografiaAES.generateRandomKeyBase64();
 
-     const encryptedData = await CriptografiaAES.encrypt(JSON.stringify(data), chave);
+    const encryptedData = await CriptografiaAES.encrypt(
+      JSON.stringify(data),
+      chave
+    );
 
     const config: AxiosRequestConfig = {
       method: "POST",
       url: ENVIAR_PEDIDO,
       headers: { "Content-Type": "application/json" },
-      data:{
+      data: {
         encryptedData,
-        chave
-        
-      }
+        chave,
+      },
     };
 
     const enviado = await requestBackEnd(config);
-   // console.log("pedido enciado " + enviado.data)
+    // console.log("pedido enciado " + enviado.data)
 
     if (enviado.status === 200 || enviado.status === 201) {
       setTimeout(() => {
@@ -209,13 +243,11 @@ const enviarPedido = async()=>{
     }
 
     return Promise.reject("Falha ao enviar o pedido");
-  } catch  {
+  } catch {
     //console.error("Erro ao enviar o pedido:", error);
     return Promise.reject("Erro ao enviar o pedido");
   }
-}
-
-
+};
 
 export {
   cadastrarNovoUsuarioRepository,
@@ -229,5 +261,5 @@ export {
   setUserRepository,
   obterHistoricoPedidoRepository,
   alterarSenhaAutenticado,
-  enviarPedido
+  enviarPedido,
 };

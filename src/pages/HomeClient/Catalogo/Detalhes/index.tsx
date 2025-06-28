@@ -19,36 +19,40 @@ const Detalhes = () => {
 
   const { setContextCartCount } = useContext(ContextCartCount);
 
-  useEffect(() => {
-    const buscarProduto = async () => {
-      setLoading(true);
+ useEffect(() => {
+  const buscarProduto = async () => {
+    setLoading(true);
 
-      if (!id || isNaN(parseInt(id))) {
-        setLoading(false);
-        return;
+    if (!id || isNaN(parseInt(id))) {
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const responseProduto = await produtoService.findById(parseInt(id));
+
+      if (!responseProduto.data || !responseProduto.data.id) {
+        setAlertData({ title: "Erro", text: "Produto não encontrado!", icon: "error" });
+      } else {
+        setProdutoAtual(responseProduto.data);
       }
-      try {
-        const responseProduto = await produtoService.findById(parseInt(id));
 
-        if (!responseProduto.data || !responseProduto.data.id) {
-          setAlertData({ title: "Erro", text: "Produto não encontrado!", icon: "error" });
-        //  console.log("Produto não encontrado!");
-        } else {
-          setProdutoAtual(responseProduto.data); 
-        }
-
-        const responseProdutos = await produtoService.findAll();
-        setProdutos(responseProdutos.data || []);
-      } catch (error) {
-        setAlertData({ title: "Erro", text: "Ocorreu um erro ao buscar o produto.", icon: "error" });
-        console.error(error);
-      } finally {
+      const responseProdutos = await produtoService.findAll();
+      setProdutos(responseProdutos.data || []);
+    } catch (error) {
+      setAlertData({ title: "Erro", text: "Ocorreu um erro ao buscar o produto.", icon: "error" });
+      console.error(error);
+    } finally {
+      
+      setTimeout(() => {
         setLoading(false);
-      }
-    };
+      }, 2000); 
+    }
+  };
 
-    buscarProduto();
-  }, [id]);
+  buscarProduto();
+}, [id]);
+
 
   const currentIndex = produtos.findIndex(produto => produto.id === produtoAtual?.id);
   const nextProduto = produtos[currentIndex + 1] || null;
