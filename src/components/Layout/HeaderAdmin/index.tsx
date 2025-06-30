@@ -25,8 +25,8 @@ const HeaderAdmin = ({ setViewerHeaderClient, setContextIsLogin }: HeaderAdminPr
         const obterUsuario = async () => {
           setLoading(true);
           try {
-            const response = await userService.getUserService();
-            setUsuario(response && response.nome ? { nome: response.nome } : null);
+            const response = await userService.getMeService();
+            setUsuario(response && response.data.nome ? { nome: response.data.nome } : null);
           } catch  {
        //     console.error('Erro ao buscar usuário:', error);
             setUsuario(null);

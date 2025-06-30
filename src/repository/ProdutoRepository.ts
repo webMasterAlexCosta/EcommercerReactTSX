@@ -3,7 +3,7 @@ import { ProdutoDTO } from "../models/dto/ProdutosDTO";
 import requestBackEnd from "../utils/request";
 import { BUSCAR_LISTA_CATEGORIAS, CADASTRO_PRODUTO, PRODUTO_KEY } from "../utils/system";
 import { isAuthenticated } from "../services/AuthService";
-import { getUserService } from "../services/UserServices";
+import { getMeService } from "../services/UserServices";
 
 const findAll = async (page?: number) => {
   try {
@@ -43,8 +43,8 @@ const findByRequest = async (item: string) => {
 
 const novoProduto = async (dto: ProdutoDTO) => {
   console.log(dto)
-  const user = await getUserService();
-  if (await isAuthenticated() && user.perfil.includes("ADMIN")) {
+  const user = await getMeService();
+  if (await isAuthenticated() && user.data.perfil.includes("ADMIN")) {
     const config: AxiosRequestConfig = {
       method: "POST",
       url: CADASTRO_PRODUTO,
@@ -56,8 +56,8 @@ const novoProduto = async (dto: ProdutoDTO) => {
 }
 
 const updatedProduto = async (produto: ProdutoDTO) => {
-  const user = await getUserService();
-  if (await isAuthenticated() && user.perfil.includes("ADMIN")) {
+  const user = await getMeService();
+  if (await isAuthenticated() && user.data.perfil.includes("ADMIN")) {
     const config: AxiosRequestConfig = {
       method: "PUT",
       url: `/api/produtos/${produto.id}/atualizar`,

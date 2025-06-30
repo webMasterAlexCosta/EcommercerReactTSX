@@ -17,13 +17,13 @@ const HeaderClient = () => {
   // Carrega o usuário ao montar o componente
   useEffect(() => {
     const buscar = async () => {
-      const userProfile = await userService.getUserService();
-      setUsuario(userProfile);
+      const userProfile = await userService.getMeService();
+      setUsuario(userProfile.data);
 
       // Define o tipo de perfil imediatamente após carregar o usuário
-      if (userProfile?.perfis?.includes("ADMIN")) {
+      if (userProfile?.data.perfis?.includes("ADMIN")) {
         setIconAdminContext("ADMIN");
-      } else if (userProfile?.perfis?.includes("CLIENTE")) {
+      } else if (userProfile?.data.perfis?.includes("CLIENTE")) {
         setIconAdminContext("CLIENTE");
       } else {
         setIconAdminContext(null);

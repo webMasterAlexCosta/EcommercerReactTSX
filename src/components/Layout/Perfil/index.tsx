@@ -48,8 +48,8 @@ const Perfil = () => {
 
     useEffect(() => {
         const obterPerfil = async () => {
-            const response = await userService.getUserService()
-            if (response.perfis.includes("ADMIN")) {
+            const response = await userService.getMeService()
+            if (response.data.perfis.includes("ADMIN")) {
                 setCaminhoSenha("/Administrativo/PerfilAdmin/MudarSenha")
                 setCaminhoEndereco("/Administrativo/PerfilAdmin/NovoEndereco")
              //   console.log("caminhoSenha set to Administrativo/MudarSenha")
@@ -71,16 +71,16 @@ const Perfil = () => {
             const accessTokenPayload = await authService.getAccessTokenPayload();
             const idUserToken = accessTokenPayload?.sub;
 
-            const usuarioLogado = await userService.getUserService();
+            const usuarioLogado = await userService.getMeService();
             setUsuario({
                 id: idUserToken || "",
-                nome: usuarioLogado?.nome || "",
-                email: usuarioLogado?.email || "",
-                telefone: usuarioLogado?.telefone || "",
-                cpf: usuarioLogado?.cpf || "",
-                dataNascimento: usuarioLogado?.dataNascimento || "",
-                perfis: usuarioLogado?.perfil || [],
-                endereco: usuarioLogado?.endereco || {} as EnderecoDTO
+                nome: usuarioLogado?.data.nome || "",
+                email: usuarioLogado?.data.email || "",
+                telefone: usuarioLogado?.data.telefone || "",
+                cpf: usuarioLogado?.data.cpf || "",
+                dataNascimento: usuarioLogado?.data.dataNascimento || "",
+                perfis: usuarioLogado?.data.perfil || [],
+                endereco: usuarioLogado?.data.endereco || {} as EnderecoDTO
             });
 
         };
