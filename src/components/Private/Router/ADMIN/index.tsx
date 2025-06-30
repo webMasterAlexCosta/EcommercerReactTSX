@@ -19,7 +19,7 @@ const PrivateRouteAdmin: React.FC<Props> = ({ children }) => {
         const authenticated = await authService.isAuthenticated(); 
         if (authenticated) {
           const userProfile = await userService.getUserService();
-          setUser(userProfile);
+          setUser(userProfile as Usuario);
         }
       } catch {
         setUser(null);

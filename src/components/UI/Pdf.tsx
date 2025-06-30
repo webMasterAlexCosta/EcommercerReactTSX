@@ -12,7 +12,7 @@ interface ProdutoCarrinhoPDF {
 }
 
 const gerarPDF = async (pedido: { numeroPedido: string } | null) => {
-    const user = await userService.getUserService()
+    const user = await userService.getUserService() as { nome?: string; email?: string; endereco?: Endereco | null };
     const carrinho = carrinhoService.getCarrinho() || [];
 
     const cart: ProdutoCarrinhoPDF[] = carrinho.map(item => ({

@@ -6,6 +6,7 @@ import ContextIsLogin from './../../data/LoginContext';
 import UserContext from '../../data/UsuarioContext';
 import { isAuthenticated } from '../../services/AuthService';
 import { getUserService } from '../../services/UserServices';
+import { Usuario } from '../../models/dto/CredenciaisDTO';
 
 const Header = () => {
   const [isAdmin, setIsAdmin] = useState<string | null>(null);
@@ -23,7 +24,7 @@ const Header = () => {
 
       try {
         const userData = await getUserService();
-        setUsuario(userData);
+        setUsuario(userData as Usuario);
       } catch {
         window.location.href = "/";
       }
