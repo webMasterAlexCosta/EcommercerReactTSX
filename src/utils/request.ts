@@ -32,18 +32,9 @@ axios.interceptors.response.use(
       sessionStorage.clear();
     }
     if (axios.isAxiosError(error) && error.response) {
-      const mensagemErro =
-        error.response.data?.message ||
-        error.response.data?.trace ||
-        error.response.data?.error ||
-        "Ocorreu um erro ao tentar processar a solicitação.";
+      
 
-      Swal.fire({
-        title: "Erro!",
-        text: mensagemErro,
-        icon: "error",
-        confirmButtonText: "OK",
-      });
+      
       setTimeout(() => {
       // window.location.reload();
       }, 3000);
